@@ -8,6 +8,13 @@ from colorama import Fore, Style
 from emoji import LANGUAGES as EMOJI_LANGUAGES
 from emoji import emojize, is_emoji
 
+from turboprint_logger.exceptions.core.level import (
+    InvalidLevelColorError,
+    InvalidLevelEmojiError,
+    LevelNameAlreadyExistsError,
+    LevelValueAlreadyExistsError,
+    NegativeLevelError,
+)
 from turboprint_logger.utils.normalizers import normalize_level_name
 
 
@@ -92,16 +99,16 @@ class Level:
         name_upper = normalize_level_name(name)
         if name_upper in Level._by_name:
             msg = f'Level with name "{name_upper}" already exists'
-            raise ValueError(msg)
+            raise LevelNameAlreadyExistsError(msg)
         if level in Level._by_level:
             msg = f"Level with value {level} already exists"
-            raise ValueError(msg)
+            raise LevelValueAlreadyExistsError(msg)
         if level < 0:
             msg = f'Level "{name_upper}" cannot be negative: {level}'
-            raise ValueError(msg)
+            raise NegativeLevelError(msg)
         if not isinstance(color, str) or not color:
             msg = f"Invalid color: {color!r}"
-            raise ValueError(msg)
+            raise InvalidLevelColorError(msg)
         emoji = emoji_name
         if emoji:
             emoji = emoji.strip().lower()
@@ -113,7 +120,7 @@ class Level:
                     break
             if not is_emoji(emoji):
                 msg = f"Invalid emoji code: {emoji_name}"
-                raise ValueError(msg)
+                raise InvalidLevelEmojiError(msg)
 
         new_level = LevelRegistry(name_upper, level, color, emoji)
         cls._by_name[name_upper] = new_level

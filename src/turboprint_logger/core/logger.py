@@ -9,6 +9,7 @@ from turboprint_logger.core.config import Config
 from turboprint_logger.core.container import Container, get_default_container
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.core.logger import LoggerInstantiationError
 from turboprint_logger.managers.context import ContextManager
 from turboprint_logger.managers.filters import FiltersManager
 from turboprint_logger.managers.formatter import FormatterManager
@@ -61,7 +62,7 @@ class Logger:
         self.metrics: MetricsManager
         self.status: StatusManager
         msg = "Logger cannot be instantiated directly. Use Logger.get_logger()"
-        raise TypeError(msg)
+        raise LoggerInstantiationError(msg)
 
     @property
     def name(self) -> str:

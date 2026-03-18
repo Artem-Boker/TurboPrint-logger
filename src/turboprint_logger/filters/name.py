@@ -5,6 +5,7 @@ from re import compile as re_compile
 from typing import Literal, get_args
 
 from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.filters.name import InvalidFilterModeError
 from turboprint_logger.interfaces import Filter
 
 _MODES = Literal["exact", "startswith", "endswith", "contains", "regex"]
@@ -14,7 +15,7 @@ class NameFilter(Filter):
     def __init__(self, pattern: str, mode: _MODES, *, ignorecase: bool = True) -> None:
         if mode.lower() not in get_args(_MODES):
             msg = f"Invalid mode: {mode.lower()}"
-            raise ValueError(msg)
+            raise InvalidFilterModeError(msg)
 
         self.pattern = pattern
         self.mode = mode.lower()

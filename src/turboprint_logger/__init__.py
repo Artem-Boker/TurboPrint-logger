@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from .core import Config, Container, Level, Logger, get_default_container
 from .integrations.logging import LoggingAdapter
-from .managers import LocaleManager
+from .managers import ConfigManager, LocaleManager
 
 get_logger = Logger.get_logger
 
 __all__ = [
     "Config",
+    "ConfigManager",
     "Container",
     "Level",
     "LocaleManager",

@@ -4,6 +4,7 @@ from collections import Counter
 from threading import Lock
 
 from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.exceptions.managers.metrics import NegativeMetricsCountError
 
 
 class MetricsManager:
@@ -62,7 +63,9 @@ class MetricsManager:
 
     def __setitem__(self, level: LevelRegistry, count: int) -> None:
         if count < 0:
-            raise ValueError
+            raise NegativeMetricsCountError(
+                f"Metrics count cannot be negative, got {count}"
+            )
         with self._lock:
             self._metrics[level.level] = count
 

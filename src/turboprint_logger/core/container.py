@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from weakref import WeakValueDictionary
 
 from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.exceptions.container.base import ContainerInstantiationError
 from turboprint_logger.managers.collections import DefaultManager, GlobalManager
 from turboprint_logger.utils.normalizers import normalize_container_name
 
@@ -36,7 +37,7 @@ class Container:
         self.globals: GlobalManager
         self.defaults: DefaultManager
         msg = "Container cannot be instantiated directly. Use Container.get_container()"
-        raise TypeError(msg)
+        raise ContainerInstantiationError(msg)
 
     @property
     def name(self) -> str:

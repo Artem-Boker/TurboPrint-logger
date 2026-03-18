@@ -8,6 +8,7 @@ from typing import Any, TypeVar, cast
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.logger import Logger
+from turboprint_logger.exceptions.decorators.retry import RetryError
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 
@@ -78,7 +79,7 @@ class RetryDecorator:
             if last_exc:
                 raise last_exc
             msg = "Unknown error in retry"
-            raise RuntimeError(msg)
+            raise RetryError(msg)
 
         return cast(_F, wrapper)
 

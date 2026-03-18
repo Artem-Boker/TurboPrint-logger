@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from .collections import DefaultManager, GlobalManager
+from .config import ConfigManager
 from .context import ContextManager
 from .filters import FiltersManager
 from .formatter import FormatterManager
@@ -12,6 +13,7 @@ from .status import StatusManager
 from .tags import TagsManager
 
 __all__ = [
+    "ConfigManager",
     "ContextManager",
     "DefaultManager",
     "FiltersManager",

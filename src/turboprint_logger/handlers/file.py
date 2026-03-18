@@ -8,6 +8,7 @@ from typing import IO
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.handlers.file import FileClosedError, FileOpenError
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
 
@@ -44,7 +45,7 @@ class FileHandler(Handler):
                 )
             except Exception as exc:
                 msg = f"Could not open file {self.file_path}: {exc}"
-                raise OSError(msg) from exc
+                raise FileOpenError(msg) from exc
 
     def reopen(self) -> None:
         with self._lock:
@@ -66,7 +67,7 @@ class FileHandler(Handler):
                 self._file.write(formatter.format(record) + "\n")
             else:
                 msg = f"File {self.file_path} is closed"
-                raise OSError(msg)
+                raise FileClosedError(msg)
 
     def emit(self, record: Record) -> None:
         try:

@@ -4,6 +4,11 @@ from collections.abc import Callable
 from threading import RLock
 from typing import TypeVar
 
+from turboprint_logger.exceptions.plugins.base import (
+    PluginAlreadyRegisteredError,
+    PluginNotFoundError,
+    PluginTypeError,
+)
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
 _T = TypeVar("_T", bound=type[Handler | Filter | Formatter])
@@ -26,12 +31,12 @@ def _register(
     def decorator(cls: _T) -> _T:
         if not issubclass(cls, type_):
             msg = f"{cls.__name__} mist be subclass of {type_.__name__}"
-            raise TypeError(msg)
+            raise PluginTypeError(msg)
         with lock:
             key = name or cls.__name__
             if key in dict_:
                 msg = f"{cls.__name__} {key!r} already registered"
-                raise ValueError(msg)
+                raise PluginAlreadyRegisteredError(msg)
             dict_[key] = cls
         return cls
 
@@ -43,7 +48,7 @@ def _get(dict_: dict[str, _T], type_: _T, name: str) -> _T:
         return dict_[name]
     except KeyError:
         msg = f"Unknown {type_.__name__.lower()}: {name}"
-        raise KeyError(msg) from None
+        raise PluginNotFoundError(msg) from None
 
 
 def register_handler(name: str | None = None) -> Callable[[_HANDLER], _HANDLER]:
