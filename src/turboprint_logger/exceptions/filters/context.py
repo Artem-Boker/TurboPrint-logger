@@ -3,5 +3,5 @@ from __future__ import annotations
 from turboprint_logger.exceptions.filters.base import FilterException
 
 
-class InvalidFilterModeError(FilterException):
-    """Raised when an invalid filter mode is provided."""
+class ContextFilterError(FilterException):
+    """Raised when a context filter encounters an error."""

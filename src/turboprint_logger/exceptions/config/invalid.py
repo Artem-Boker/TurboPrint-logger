@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from turboprint_logger.exceptions.config.base import InvalidConfigException
+from turboprint_logger.exceptions.config.base import ConfigException
+
+
+class InvalidConfigException(ConfigException):
+    """Exception raised when the config is invalid."""
 
 
 class InvalidConfigValueException(InvalidConfigException):

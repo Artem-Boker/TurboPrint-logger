@@ -63,9 +63,8 @@ class MetricsManager:
 
     def __setitem__(self, level: LevelRegistry, count: int) -> None:
         if count < 0:
-            raise NegativeMetricsCountError(
-                f"Metrics count cannot be negative, got {count}"
-            )
+            msg = f"Metrics count cannot be negative, got {count}"
+            raise NegativeMetricsCountError(msg)
         with self._lock:
             self._metrics[level.level] = count
 

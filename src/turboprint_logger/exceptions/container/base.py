@@ -6,11 +6,3 @@ class ContainerException(Exception):
 
     def __init__(self, message: str) -> None:
         super().__init__(message)
-
-
-class ContainerInstantiationError(ContainerException):
-    """Raised when attempting to instantiate a Container directly."""
-
-
-class ContainerNotFoundError(ContainerException):
-    """Raised when a container with given name does not exist."""

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 
-class CoreException(Exception):
-    """Base exception for all core exceptions."""
+class HandlerException(Exception):
+    """Base exception for handler-related errors."""
 
     def __init__(self, message: str) -> None:
         super().__init__(message)

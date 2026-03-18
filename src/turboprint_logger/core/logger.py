@@ -26,7 +26,7 @@ _DEFAULT_CONTAINER = get_default_container()
 
 class Logger:
     __slots__ = (
-        # "__weakref__",
+        "__weakref__",
         "_container",
         "_logger_id",
         "_name",

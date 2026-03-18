@@ -5,7 +5,9 @@ from typing import TYPE_CHECKING
 from weakref import WeakValueDictionary
 
 from turboprint_logger.core.levels import LevelRegistry
-from turboprint_logger.exceptions.container.base import ContainerInstantiationError
+from turboprint_logger.exceptions.container.instantiation import (
+    ContainerInstantiationError,
+)
 from turboprint_logger.managers.collections import DefaultManager, GlobalManager
 from turboprint_logger.utils.normalizers import normalize_container_name
 

@@ -8,7 +8,7 @@ from colorama import Fore, Style
 from emoji import LANGUAGES as EMOJI_LANGUAGES
 from emoji import emojize, is_emoji
 
-from turboprint_logger.exceptions.core.level import (
+from turboprint_logger.exceptions.core.levels import (
     InvalidLevelColorError,
     InvalidLevelEmojiError,
     LevelNameAlreadyExistsError,

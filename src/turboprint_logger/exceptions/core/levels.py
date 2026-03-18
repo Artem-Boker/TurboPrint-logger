@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from turboprint_logger.exceptions.core.base import LevelException
+
+class LevelException(Exception):
+    """Base exception for level-related errors."""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
 
 
 class LevelRegistrationError(LevelException):
