@@ -1,0 +1,41 @@
+from __future__ import annotations
+
+from contextlib import contextmanager
+from threading import RLock
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+
+
+class LevelManager:
+    __slots__ = ("_level", "_lock")
+
+    def __init__(self, level: LevelRegistry | None = None) -> None:
+        self._lock = RLock()
+        self._level: LevelRegistry = level or Level.NOTSET
+
+    def get(self) -> LevelRegistry:
+        with self._lock:
+            return self._level
+
+    def set(self, level: LevelRegistry) -> None:
+        with self._lock:
+            self._level = level
+
+    @contextmanager
+    def temporary(self, level: LevelRegistry):  # noqa: ANN201
+        original = self._level
+        self._level = level
+        try:
+            yield
+        finally:
+            self._level = original
+
+    def enabled_for(self, level: LevelRegistry) -> bool:
+        with self._lock:
+            return self._level.enabled_for(level)
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(level_name={self._level.name})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(level={self._level!r})"

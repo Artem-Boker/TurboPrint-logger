@@ -1,0 +1,142 @@
+[build-system]
+requires = ["uv_build>=0.10,<0.11.0"]
+build-backend = "uv_build"
+
+[project]
+name = "TurboPrint-logger"
+version = "0.1.0"
+description = "This is your favorite logger"
+authors = [{ name = "Artem-Boker" }]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "colorama>=0.4.6",
+    "emoji>=2.15.0",
+]
+
+[project.optional-dependencies]
+json = [
+    "ujson>=5.4.0",
+]
+
+[dependency-groups]
+builds = [
+    "uv-build>=0.10.10",
+]
+dev = [
+    "nox>=2026.2.9",
+    "nox-uv>=0.7.1",
+]
+docs = [
+    "sphinx>=9.0.4",
+]
+formats = [
+    "ruff>=0.15.6",
+]
+lints = [
+    "ruff>=0.15.6",
+    "ty>=0.0.23",
+]
+tests = [
+    "pytest>=9.0.2",
+    "pytest-benchmark>=5.2.3",
+    "pytest-cov>=7.0.0",
+    "pytest-profiling>=1.8.1",
+]
+types = [
+    "types-colorama>=0.4.15.20250801",
+]
+
+[project.urls]
+Homepage = "https://github.com/Artem-Boker/TurboPrint-logger"
+Repository = "https://github.com/Artem-Boker/TurboPrint-logger.git"
+
+[tool.ruff]
+line-length = 88
+include = ["src/**/*.py", "tests/**/*.py"]
+
+[tool.ruff.lint]
+select = [
+    "F",   # pyflakes
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "C",   # McCabe complexity
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "A",   # flake8-builtins
+    "UP",  # pyupgrade
+    "YTT", # flake8-2020
+    "ANN", # flake8-annotations (optional)
+    "S",   # flake8-bandit (partial security)
+    "BLE", # flake8-blind-except
+    "FBT", # flake8-boolean-trap
+    "C4",  # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "T10", # flake8-debugger
+    "EM",  # flake8-errmsg
+    "EXE", # flake8-executable
+    "ISC", # flake8-implicit-str-concat
+    "ICN", # flake8-import-conventions
+    "G",   # flake8-logging-format
+    "PIE", # flake8-pie
+    "T20", # flake8-print
+    "PYI", # flake8-pyi
+    "PT",  # flake8-pytest-style
+    "Q",   # flake8-quotes
+    "RSE", # flake8-raise
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    "TID", # flake8-tidy-imports
+    "ARG", # flake8-unused-arguments
+    "PTH", # flake8-use-pathlib
+    "ERA", # eradicate (removing commented out code)
+    "PD",  # pandas-vet
+    "PGH", # pygrep-hooks
+    "PL",  # pylint (partially)
+    "TRY", # tryceratops
+    "FLY", # flynt
+    "NPY", # NumPy-specific rules
+    "PERF",# Perflint
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "ANN002", # *args
+    "ANN003", # **kwargs
+]
+
+[tool.ruff.lint.isort]
+force-single-line = false
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "ANN",     # annotations
+    "S101",    # assert
+    "T20",     # print
+    "PLR2004", # magic numbers
+    "PT009",   # unittest-style
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ty.src]
+respect-ignore-files = true
+include = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = """
+    --strict-markers
+    --strict-config
+    -ra
+    --tb=short
+    --showlocals
+    --strict
+"""
