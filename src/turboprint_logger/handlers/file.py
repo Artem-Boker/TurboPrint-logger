@@ -8,7 +8,11 @@ from typing import IO
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
-from turboprint_logger.exceptions.handlers.file import FileClosedError, FileOpenError
+from turboprint_logger.exceptions.handlers.file import (
+    FileClosedError,
+    FileOpenError,
+    FileWriteError,
+)
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
 
@@ -64,7 +68,11 @@ class FileHandler(Handler):
                 self._open_file()
             formatter = self.formatter or record.logger.formatter.get()
             if self._file and not self._file.closed:
-                self._file.write(formatter.format(record) + "\n")
+                try:
+                    self._file.write(formatter.format(record) + "\n")
+                except Exception as exc:
+                    msg = f"Could not write to file {self.file_path}: {exc}"
+                    raise FileWriteError(msg) from exc
             else:
                 msg = f"File {self.file_path} is closed"
                 raise FileClosedError(msg)

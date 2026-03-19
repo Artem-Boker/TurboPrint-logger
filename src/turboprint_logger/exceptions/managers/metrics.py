@@ -3,9 +3,9 @@ from __future__ import annotations
 from turboprint_logger.exceptions.managers.base import ManagerException
 
 
-class MetricsError(ManagerException):
-    """Base exception for metrics-related errors."""
+class MetricsException(ManagerException):
+    """Base exception for all metrics managers exceptions"""
 
 
-class NegativeMetricsCountError(MetricsError):
-    """Raised when attempting to set a negative count for metrics."""
+class NegativeMetricsCountError(MetricsException):
+    """Raised when the metrics count is negative"""

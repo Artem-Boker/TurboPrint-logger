@@ -121,4 +121,7 @@ def clean(s: Session) -> None:
             total_size += _get_size(pyc)
             pyc.unlink(missing_ok=True)
 
-    s.log(f"Total size: {total_size} bytes ({total_size / 1024:.2f} KB)")
+    kb_size = total_size / 1024
+    mb_size = total_size / 1024 / 1024
+
+    s.log(f"Total size: {total_size} bytes // {kb_size:.2f} KB // {mb_size:.2f} MB")

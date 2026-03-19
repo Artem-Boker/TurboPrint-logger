@@ -3,5 +3,9 @@ from __future__ import annotations
 from turboprint_logger.exceptions.filters.base import FilterException
 
 
-class InvalidFilterModeError(FilterException):
-    """Raised when an invalid filter mode is provided."""
+class NameFilterException(FilterException):
+    """Base exception for all name filter exceptions"""
+
+
+class InvalidFilterModeError(NameFilterException):
+    """Raised when the filter mode is invalid"""

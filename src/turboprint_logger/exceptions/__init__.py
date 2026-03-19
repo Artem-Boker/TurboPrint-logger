@@ -1,3 +1,5 @@
 from __future__ import annotations
 
-__all__ = []
+from .base import TurboPrintException
+
+__all__ = ["TurboPrintException"]

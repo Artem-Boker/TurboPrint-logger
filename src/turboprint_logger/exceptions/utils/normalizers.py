@@ -1,23 +1,23 @@
 from __future__ import annotations
 
-from turboprint_logger.exceptions.utils.base import ValidationException
+from turboprint_logger.exceptions.utils.base import UtilException
 
 
-class NormalizationError(ValidationException):
-    """Base exception for normalization errors."""
+class NormalizerException(UtilException):
+    """Base exception for all normalizers utils exceptions"""
 
 
-class InvalidContainerNameError(NormalizationError):
-    """Raised when a container name is invalid."""
+class InvalidContainerNameError(NormalizerException):
+    """Raised when the container name is invalid"""
 
 
-class InvalidLoggerNameError(NormalizationError):
-    """Raised when a logger name is invalid."""
+class InvalidContextKeyError(NormalizerException):
+    """Raised when the context key is invalid"""
 
 
-class InvalidLevelNameError(NormalizationError):
-    """Raised when a level name is invalid."""
+class InvalidLevelNameError(NormalizerException):
+    """Raised when the level name is invalid"""
 
 
-class InvalidContextKeyError(NormalizationError):
-    """Raised when a context key is invalid."""
+class InvalidLoggerNameError(NormalizerException):
+    """Raised when the logger name is invalid"""

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
+from turboprint_logger.exceptions.base import TurboPrintException
 
-class ValidationException(Exception):
-    """Base exception for validation errors."""
 
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+class UtilException(TurboPrintException):
+    """Base exception for all utils exceptions"""

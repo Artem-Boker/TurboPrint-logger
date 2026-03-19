@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-
-class RetryException(Exception):
-    """Base exception for retry-related errors."""
-
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+from turboprint_logger.exceptions.decorators.base import DecoratorException
 
 
-class RetryError(RetryException):
-    """Raised when an unknown error occurs in retry."""
+class RetryException(DecoratorException):
+    """Base exception for all retry decorator exceptions"""
+
+
+class RetryLimitExceededError(RetryException):
+    """Raised when the retry limit is exceeded"""
+
+
+class UnknownRetryError(RetryException):
+    """Raised when an unknown error occurs"""

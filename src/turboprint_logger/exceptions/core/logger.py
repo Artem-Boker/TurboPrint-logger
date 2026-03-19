@@ -1,12 +1,11 @@
 from __future__ import annotations
 
+from turboprint_logger.exceptions.core.base import CoreException
 
-class LoggerException(Exception):
-    """Base exception for logger-related errors."""
 
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+class LoggerException(CoreException):
+    """Base exception for all loggers exceptions"""
 
 
 class LoggerInstantiationError(LoggerException):
-    """Raised when attempting to instantiate a Logger directly."""
+    """Exception raised when logger cannot be instantiated"""

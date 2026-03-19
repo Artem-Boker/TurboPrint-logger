@@ -3,13 +3,17 @@ from __future__ import annotations
 from turboprint_logger.exceptions.handlers.base import HandlerException
 
 
-class FileHandlerError(HandlerException, OSError):
-    """Base exception for file handler errors."""
+class FileHandlerException(HandlerException):
+    """Base exception for all file handlers exceptions"""
 
 
-class FileOpenError(FileHandlerError):
-    """Raised when a file cannot be opened."""
+class FileClosedError(FileHandlerException):
+    """Raised when the file is closed"""
 
 
-class FileClosedError(FileHandlerError):
-    """Raised when attempting to write to a closed file."""
+class FileOpenError(FileHandlerException):
+    """Raised when the file cannot be opened"""
+
+
+class FileWriteError(FileHandlerException):
+    """Raised when the file cannot be written"""

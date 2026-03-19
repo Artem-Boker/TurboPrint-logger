@@ -3,5 +3,5 @@ from __future__ import annotations
 from turboprint_logger.exceptions.base import TurboPrintException
 
 
-class ManagerException(TurboPrintException):
-    """Base exception for all managers exceptions"""
+class FormatterException(TurboPrintException):
+    """Base exception for all formatters exceptions"""

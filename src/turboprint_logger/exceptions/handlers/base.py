@@ -1,8 +1,7 @@
 from __future__ import annotations
 
+from turboprint_logger.exceptions.base import TurboPrintException
 
-class HandlerException(Exception):
-    """Base exception for handler-related errors."""
 
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+class HandlerException(TurboPrintException):
+    """Base exception for all handlers exceptions"""

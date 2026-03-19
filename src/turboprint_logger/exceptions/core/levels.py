@@ -1,32 +1,27 @@
 from __future__ import annotations
 
-
-class LevelException(Exception):
-    """Base exception for level-related errors."""
-
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+from turboprint_logger.exceptions.core.base import CoreException
 
 
-class LevelRegistrationError(LevelException):
-    """Base exception for level registration errors."""
+class LevelException(CoreException):
+    """Base exception for all levels exceptions"""
 
 
-class LevelNameAlreadyExistsError(LevelRegistrationError):
-    """Raised when a level with the same name already exists."""
+class InvalidLevelColorError(LevelException):
+    """Raised when the level color is invalid"""
 
 
-class LevelValueAlreadyExistsError(LevelRegistrationError):
-    """Raised when a level with the same value already exists."""
+class InvalidLevelEmojiError(LevelException):
+    """Raised when the level emoji is invalid"""
 
 
-class NegativeLevelError(LevelRegistrationError):
-    """Raised when a level value is negative."""
+class LevelNameAlreadyExistsError(LevelException):
+    """Raised when the level name already exists"""
 
 
-class InvalidLevelColorError(LevelRegistrationError):
-    """Raised when a level color is invalid."""
+class LevelValueAlreadyExistsError(LevelException):
+    """Raised when the level value already exists"""
 
 
-class InvalidLevelEmojiError(LevelRegistrationError):
-    """Raised when a level emoji is invalid."""
+class NegativeLevelError(LevelException):
+    """Raised when the level value is negative"""
