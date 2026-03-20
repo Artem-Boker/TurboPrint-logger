@@ -24,15 +24,17 @@ class FileHandler(Handler):
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
         *,
+        separator: str = "\n",
         buffer_size: int | None = None,
         encoding: str = "utf-8",
         update_mode: bool = False,
     ) -> None:
         super().__init__(min_level, formatter, filters)
-        self.file_path = file_path
+        self.file_path = Path(file_path)
         self.mode = "a" if update_mode else "w"
         self.encoding = encoding
         self.buffer_size = 1 if not buffer_size or buffer_size < 1 else buffer_size
+        self.separator = separator
         self._file: IO | None = None
         self._lock = RLock()
         self._open_file()
@@ -41,10 +43,9 @@ class FileHandler(Handler):
     def _open_file(self) -> None:
         with self._lock:
             try:
-                path = Path(self.file_path)
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.touch(exist_ok=True)
-                self._file = path.open(
+                self.file_path.parent.mkdir(parents=True, exist_ok=True)
+                self.file_path.touch(exist_ok=True)
+                self._file = self.file_path.open(
                     self.mode, encoding=self.encoding, buffering=self.buffer_size
                 )
             except Exception as exc:
@@ -69,7 +70,7 @@ class FileHandler(Handler):
             formatter = self.formatter or record.logger.formatter.get()
             if self._file and not self._file.closed:
                 try:
-                    self._file.write(formatter.format(record) + "\n")
+                    self._file.write(formatter.format(record) + self.separator)
                 except Exception as exc:
                     msg = f"Could not write to file {self.file_path}: {exc}"
                     raise FileWriteError(msg) from exc
