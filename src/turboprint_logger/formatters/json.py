@@ -3,12 +3,19 @@ from __future__ import annotations
 from datetime import date, datetime, time
 from typing import Any
 
-try:
-    from ujson import dumps  # type: ignore[reportMissingModuleSource]
-except ImportError:
-    from json import dumps
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Formatter
+
+JSON_MODULE = "json"
+try:
+    from msgspec.json import Encoder
+
+    JSON_MODULE = "msgspec"
+except ImportError:
+    try:
+        from ujson import dumps
+    except ImportError:
+        from json import dumps
 
 
 class JSONFormatter(Formatter):
@@ -27,8 +34,14 @@ class JSONFormatter(Formatter):
         self.extra = extra or {}
         self.sort_keys = sort_keys
 
+        if JSON_MODULE == "msgspec":
+            order = "sorted" if sort_keys else "deterministic"
+            self._encoder = Encoder(enc_hook=self._default_serializer, order=order)
+
     @staticmethod
-    def _default_serializer(obj: Any) -> Any:  # noqa: ANN401
+    def _default_serializer(obj: Any) -> Any:  # noqa: ANN401, PLR0911
+        if isinstance(obj, dict):
+            return obj
         if hasattr(obj, "dict"):
             return obj.dict() if callable(obj.dict) else obj.dict
         if hasattr(obj, "to_dict"):
@@ -72,6 +85,8 @@ class JSONFormatter(Formatter):
         if self.include:
             data = {key: value for key, value in data.items() if key in self.include}
 
+        if JSON_MODULE == "msgspec":
+            return self._encoder.encode(data).decode("utf-8")
         return dumps(
             data,
             ensure_ascii=False,

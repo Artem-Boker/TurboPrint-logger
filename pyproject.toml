@@ -18,6 +18,7 @@ dependencies = [
 [project.optional-dependencies]
 json = [
     "ujson>=5.4.0",
+    "msgspec>=0.20.0",
 ]
 
 [dependency-groups]
