@@ -41,9 +41,9 @@ lints = [
 ]
 tests = [
     "pytest>=9.0.2",
-    "pytest-benchmark>=5.2.3",
-    "pytest-cov>=7.0.0",
-    "pytest-profiling>=1.8.1",
+    "pytest-emoji>=0.2.0",
+    "pytest-random-order>=1.2.0",
+    "pytest-sugar>=1.1.1",
 ]
 types = [
     "types-colorama>=0.4.15.20250801",
@@ -128,16 +128,22 @@ line-ending = "auto"
 respect-ignore-files = true
 include = ["src", "tests"]
 
-[tool.pytest.ini_options]
+[tool.pytest]
 testpaths = ["tests"]
-python_files = "test_*.py"
-python_classes = "Test*"
-python_functions = "test_*"
-addopts = """
-    --strict-markers
-    --strict-config
-    -ra
-    --tb=short
-    --showlocals
-    --strict
-"""
+pythonpath = ["src"]
+addopts = [
+    "-v",                           # подробный вывод
+    "--strict",                     # строгая проверка
+    "--strict-markers",             # строгая проверка маркеров
+    "--tb=short",                   # короткий трейсбек
+    "--emoji",                      # используем emoji
+    "--random-order",               # случайный порядок тестов (pytest-random-order)
+]
+markers = [
+    "slow: тесты, требующие много времени",
+    "integration: тесты, использующие внешние сервисы или БД",
+    # "benchmark: тесты производительности (pytest-benchmark)",
+    # "profile: тесты для профилирования (pytest-profiling)",
+]
+# benchmark_save = "all"
+# profiling_svg = true
