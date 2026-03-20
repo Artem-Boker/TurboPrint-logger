@@ -27,6 +27,10 @@ class ContextManager:
         with self._lock:
             self._context.clear()
 
+    def update(self, **context) -> None:
+        with self._lock:
+            self._context.update(context)
+
     @contextmanager
     def temporary(self, *, replace: bool = True, **context):  # noqa: ANN201
         original = self._context

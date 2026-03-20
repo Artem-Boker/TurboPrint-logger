@@ -170,7 +170,7 @@ class Logger:
     ) -> Record:
         if isinstance(level, str):
             level = Level.get_by_name(level) or Level.NOTSET
-        frame = sys._getframe(1)
+        frame = sys._getframe(2)
         code = frame.f_code
         return Record(
             message=message,
@@ -189,7 +189,7 @@ class Logger:
         if not self._container.globals.status.logger.enabled:
             return False
 
-        if not self._container.globals.level.enabled_for(record.level):
+        if not record.level.enabled_for(self._container.globals.level.get()):
             return False
 
         if self.status.global_filters.enabled and not all(
@@ -212,7 +212,7 @@ class Logger:
         if not self.status.logger.enabled:
             return False
 
-        if not self.level.enabled_for(record.level):
+        if not record.level.enabled_for(self.level.get()):
             return False
 
         if self.status.filters.enabled and not all(
