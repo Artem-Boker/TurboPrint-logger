@@ -63,7 +63,7 @@ class Container:
             if name == _DEFAULT_CONTAINER_NAME:
                 return _DEFAULT_CONTAINER
             if name not in cls._containers:
-                container = Container.get_container(name)
+                container = Container._create(name)
                 cls._containers[name] = container
                 return container
             return cls._containers[name]
