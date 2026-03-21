@@ -34,7 +34,7 @@ def _register(
             raise PluginTypeError(msg)
         with lock:
             key = name or cls.__name__
-            if key in dict_:
+            if key in dict_ and dict_[key] is not cls:
                 msg = f"{cls.__name__} {key!r} already registered"
                 raise PluginAlreadyRegisteredError(msg)
             dict_[key] = cls
