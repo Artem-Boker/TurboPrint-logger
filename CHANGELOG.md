@@ -1,5 +1,15 @@
 # TurboPrint-logger Changelog
 
+## [v0.2.3](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.2...v0.2.3) (2026-03-21)
+
+### feat
+
+- **handlers:** :sparkles: added timed rotating file handler ([65a6839](https://github.com/Artem-Boker/TurboPrint-logger/commit/65a6839eda3ddce54c9b2f8ac3dda82d4a93ad44))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.3 ([9f4c009](https://github.com/Artem-Boker/TurboPrint-logger/commit/9f4c009113b0a335abe24410ebe5667e1c6d749e))
+
 ## [v0.2.2](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.1...v0.2.2) (2026-03-21)
 
 ### fix
@@ -15,7 +25,7 @@
 
 ### docs
 
-- **changelog:** :memo: add conventional changelog for v0.2.2 ([6fc4821](https://github.com/Artem-Boker/TurboPrint-logger/commit/6fc48213c5acbd9c3b6e1fa2ef4035a6fa117c0a))
+- **changelog:** :memo: add conventional changelog for v0.2.2 ([8336a0c](https://github.com/Artem-Boker/TurboPrint-logger/commit/8336a0cf0fd6181c7f6b5a000510d845a0cf6d49))
 
 ## [v0.2.1](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.0...v0.2.1) (2026-03-21)
 
