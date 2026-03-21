@@ -40,7 +40,10 @@ class SecurityFormatter(Formatter):
             for key, value in item.items():
                 if not isinstance(key, str):
                     continue
-                masked[key] = self._mask_process(value)
+                if key in self.sensitive_fields:
+                    masked[key] = self.mask_char * len(value)
+                else:
+                    masked[key] = self._mask_process(value)
             return masked
         if isinstance(item, str) and any(
             pattern.search(item) for pattern in self._compiled_patterns
