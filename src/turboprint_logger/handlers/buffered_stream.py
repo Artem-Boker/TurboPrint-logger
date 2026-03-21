@@ -25,8 +25,9 @@ class BufferedStreamHandler(Handler):
         self.buffer: list[str] = []
         self.buffer_size = max(buffer_size, 0)
         self._timer = Timer(interval=flush_interval, function=self.flush)
+        self._timer.daemon = True
         self._lock = RLock()
-        register_exit(lambda: (self._timer.cancel(), self.flush()))
+        register_exit(self.flush)
         self._timer.start()
 
     def emit(self, record: Record) -> None:

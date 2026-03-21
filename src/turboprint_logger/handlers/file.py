@@ -37,10 +37,11 @@ class FileHandler(Handler):
         self.buffer_size = 1 if not buffer_size or buffer_size < 1 else buffer_size
         self.separator = separator
         self._timer = Timer(interval=flush_interval, function=self._flush)
+        self._timer.daemon = True
         self._file: IO | None = None
         self._lock = RLock()
         self._open_file()
-        register_exit(lambda: (self._timer.cancel(), self.close()))
+        register_exit(self.close)
         self._timer.start()
 
     def _flush(self) -> None:
