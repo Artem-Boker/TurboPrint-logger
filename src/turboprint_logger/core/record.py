@@ -21,35 +21,24 @@ class Record:
     file: str
     function: str
     line: int
-    _date_time: datetime | None = field(default=None, init=False, repr=False)
+    date_time: datetime = field(default_factory=lambda: datetime.now(UTC))
     context: dict[str, Any] = field(default_factory=dict)
     tags: set[str] = field(default_factory=set)
 
-    @property
-    def date_time(self) -> datetime:
-        if self._date_time is None:
-            self._date_time = datetime.now(UTC)
-        return self._date_time
-
-    @date_time.setter
-    def date_time(self, value: datetime) -> None:
-        self._date_time = value
-
     def copy(self) -> Record:
-        new = Record(
+        return Record(
             message=self.message,
             level=self.level,
             logger=self.logger,
             trace_id=self.trace_id,
             logger_id=self.logger_id,
-            context=self.context.copy(),
-            tags=self.tags.copy(),
             file=self.file,
             function=self.function,
             line=self.line,
+            date_time=self.date_time,
+            context=self.context.copy(),
+            tags=self.tags.copy(),
         )
-        new._date_time = self._date_time
-        return new
 
     def __str__(self) -> str:
         return (
