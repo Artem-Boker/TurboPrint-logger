@@ -24,11 +24,27 @@ class BufferedStreamHandler(Handler):
         self.stream = stream
         self.buffer: list[str] = []
         self.buffer_size = max(buffer_size, 0)
-        self._timer = Timer(interval=flush_interval, function=self.flush)
-        self._timer.daemon = True
+        self.flush_interval = flush_interval
+        self._timer: Timer | None = None
+        self._closed = False
         self._lock = RLock()
         register_exit(self.flush)
-        self._timer.start()
+        self._schedule_flush()
+
+    def _schedule_flush(self) -> None:
+        with self._lock:
+            if self._closed:
+                return
+            timer = Timer(interval=self.flush_interval, function=self._on_timer_flush)
+            timer.daemon = True
+            self._timer = timer
+            timer.start()
+
+    def _on_timer_flush(self) -> None:
+        try:
+            self.flush()
+        finally:
+            self._schedule_flush()
 
     def emit(self, record: Record) -> None:
         with self._lock:
@@ -43,3 +59,11 @@ class BufferedStreamHandler(Handler):
                 self.stream.write("\n".join(self.buffer) + "\n")
                 self.stream.flush()
                 self.buffer.clear()
+
+    def close(self) -> None:
+        with self._lock:
+            self._closed = True
+            if self._timer is not None:
+                self._timer.cancel()
+                self._timer = None
+        self.flush()

@@ -36,18 +36,33 @@ class FileHandler(Handler):
         self.encoding = encoding
         self.buffer_size = 1 if not buffer_size or buffer_size < 1 else buffer_size
         self.separator = separator
-        self._timer = Timer(interval=flush_interval, function=self._flush)
-        self._timer.daemon = True
+        self.flush_interval = flush_interval
+        self._timer: Timer | None = None
+        self._closed = False
         self._file: IO | None = None
         self._lock = RLock()
         self._open_file()
         register_exit(self.close)
-        self._timer.start()
+        self._schedule_flush()
+
+    def _schedule_flush(self) -> None:
+        with self._lock:
+            if self._closed:
+                return
+            timer = Timer(interval=self.flush_interval, function=self._flush)
+            timer.daemon = True
+            self._timer = timer
+            timer.start()
 
     def _flush(self) -> None:
-        with self._lock:
-            if self._file and not self._file.closed:
-                self._file.flush()
+        try:
+            with self._lock:
+                if self._closed:
+                    return
+                if self._file and not self._file.closed:
+                    self._file.flush()
+        finally:
+            self._schedule_flush()
 
     def _open_file(self) -> None:
         with self._lock:
@@ -63,11 +78,20 @@ class FileHandler(Handler):
 
     def reopen(self) -> None:
         with self._lock:
-            self.close()
+            if self._file and not self._file.closed:
+                self._file.close()
+            self._file = None
+            self._closed = False
             self._open_file()
+            if self._timer is None:
+                self._schedule_flush()
 
     def close(self) -> None:
         with self._lock:
+            self._closed = True
+            if self._timer is not None:
+                self._timer.cancel()
+                self._timer = None
             if self._file and not self._file.closed:
                 self._file.close()
             self._file = None
