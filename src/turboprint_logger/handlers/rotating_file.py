@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from contextlib import suppress
 from pathlib import Path
-from sys import stderr
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
@@ -111,15 +110,3 @@ class RotatingFileHandler(FileHandler):
     def reopen(self) -> None:
         super().reopen()
         self._update_counts()
-
-    def emit(self, record: Record) -> None:
-        try:
-            self._write(record)
-        except OSError:
-            self.reopen()
-            try:
-                self._write(record)
-            except OSError:
-                stderr.write(
-                    f"OSError[RotatingFileHandler]: Failed to write to {self.file_path}\n"  # noqa: E501
-                )

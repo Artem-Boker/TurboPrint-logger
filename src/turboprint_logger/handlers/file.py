@@ -3,7 +3,7 @@ from __future__ import annotations
 from atexit import register as register_exit
 from pathlib import Path
 from sys import stderr
-from threading import RLock
+from threading import RLock, Timer
 from typing import IO
 
 from turboprint_logger.core.levels import Level, LevelRegistry
@@ -26,6 +26,7 @@ class FileHandler(Handler):
         *,
         separator: str = "\n",
         buffer_size: int | None = None,
+        flush_interval: int = 60,
         encoding: str = "utf-8",
         update_mode: bool = False,
     ) -> None:
@@ -35,10 +36,17 @@ class FileHandler(Handler):
         self.encoding = encoding
         self.buffer_size = 1 if not buffer_size or buffer_size < 1 else buffer_size
         self.separator = separator
+        self._timer = Timer(interval=flush_interval, function=self._flush)
         self._file: IO | None = None
         self._lock = RLock()
         self._open_file()
-        register_exit(self.close)
+        register_exit(lambda: (self._timer.cancel(), self.close()))
+        self._timer.start()
+
+    def _flush(self) -> None:
+        with self._lock:
+            if self._file and not self._file.closed:
+                self._file.flush()
 
     def _open_file(self) -> None:
         with self._lock:
@@ -81,11 +89,14 @@ class FileHandler(Handler):
     def emit(self, record: Record) -> None:
         try:
             self._write(record)
-        except OSError:
+        except Exception as exc:  # noqa: BLE001
+            stderr.write(
+                f"{exc.__class__.__name__}[{self.__class__.__name__}]: {exc}\n"
+            )
             self.reopen()
             try:
                 self._write(record)
-            except OSError:
+            except Exception as exc:  # noqa: BLE001
                 stderr.write(
-                    f"OSError[FileHandler]: Failed to write to {self.file_path}\n"
+                    f"{exc.__class__.__name__}[{self.__class__.__name__}]: Failed to write to {self.file_path}: {exc}\n"  # noqa: E501
                 )

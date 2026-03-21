@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from atexit import register as register_exit
 from sys import stdout as default_output
-from threading import RLock
+from threading import RLock, Timer
 from typing import TextIO
 
 from turboprint_logger.core.levels import Level, LevelRegistry
@@ -11,10 +11,11 @@ from turboprint_logger.interfaces import Filter, Formatter, Handler
 
 
 class BufferedStreamHandler(Handler):
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         stream: TextIO = default_output,
         buffer_size: int = 1_000,
+        flush_interval: int = 60,
         min_level: LevelRegistry = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
@@ -23,8 +24,10 @@ class BufferedStreamHandler(Handler):
         self.stream = stream
         self.buffer: list[str] = []
         self.buffer_size = max(buffer_size, 0)
+        self._timer = Timer(interval=flush_interval, function=self.flush)
         self._lock = RLock()
-        register_exit(self.flush)
+        register_exit(lambda: (self._timer.cancel(), self.flush()))
+        self._timer.start()
 
     def emit(self, record: Record) -> None:
         with self._lock:
