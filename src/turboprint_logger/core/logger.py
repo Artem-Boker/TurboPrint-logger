@@ -106,8 +106,13 @@ class Logger:
         self.context = ContextManager(**(config.context or defaults.context.get()))
         self.tags = TagsManager(*(config.tags or defaults.tags.get()))
         self.metrics = MetricsManager()
+        logger_status = (
+            config.status
+            if config.status is not None
+            else defaults.status.logger.enabled
+        )
         self.status = StatusManager(
-            logger=config.status or defaults.status.logger.enabled,
+            logger=logger_status,
             handlers=defaults.status.handlers.enabled,
             filters=defaults.status.filters.enabled,
             global_handlers=defaults.status.global_handlers.enabled,
