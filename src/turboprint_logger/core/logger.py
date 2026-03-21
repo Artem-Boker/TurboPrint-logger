@@ -258,7 +258,7 @@ class Logger:
         merged_context = self._merge_context(extra)
         record = self._create_record(level, message, merged_tags, merged_context)
         if self._process_global(record):
-            self._process_local(record)
+            self._process_record(record)
         return record
 
     def __str__(self) -> str:
