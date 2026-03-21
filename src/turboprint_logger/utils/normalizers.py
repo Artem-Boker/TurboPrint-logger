@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-from functools import lru_cache
-from re import IGNORECASE
-from re import fullmatch as re_full
-from re import search as re_search
+import re
 
 from turboprint_logger.exceptions.utils.normalizers import (
     InvalidContainerNameError,
@@ -12,21 +9,28 @@ from turboprint_logger.exceptions.utils.normalizers import (
     InvalidLoggerNameError,
 )
 
+_PATTERN_CONTAINER = re.compile(r"[a-z0-9_-]+", re.IGNORECASE)
+_PATTERN_LOGGER = re.compile(r"[a-z0-9_.-]+", re.IGNORECASE)
+_PATTERN_LEVEL = re.compile(r"[a-z_-]+", re.IGNORECASE)
+_PATTERN_CONTEXT = re.compile(r"[a-z0-9_-]+", re.IGNORECASE)
 
-@lru_cache(maxsize=1024)
-def _normalize(name: str, pattern: str, *, upper: bool = True) -> str | None:
+_BAD_BOUNDARIES = re.compile(r"^[_.-]|[_.-]$", re.IGNORECASE)
+_BAD_DOUBLE = re.compile(r"\.\.|--|__", re.IGNORECASE)
+
+
+def _normalize(name: str, pattern: re.Pattern, *, upper: bool = True) -> str | None:
     name = name.strip().upper() if upper else name.strip().lower()
-    if not re_full(pattern, name, IGNORECASE):
+    if not pattern.fullmatch(name):
         return None
-    if re_search(r"^[_.-]|[_.-]$", name, IGNORECASE):
+    if _BAD_BOUNDARIES.search(name):
         return None
-    if re_search(r"\.\.|--|__", name, IGNORECASE):
+    if _BAD_DOUBLE.search(name):
         return None
     return name
 
 
 def normalize_container_name(name: str) -> str:
-    normal_name = _normalize(name, r"[a-z0-9_-]+", upper=False)
+    normal_name = _normalize(name, _PATTERN_CONTAINER, upper=False)
     if not normal_name:
         msg = f"Invalid container name: {name}"
         raise InvalidContainerNameError(msg)
@@ -34,7 +38,7 @@ def normalize_container_name(name: str) -> str:
 
 
 def normalize_logger_name(name: str) -> str:
-    normal_name = _normalize(name, r"[a-z0-9_.-]+", upper=False)
+    normal_name = _normalize(name, _PATTERN_LOGGER, upper=False)
     if not normal_name:
         msg = f"Invalid logger name: {name}"
         raise InvalidLoggerNameError(msg)
@@ -42,7 +46,7 @@ def normalize_logger_name(name: str) -> str:
 
 
 def normalize_level_name(name: str) -> str:
-    normal_name = _normalize(name, r"[a-z_-]+", upper=True)
+    normal_name = _normalize(name, _PATTERN_LEVEL, upper=True)
     if not normal_name:
         msg = f"Invalid level name: {name}"
         raise InvalidLevelNameError(msg)
@@ -50,7 +54,7 @@ def normalize_level_name(name: str) -> str:
 
 
 def normalize_context_key(key: str) -> str:
-    normal_name = _normalize(key, r"[a-z0-9_-]+", upper=False)
+    normal_name = _normalize(key, _PATTERN_CONTEXT, upper=False)
     if not normal_name:
         msg = f"Invalid context key: {key}"
         raise InvalidContextKeyError(msg)
