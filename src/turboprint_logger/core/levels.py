@@ -89,7 +89,7 @@ class Level:
         return sorted(cls._by_level.values(), key=lambda lvl: lvl.level)
 
     @classmethod
-    def register(
+    def register(  # noqa: C901
         cls,
         name: str,
         level: int,
@@ -109,13 +109,14 @@ class Level:
         if not isinstance(color, str) or not color:
             msg = f"Invalid color: {color!r}"
             raise InvalidLevelColorError(msg)
-        emoji = emoji_name
-        if emoji:
-            emoji = emoji.strip().lower()
+        emoji = emoji_name.strip().lower() if emoji_name else emoji_name
+        if emoji and not is_emoji(emoji):
+            if not emoji.startswith(":"):
+                emoji = ":" + emoji
+            if not emoji.endswith(":"):
+                emoji = emoji + ":"
             for lang in EMOJI_LANGUAGES:
-                emoji = emojize(
-                    emoji, delimiters=("", ""), variant="emoji_type", language=lang
-                )
+                emoji = emojize(emoji, variant="emoji_type", language=lang)
                 if is_emoji(emoji):
                     break
             if not is_emoji(emoji):
