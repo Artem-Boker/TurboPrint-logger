@@ -1,5 +1,22 @@
 # TurboPrint-logger Changelog
 
+## [v0.2.2](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.1...v0.2.2) (2026-03-21)
+
+### fix
+
+- **handlers:** :bug: fixed buffer reset timer and atexit ([e2f5ce1](https://github.com/Artem-Boker/TurboPrint-logger/commit/e2f5ce19a84a562a836ac82fac7159fb914357f4))
+- **logger:** :bug: fix logger propagate handling and added version in project init file ([7b8d3b5](https://github.com/Artem-Boker/TurboPrint-logger/commit/7b8d3b5fe5a9936643cb8aa7f78828a5bda2a743))
+- **handlers:** :bug: fixed buffer timer ([cb89d51](https://github.com/Artem-Boker/TurboPrint-logger/commit/cb89d51e78377546e4d59e6b61fc2db802da3169))
+- **plugins:** :bug: fixed register all plugins ([71b084f](https://github.com/Artem-Boker/TurboPrint-logger/commit/71b084f2d8fad3b8b61e2fe6d0ef6edc2a3db7d1))
+
+### feat
+
+- **managers:** :sparkles: added config manager with yaml, json config parsers ([eacb0c9](https://github.com/Artem-Boker/TurboPrint-logger/commit/eacb0c95265983cb082bf8e316b9047d5c23af5b))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.2 ([6fc4821](https://github.com/Artem-Boker/TurboPrint-logger/commit/6fc48213c5acbd9c3b6e1fa2ef4035a6fa117c0a))
+
 ## [v0.2.1](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.0...v0.2.1) (2026-03-21)
 
 ### refactor
@@ -21,7 +38,7 @@
 
 ### docs
 
-- **changelog:** :memo: add conventional changelog for v0.2.1 ([9f94c97](https://github.com/Artem-Boker/TurboPrint-logger/commit/9f94c9721e7ab2178b8560705fea2452fc1f60b3))
+- **changelog:** :memo: add conventional changelog for v0.2.1 ([e272eef](https://github.com/Artem-Boker/TurboPrint-logger/commit/e272eef184cb09ebc058e0de6112e2161cba712a))
 
 ## [v0.2.0](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.1.0...v0.2.0) (2026-03-21)
 
