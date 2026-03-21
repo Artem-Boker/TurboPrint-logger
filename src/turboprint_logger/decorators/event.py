@@ -9,10 +9,9 @@ from typing import Any, TypeVar, cast
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.logger import Logger
+from turboprint_logger.utils.reserved import filter_reserved
 
 _F = TypeVar("_F", bound=Callable[..., Any])
-
-_RESERVED_PARAMS = {"level", "message", "tags"}
 
 
 class EventDecorator:
@@ -41,10 +40,6 @@ class EventDecorator:
         self.exc_message = Template(exc_message)
         self.default_context = default_context
 
-    @staticmethod
-    def _filter_reserved(extra: dict[str, Any]) -> dict[str, Any]:
-        return {k: v for k, v in extra.items() if k not in _RESERVED_PARAMS}
-
     def __call__(self, func: _F) -> _F:
         @wraps(func)
         def wrapper(*args, **kwargs):  # noqa: ANN202
@@ -64,7 +59,7 @@ class EventDecorator:
             self.logger(
                 self.level,
                 entry_message,
-                **self._filter_reserved(entry_extra),
+                **filter_reserved(entry_extra),
             )
             start_time = perf_counter()
 
@@ -83,7 +78,7 @@ class EventDecorator:
                 self.logger(
                     self.error_level,
                     exc_message,
-                    **self._filter_reserved(exc_extra),
+                    **filter_reserved(exc_extra),
                 )
                 raise
 
@@ -99,7 +94,7 @@ class EventDecorator:
             self.logger(
                 self.level,
                 exit_message,
-                **self._filter_reserved(exit_extra),
+                **filter_reserved(exit_extra),
             )
             return result
 
