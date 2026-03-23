@@ -57,7 +57,7 @@ class Container:
         return self
 
     @classmethod
-    def get_container(cls, name: str = "root") -> Container:
+    def get_container(cls, name: str = _DEFAULT_CONTAINER_NAME) -> Container:
         name = normalize_container_name(name)
         with cls._get_container_lock:
             if name == _DEFAULT_CONTAINER_NAME:
@@ -90,7 +90,7 @@ class Container:
         )
 
 
-_DEFAULT_CONTAINER = Container._create()
+_DEFAULT_CONTAINER = Container._create(_DEFAULT_CONTAINER_NAME)
 
 
 def get_default_container() -> Container:

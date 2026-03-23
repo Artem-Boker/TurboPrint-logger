@@ -39,11 +39,11 @@ class RegexFilter(Filter):
             case "logger_name":
                 return record.logger.name
             case "file":
-                return record.file or ""
+                return record.file
             case "function":
-                return record.function or ""
+                return record.function
             case "line":
-                return str(record.line) if record.line else ""
+                return str(record.line)
             case _:
                 return str(record.context.get(self.field, ""))
 

@@ -42,7 +42,7 @@ class ManagerCollection:
         self.handlers = HandlersManager(*(handlers or ()))
         self.filters = FiltersManager(*(filters or ()))
         self.context = ContextManager(**(context or {}))
-        self.tags = TagsManager(*(tags or {}))
+        self.tags = TagsManager(*(tags or ()))
         self.status = StatusManager(
             logger=logger_status if logger_status is not None else True
         )

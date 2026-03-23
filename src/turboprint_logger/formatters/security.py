@@ -41,7 +41,7 @@ class SecurityFormatter(Formatter):
                 if not isinstance(key, str):
                     continue
                 if key in self.sensitive_fields:
-                    masked[key] = self.mask_char * len(value)
+                    masked[key] = "***"
                 else:
                     masked[key] = self._mask_process(value)
             return masked

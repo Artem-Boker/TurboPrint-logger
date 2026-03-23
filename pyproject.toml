@@ -8,7 +8,7 @@ Repository = "https://github.com/Artem-Boker/TurboPrint-logger.git"
 
 [project]
 name = "TurboPrint-logger"
-version = "0.2.1"
+version = "0.2.3"
 description = "This is your favorite logger"
 authors = [{ name = "Artem-Boker" }]
 readme = "README.md"
