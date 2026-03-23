@@ -7,6 +7,8 @@ from typing import Any
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Formatter
 
+__all__ = ("SecurityFormatter",)
+
 
 class SecurityFormatter(Formatter):
     def __init__(

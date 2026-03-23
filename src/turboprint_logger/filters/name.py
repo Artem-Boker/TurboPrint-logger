@@ -8,6 +8,8 @@ from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.filters.name import InvalidFilterModeError
 from turboprint_logger.interfaces import Filter
 
+__all__ = ("NameFilter",)
+
 _MODES = Literal["exact", "startswith", "endswith", "contains", "regex"]
 
 

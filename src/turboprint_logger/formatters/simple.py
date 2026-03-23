@@ -13,6 +13,8 @@ from turboprint_logger.interfaces import Formatter
 if TYPE_CHECKING:
     from turboprint_logger.core.logger import Logger
 
+__all__ = ("SimpleFormatter",)
+
 
 class FormatDict(TypedDict):
     message: str

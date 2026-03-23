@@ -12,6 +12,8 @@ from turboprint_logger.utils.normalizers import normalize_container_name
 if TYPE_CHECKING:
     from turboprint_logger.core.logger import Logger
 
+__all__ = ("Container", "get_default_container")
+
 _DEFAULT_CONTAINER_NAME = "default"
 
 

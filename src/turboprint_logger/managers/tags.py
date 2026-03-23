@@ -4,6 +4,8 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from threading import RLock
 
+__all__ = ("TagsManager",)
+
 
 class TagsManager:
     __slots__ = ("_lock", "_tags")

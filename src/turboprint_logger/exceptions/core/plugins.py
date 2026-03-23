@@ -2,6 +2,13 @@ from __future__ import annotations
 
 from turboprint_logger.exceptions.core.base import CoreException
 
+__all__ = (
+    "PluginAlreadyRegisteredError",
+    "PluginException",
+    "PluginNotFoundError",
+    "PluginTypeError",
+)
+
 
 class PluginException(CoreException):
     """Base exception for all plugins exceptions"""

@@ -17,6 +17,8 @@ from turboprint_logger.exceptions.core.levels import (
 )
 from turboprint_logger.utils.normalizers import normalize_level_name
 
+__all__ = ("Level", "LevelRegistry")
+
 
 @dataclass(frozen=True, slots=True)
 class LevelRegistry:

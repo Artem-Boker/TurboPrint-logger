@@ -9,6 +9,8 @@ from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
+__all__ = ("BufferedStreamHandler",)
+
 
 class BufferedStreamHandler(Handler):
     def __init__(  # noqa: PLR0913

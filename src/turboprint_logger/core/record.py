@@ -10,6 +10,8 @@ from turboprint_logger.core.levels import LevelRegistry
 if TYPE_CHECKING:
     from turboprint_logger.core.logger import Logger
 
+__all__ = ("Record",)
+
 
 @dataclass(slots=True)
 class Record:

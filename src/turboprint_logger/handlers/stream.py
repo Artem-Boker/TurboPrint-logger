@@ -9,6 +9,8 @@ from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
+__all__ = ("StreamHandler",)
+
 
 class StreamHandler(Handler):
     def __init__(

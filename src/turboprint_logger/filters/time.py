@@ -5,6 +5,8 @@ from datetime import UTC, time
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Filter
 
+__all__ = ("TimeFilter",)
+
 
 class TimeFilter(Filter):
     def __init__(self, start: time | None = None, end: time | None = None) -> None:

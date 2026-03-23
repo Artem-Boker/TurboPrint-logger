@@ -15,6 +15,8 @@ from turboprint_logger.exceptions.handlers.file import (
 )
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
+__all__ = ("FileHandler",)
+
 
 class FileHandler(Handler):
     def __init__(  # noqa: PLR0913

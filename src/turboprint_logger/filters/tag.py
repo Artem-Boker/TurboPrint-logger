@@ -3,6 +3,8 @@ from __future__ import annotations
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Filter
 
+__all__ = ("TagFilter",)
+
 
 class TagFilter(Filter):
     def __init__(self, *required_tags: str, match_all: bool = True) -> None:

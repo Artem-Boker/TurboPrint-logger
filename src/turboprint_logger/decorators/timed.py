@@ -9,6 +9,8 @@ from typing import Any, TypeVar, cast
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.logger import Logger
 
+__all__ = ("timed",)
+
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 

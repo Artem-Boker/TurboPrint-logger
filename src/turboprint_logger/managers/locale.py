@@ -4,6 +4,8 @@ from contextlib import contextmanager
 from threading import local
 from typing import Literal
 
+__all__ = ("LocaleManager",)
+
 _SUPPORTED_LANGUAGES = Literal["ru_RU", "en_US"]
 
 

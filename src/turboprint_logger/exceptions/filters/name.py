@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from turboprint_logger.exceptions.filters.base import FilterException
 
+__all__ = ("InvalidFilterModeError", "NameFilterException")
+
 
 class NameFilterException(FilterException):
     """Base exception for all name filter exceptions"""

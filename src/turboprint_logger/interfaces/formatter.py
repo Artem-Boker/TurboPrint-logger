@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 
 from turboprint_logger.core.record import Record
 
+__all__ = ("Formatter",)
+
 
 class Formatter(ABC):
     __slots__ = ()

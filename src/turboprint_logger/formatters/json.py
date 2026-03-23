@@ -17,6 +17,8 @@ except ImportError:
     except ImportError:
         from json import dumps
 
+__all__ = ("JSONFormatter",)
+
 
 class JSONFormatter(Formatter):
     def __init__(

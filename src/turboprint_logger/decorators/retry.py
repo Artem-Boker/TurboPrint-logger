@@ -13,6 +13,8 @@ from turboprint_logger.exceptions.decorators.retry import (
     UnknownRetryError,
 )
 
+__all__ = ("retry",)
+
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 

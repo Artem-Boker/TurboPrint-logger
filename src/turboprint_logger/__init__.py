@@ -9,7 +9,7 @@ from .managers import ConfigManager, LocaleManager
 get_logger = Logger.get_logger
 get_container = Container.get_container
 
-__all__ = [
+__all__ = (
     "Config",
     "ConfigManager",
     "Container",
@@ -20,7 +20,7 @@ __all__ = [
     "get_container",
     "get_default_container",
     "get_logger",
-]
+)
 
 __version__ = "0.2.3"
 

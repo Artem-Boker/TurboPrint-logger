@@ -3,6 +3,8 @@ from __future__ import annotations
 from contextlib import contextmanager
 from threading import RLock
 
+__all__ = ("StatusManager",)
+
 
 class StatusComponent:
     __slots__ = ("_lock", "enabled")
@@ -33,7 +35,7 @@ class StatusComponent:
             self.enabled = False
 
     @contextmanager
-    def temporary(self, *, status: bool = True):  # noqa: ANN201
+    def temporary(self, *, status: bool = True):  # noqa: ANN202
         original = self.enabled
         self.enabled = status
         try:

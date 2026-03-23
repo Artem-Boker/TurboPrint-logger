@@ -6,6 +6,8 @@ from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Filter, Formatter
 
+__all__ = ("Handler",)
+
 
 class Handler(ABC):
     __slots__ = ("filters", "formatter", "level")

@@ -6,6 +6,8 @@ from typing import Any
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.logger import Logger
 
+__all__ = ("LoggingAdapter", "install_adapter")
+
 _STD_TO_CUSTOM_LEVEL = {
     logging.NOTSET: Level.NOTSET,
     logging.DEBUG: Level.DEBUG,

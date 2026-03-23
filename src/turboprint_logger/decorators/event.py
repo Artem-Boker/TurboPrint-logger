@@ -11,6 +11,8 @@ from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.logger import Logger
 from turboprint_logger.utils.reserved import filter_reserved
 
+__all__ = ("event",)
+
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 

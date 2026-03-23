@@ -6,6 +6,8 @@ from re import Pattern
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Filter
 
+__all__ = ("ContextFilter",)
+
 
 class ContextFilter(Filter):
     def __init__(

@@ -12,7 +12,7 @@ from .metrics import MetricsManager
 from .status import StatusManager
 from .tags import TagsManager
 
-__all__ = [
+__all__ = (
     "ConfigManager",
     "ContextManager",
     "DefaultManager",
@@ -25,4 +25,4 @@ __all__ = [
     "MetricsManager",
     "StatusManager",
     "TagsManager",
-]
+)

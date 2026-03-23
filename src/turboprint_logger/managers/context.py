@@ -7,6 +7,8 @@ from typing import Any
 
 from turboprint_logger.utils.normalizers import normalize_context_key
 
+__all__ = ("ContextManager",)
+
 
 class ContextManager:
     __slots__ = ("_context", "_lock")

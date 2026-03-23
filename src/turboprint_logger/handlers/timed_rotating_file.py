@@ -10,6 +10,8 @@ from turboprint_logger.core.record import Record
 from turboprint_logger.handlers.file import FileHandler
 from turboprint_logger.interfaces import Filter, Formatter
 
+__all__ = ("TimedRotatingFileHandler",)
+
 
 class TimedRotatingFileHandler(FileHandler):
     def __init__(  # noqa: PLR0913

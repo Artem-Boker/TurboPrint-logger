@@ -6,6 +6,8 @@ from threading import RLock
 
 from turboprint_logger.interfaces import Filter
 
+__all__ = ("FiltersManager",)
+
 
 class FiltersManager:
     __slots__ = ("_filters", "_lock")

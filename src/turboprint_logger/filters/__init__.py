@@ -8,7 +8,7 @@ from .regex import RegexFilter
 from .tag import TagFilter
 from .time import TimeFilter
 
-__all__ = [
+__all__ = (
     "CompositeFilter",
     "ContextFilter",
     "LevelFilter",
@@ -16,4 +16,4 @@ __all__ = [
     "RegexFilter",
     "TagFilter",
     "TimeFilter",
-]
+)

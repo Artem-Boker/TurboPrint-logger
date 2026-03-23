@@ -20,6 +20,9 @@ from turboprint_logger.managers.status import StatusManager
 from turboprint_logger.managers.tags import TagsManager
 from turboprint_logger.utils.normalizers import normalize_logger_name
 
+__all__ = ("Logger",)
+
+
 _ROOT_LOGGER_NAME = "root".strip().lower()
 _DEFAULT_CONTAINER = get_default_container()
 

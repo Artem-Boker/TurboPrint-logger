@@ -6,7 +6,7 @@ from .levels import Level, LevelRegistry
 from .logger import Logger
 from .record import Record
 
-__all__ = [
+__all__ = (
     "Config",
     "Container",
     "Level",
@@ -14,4 +14,4 @@ __all__ = [
     "Logger",
     "Record",
     "get_default_container",
-]
+)

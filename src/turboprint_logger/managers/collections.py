@@ -12,6 +12,8 @@ from turboprint_logger.managers.level import LevelManager
 from turboprint_logger.managers.status import StatusManager
 from turboprint_logger.managers.tags import TagsManager
 
+__all__ = ("DefaultManager", "GlobalManager")
+
 
 class ManagerCollection:
     __slots__ = (

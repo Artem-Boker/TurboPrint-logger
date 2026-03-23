@@ -1,5 +1,7 @@
 from typing import Any
 
+__all__ = ("filter_reserved",)
+
 _RESERVED_KEYS = ("level", "message", "tags")
 
 

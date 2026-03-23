@@ -5,4 +5,4 @@ from .event import event
 from .retry import retry
 from .timed import timed
 
-__all__ = ["deprecated", "event", "retry", "timed"]
+__all__ = ("deprecated", "event", "retry", "timed")

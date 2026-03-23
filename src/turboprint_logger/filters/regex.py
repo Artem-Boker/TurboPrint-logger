@@ -7,6 +7,8 @@ from typing import Literal
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Filter
 
+__all__ = ("RegexFilter",)
+
 _FIELDS = Literal[
     "message", "level_name", "logger_name", "code", "file", "function", "line"
 ]

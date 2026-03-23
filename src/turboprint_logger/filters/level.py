@@ -4,6 +4,8 @@ from turboprint_logger.core.levels import LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Filter
 
+__all__ = ("LevelFilter",)
+
 
 class LevelFilter(Filter):
     def __init__(

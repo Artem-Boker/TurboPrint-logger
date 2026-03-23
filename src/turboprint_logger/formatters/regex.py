@@ -6,6 +6,8 @@ from re import compile as re_compile
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Formatter
 
+__all__ = ("RegexFormatter",)
+
 
 class RegexFormatter(Formatter):
     def __init__(

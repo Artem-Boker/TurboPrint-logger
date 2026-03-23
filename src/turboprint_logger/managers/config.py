@@ -21,6 +21,8 @@ if TYPE_CHECKING:
     from turboprint_logger.core.container import Container
     from turboprint_logger.core.logger import Logger
 
+__all__ = ("ConfigManager",)
+
 _ROOT_LOGGER_NAME = "root"
 
 

@@ -6,6 +6,8 @@ from typing import Any
 from turboprint_logger.core.levels import LevelRegistry
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
+__all__ = ("Config",)
+
 
 @dataclass(slots=True)
 class Config:

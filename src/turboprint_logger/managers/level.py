@@ -5,6 +5,8 @@ from threading import RLock
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 
+__all__ = ("LevelManager",)
+
 
 class LevelManager:
     __slots__ = ("_level", "_lock")

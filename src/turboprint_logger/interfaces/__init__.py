@@ -4,4 +4,4 @@ from .filter import Filter
 from .formatter import Formatter
 from .handler import Handler
 
-__all__ = ["Filter", "Formatter", "Handler"]
+__all__ = ("Filter", "Formatter", "Handler")

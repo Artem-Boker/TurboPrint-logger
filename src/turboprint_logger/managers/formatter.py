@@ -6,6 +6,8 @@ from threading import RLock
 from turboprint_logger.formatters import SimpleFormatter
 from turboprint_logger.interfaces import Formatter
 
+__all__ = ("FormatterManager",)
+
 
 class FormatterManager:
     __slots__ = ("_formatter", "_lock")

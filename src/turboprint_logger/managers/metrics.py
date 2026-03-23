@@ -6,6 +6,8 @@ from threading import Lock
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.exceptions.managers.metrics import NegativeMetricsCountError
 
+__all__ = ("MetricsManager",)
+
 
 class MetricsManager:
     __slots__ = ("_lock", "_metrics")
