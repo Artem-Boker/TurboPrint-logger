@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from contextlib import suppress
+from gzip import open as gzip_open
 from pathlib import Path
+from shutil import copyfileobj
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
@@ -23,6 +25,7 @@ class RotatingFileHandler(FileHandler):
         buffer_size: int | None = None,
         encoding: str = "utf-8",
         update_mode: bool = False,
+        compress: bool = True,
         max_bytes: int | None = None,
         max_lines: int | None = None,
         backup_count: int = 0,
@@ -37,6 +40,7 @@ class RotatingFileHandler(FileHandler):
             encoding=encoding,
             update_mode=update_mode,
         )
+        self.compress = compress
         self.max_bytes = max_bytes
         self.max_lines = max_lines
         self.backup_count = backup_count
@@ -92,6 +96,12 @@ class RotatingFileHandler(FileHandler):
             if src.exists():
                 with suppress(OSError):
                     src.replace(dst)
+
+            if self.compress:
+                compressed_path = dst.with_suffix(dst.suffix + ".gz")
+                with src.open("rb") as f_in, gzip_open(compressed_path, "wb") as f_out:
+                    copyfileobj(f_in, f_out)
+                src.unlink(missing_ok=True)
 
     def _write(self, record: Record) -> None:
         with self._lock:

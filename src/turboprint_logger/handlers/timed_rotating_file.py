@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from contextlib import suppress
+from gzip import open as gzip_open
 from pathlib import Path
+from shutil import copyfileobj
 from time import time
 from typing import Literal
 
@@ -25,6 +27,7 @@ class TimedRotatingFileHandler(FileHandler):
         buffer_size: int | None = None,
         encoding: str = "utf-8",
         update_mode: bool = False,
+        compress: bool = True,
         when: Literal["s", "m", "h", "D", "W", "M"] = "h",
         interval: int = 1,
         backup_count: int = 0,
@@ -39,6 +42,7 @@ class TimedRotatingFileHandler(FileHandler):
             encoding=encoding,
             update_mode=update_mode,
         )
+        self.compress = compress
         self.when = when.strip().lower()
         self.interval = max(1, interval)
         self.backup_count = backup_count
@@ -88,6 +92,12 @@ class TimedRotatingFileHandler(FileHandler):
             if src.exists():
                 with suppress(OSError):
                     src.replace(dst)
+
+            if self.compress:
+                compressed_path = dst.with_suffix(dst.suffix + ".gz")
+                with src.open("rb") as f_in, gzip_open(compressed_path, "wb") as f_out:
+                    copyfileobj(f_in, f_out)
+                src.unlink(missing_ok=True)
 
     def _write(self, record: Record) -> None:
         with self._lock:
