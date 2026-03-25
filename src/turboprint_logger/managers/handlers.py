@@ -37,12 +37,13 @@ class HandlersManager:
 
     @contextmanager
     def temporary(self, *handlers: Handler, replace: bool = True):  # noqa: ANN201
-        original = self._handlers
-        self._handlers = list(handlers) if replace else [*self._handlers, *handlers]
-        try:
-            yield
-        finally:
-            self._handlers = original
+        with self._lock:
+            original = self._handlers
+            self._handlers = list(handlers) if replace else [*self._handlers, *handlers]
+            try:
+                yield
+            finally:
+                self._handlers = original
 
     def __len__(self) -> int:
         with self._lock:

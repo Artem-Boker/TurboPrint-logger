@@ -25,12 +25,13 @@ class LevelManager:
 
     @contextmanager
     def temporary(self, level: LevelRegistry):  # noqa: ANN201
-        original = self._level
-        self._level = level
-        try:
-            yield
-        finally:
-            self._level = original
+        with self._lock:
+            original = self._level
+            self._level = level
+            try:
+                yield
+            finally:
+                self._level = original
 
     def enabled_for(self, level: LevelRegistry) -> bool:
         with self._lock:

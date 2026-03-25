@@ -21,8 +21,6 @@ class ContextFilter(Filter):
 
     @staticmethod
     def _check_condition(condition: object, actual: object) -> bool:
-        if actual is None:
-            return False
         if callable(condition):
             try:
                 return condition(actual)  # type: ignore[no-any-return]

@@ -99,6 +99,7 @@ class RotatingFileHandler(FileHandler):
                 self.close()
                 self._rotate()
                 self._open_file()
+                self._closed = False
                 self._update_counts()
 
             super()._write(record)

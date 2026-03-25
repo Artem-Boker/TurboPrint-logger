@@ -26,12 +26,13 @@ class FormatterManager:
 
     @contextmanager
     def temporary(self, formatter: Formatter):  # noqa: ANN201
-        original = self._formatter
-        self._formatter = formatter
-        try:
-            yield
-        finally:
-            self._formatter = original
+        with self._lock:
+            original = self._formatter
+            self._formatter = formatter
+            try:
+                yield
+            finally:
+                self._formatter = original
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}(formatter={self._formatter})"

@@ -36,12 +36,13 @@ class TagsManager:
 
     @contextmanager
     def temporary(self, *tags: str, replace: bool = True):  # noqa: ANN201
-        original = self._tags
-        self._tags = set(tags) if replace else {*self._tags, *tags}
-        try:
-            yield
-        finally:
-            self._tags = original
+        with self._lock:
+            original = self._tags
+            self._tags = set(tags) if replace else {*self._tags, *tags}
+            try:
+                yield
+            finally:
+                self._tags = original
 
     def __len__(self) -> int:
         with self._lock:

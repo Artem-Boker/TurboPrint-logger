@@ -43,6 +43,8 @@ class BufferedStreamHandler(Handler):
             timer.start()
 
     def _on_timer_flush(self) -> None:
+        if self._closed:
+            return
         try:
             self.flush()
         finally:

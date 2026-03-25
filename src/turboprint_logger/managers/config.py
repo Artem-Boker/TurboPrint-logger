@@ -324,18 +324,15 @@ class ConfigManager:
             msg = "Filter 'kwargs' must be a dict"
             raise ConfigSpecError(msg)
 
-        if name == "LevelFilter":
-            kwargs = dict(kwargs)
-            if "min_level" in kwargs:
-                kwargs["min_level"] = self._as_level(kwargs["min_level"])
-            if "max_level" in kwargs:
-                kwargs["max_level"] = self._as_level(kwargs["max_level"])
-            if "allowed_levels" in kwargs and isinstance(
-                kwargs["allowed_levels"], list
-            ):
-                kwargs["allowed_levels"] = [
-                    self._as_level(item) for item in kwargs["allowed_levels"]
-                ]
+        kwargs = dict(kwargs)
+        if "min_level" in kwargs:
+            kwargs["min_level"] = self._as_level(kwargs["min_level"])
+        if "max_level" in kwargs:
+            kwargs["max_level"] = self._as_level(kwargs["max_level"])
+        if "allowed_levels" in kwargs and isinstance(kwargs["allowed_levels"], list):
+            kwargs["allowed_levels"] = [
+                self._as_level(item) for item in kwargs["allowed_levels"]
+            ]
 
         cls = get_filter(name)
         return cls(**kwargs)
