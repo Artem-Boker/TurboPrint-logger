@@ -7,9 +7,15 @@ __all__ = ("TagFilter",)
 
 
 class TagFilter(Filter):
-    def __init__(self, *required_tags: str, match_all: bool = True) -> None:
+    def __init__(
+        self, *required_tags: str, match_all: bool = True, opposite: bool = False
+    ) -> None:
         self.required = required_tags
         self.check = all if match_all else any
+        self.opposite = opposite
 
     def filter(self, record: Record) -> bool:
-        return self.check(tag in record.tags for tag in self.required)
+        result = self.check(tag in record.tags for tag in self.required)
+        if self.opposite:
+            return not result
+        return result

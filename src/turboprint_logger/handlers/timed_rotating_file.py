@@ -43,7 +43,7 @@ class TimedRotatingFileHandler(FileHandler):
             update_mode=update_mode,
         )
         self.compress = compress
-        self.when = when.strip().lower()
+        self.when = when.strip()
         self.interval = max(1, interval)
         self.backup_count = backup_count
         self._rotation_seconds = self._get_rotation_seconds()
@@ -73,6 +73,10 @@ class TimedRotatingFileHandler(FileHandler):
         new_name = f"{stem}.{number}{''.join(suffixes)}"
         return path.parent / new_name
 
+    @staticmethod
+    def _compressed_path(path: Path) -> Path:
+        return path.with_suffix(path.suffix + ".gz")
+
     def _rotate(self) -> None:
         with self._lock:
             if self.backup_count <= 0:
@@ -83,7 +87,12 @@ class TimedRotatingFileHandler(FileHandler):
             for i in range(self.backup_count - 1, 0, -1):
                 src = self._rotated_path(i)
                 dst = self._rotated_path(i + 1)
-                if src.exists():
+                src_gz = self._compressed_path(src)
+                dst_gz = self._compressed_path(dst)
+                if src_gz.exists():
+                    with suppress(OSError):
+                        src_gz.replace(dst_gz)
+                elif src.exists():
                     with suppress(OSError):
                         src.replace(dst)
 
@@ -93,11 +102,11 @@ class TimedRotatingFileHandler(FileHandler):
                 with suppress(OSError):
                     src.replace(dst)
 
-            if self.compress:
-                compressed_path = dst.with_suffix(dst.suffix + ".gz")
-                with src.open("rb") as f_in, gzip_open(compressed_path, "wb") as f_out:
+            if self.compress and dst.exists():
+                compressed_path = self._compressed_path(dst)
+                with dst.open("rb") as f_in, gzip_open(compressed_path, "wb") as f_out:
                     copyfileobj(f_in, f_out)
-                src.unlink(missing_ok=True)
+                dst.unlink(missing_ok=True)
 
     def _write(self, record: Record) -> None:
         with self._lock:
