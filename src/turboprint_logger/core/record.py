@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
@@ -28,16 +28,8 @@ class Record:
     tags: set[str] = field(default_factory=set)
 
     def copy(self) -> Record:
-        return Record(
-            message=self.message,
-            level=self.level,
-            logger=self.logger,
-            trace_id=self.trace_id,
-            logger_id=self.logger_id,
-            file=self.file,
-            function=self.function,
-            line=self.line,
-            date_time=self.date_time,
+        return replace(
+            self,
             context=self.context.copy(),
             tags=self.tags.copy(),
         )
