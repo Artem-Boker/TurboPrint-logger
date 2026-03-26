@@ -15,7 +15,11 @@ class TagFilter(Filter):
         self.opposite = opposite
 
     def filter(self, record: Record) -> bool:
+        if not self.required:
+            return True
+
         result = self.check(tag in record.tags for tag in self.required)
+
         if self.opposite:
             return not result
         return result

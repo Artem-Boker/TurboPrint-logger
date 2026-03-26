@@ -5,6 +5,7 @@ from typing import Any
 
 from turboprint_logger.core.levels import LevelRegistry
 from turboprint_logger.interfaces import Filter, Formatter, Handler
+from turboprint_logger.interfaces.processor import Processor
 
 __all__ = ("Config",)
 
@@ -13,6 +14,7 @@ __all__ = ("Config",)
 class Config:
     min_level: LevelRegistry | None = None
     formatter: Formatter | None = None
+    processors: list[Processor] | None = None
     handlers: list[Handler] | None = None
     filters: list[Filter] | None = None
     propagate: bool | None = None

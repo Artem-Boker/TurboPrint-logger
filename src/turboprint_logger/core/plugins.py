@@ -9,7 +9,7 @@ from turboprint_logger.exceptions.core.plugins import (
     PluginNotFoundError,
     PluginTypeError,
 )
-from turboprint_logger.interfaces import Filter, Formatter, Handler
+from turboprint_logger.interfaces import Filter, Formatter, Handler, Processor
 
 __all__ = (
     "get_filter",
@@ -20,18 +20,21 @@ __all__ = (
     "register_handler",
 )
 
-_T = TypeVar("_T", bound=type[Handler | Filter | Formatter])
+_T = TypeVar("_T", bound=type[Handler | Filter | Formatter | Processor])
 _HANDLER = TypeVar("_HANDLER", bound=type[Handler])
 _FILTER = TypeVar("_FILTER", bound=type[Filter])
 _FORMATTER = TypeVar("_FORMATTER", bound=type[Formatter])
+_PROCESSOR = TypeVar("_PROCESSOR", bound=type[Processor])
 
 _handlers_lock = RLock()
 _filters_lock = RLock()
 _formatters_lock = RLock()
+_processors_lock = RLock()
 
 _handlers: dict[str, type[Handler]] = {}
 _filters: dict[str, type[Filter]] = {}
 _formatters: dict[str, type[Formatter]] = {}
+_processors: dict[str, type[Processor]] = {}
 
 
 def _register(
@@ -82,3 +85,11 @@ def register_formatter(name: str | None = None) -> Callable[[_FORMATTER], _FORMA
 
 def get_formatter(name: str) -> type[Formatter]:
     return _get(_formatters, Formatter, name)
+
+
+def register_processor(name: str | None = None) -> Callable[[_PROCESSOR], _PROCESSOR]:
+    return _register(Processor, _processors_lock, _processors, name)  # pyright: ignore[reportReturnType]
+
+
+def get_processor(name: str) -> type[Processor]:
+    return _get(_processors, Processor, name)

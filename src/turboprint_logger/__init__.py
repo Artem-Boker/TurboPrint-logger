@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from . import filters, formatters, handlers
+from . import filters, formatters, handlers, processors
 from .core import Config, Container, Level, Logger, get_default_container
 from .core import plugins as __plugins
 from .integrations.logging import LoggingAdapter
@@ -36,3 +36,4 @@ def __register_from_package(package, registry_func) -> None:  # noqa: ANN001
 __register_from_package(filters, __plugins.register_filter)
 __register_from_package(formatters, __plugins.register_formatter)
 __register_from_package(handlers, __plugins.register_handler)
+__register_from_package(processors, __plugins.register_processor)

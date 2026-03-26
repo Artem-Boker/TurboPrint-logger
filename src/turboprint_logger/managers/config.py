@@ -8,7 +8,12 @@ from time import sleep
 from typing import TYPE_CHECKING, Any, Protocol, TypeAlias, cast
 
 from turboprint_logger.core.levels import Level, LevelRegistry
-from turboprint_logger.core.plugins import get_filter, get_formatter, get_handler
+from turboprint_logger.core.plugins import (
+    get_filter,
+    get_formatter,
+    get_handler,
+    get_processor,
+)
 from turboprint_logger.exceptions.managers.config import (
     ConfigParserError,
     ConfigReloadError,
@@ -16,6 +21,7 @@ from turboprint_logger.exceptions.managers.config import (
     ConfigWatchAlreadyRunningError,
 )
 from turboprint_logger.interfaces import Filter, Formatter, Handler
+from turboprint_logger.interfaces.processor import Processor
 
 if TYPE_CHECKING:
     from turboprint_logger.core.container import Container
@@ -191,8 +197,9 @@ class ConfigManager:
         self.register_factory("formatter", self._build_formatter)
         self.register_factory("filter", self._build_filter)
         self.register_factory("handler", self._build_handler)
+        self.register_factory("processor", self._build_processor)
 
-    def _apply_logger(self, logger: Logger, spec: dict[str, Any]) -> None:  # noqa: C901
+    def _apply_logger(self, logger: Logger, spec: dict[str, Any]) -> None:  # noqa: C901, PLR0912
         if "min_level" in spec:
             logger.level.set(self._as_level(spec["min_level"]))
 
@@ -213,6 +220,18 @@ class ConfigManager:
             ]
             logger.handlers.clear()
             logger.handlers.add(*handlers)
+
+        if "processors" in spec:
+            processors_spec = spec["processors"]
+            if not isinstance(processors_spec, list):
+                msg = "Logger key 'processors' must be a list"
+                raise ConfigSpecError(msg)
+            processors = [
+                cast(Processor, self._build_component("processor", item))
+                for item in processors_spec
+            ]
+            logger.processors.clear()
+            logger.processors.add(*processors)
 
         if "filters" in spec:
             filters_spec = spec["filters"]
@@ -335,6 +354,19 @@ class ConfigManager:
             ]
 
         cls = get_filter(name)
+        return cls(**kwargs)
+
+    def _build_processor(self, spec: dict[str, Any]) -> Processor:
+        name = str(spec.get("name", "")).strip()
+        kwargs = spec.get("kwargs", {})
+        if not name:
+            msg = "Processor spec requires non-empty 'name'"
+            raise ConfigSpecError(msg)
+        if not isinstance(kwargs, dict):
+            msg = "Processor 'kwargs' must be a dict"
+            raise ConfigSpecError(msg)
+
+        cls = get_processor(name)
         return cls(**kwargs)
 
     def _build_handler(self, spec: dict[str, Any]) -> Handler:

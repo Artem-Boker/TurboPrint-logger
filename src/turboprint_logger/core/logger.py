@@ -16,6 +16,7 @@ from turboprint_logger.managers.formatter import FormatterManager
 from turboprint_logger.managers.handlers import HandlersManager
 from turboprint_logger.managers.level import LevelManager
 from turboprint_logger.managers.metrics import MetricsManager
+from turboprint_logger.managers.processors import ProcessorsManager
 from turboprint_logger.managers.status import StatusManager
 from turboprint_logger.managers.tags import TagsManager
 from turboprint_logger.utils.normalizers import normalize_logger_name
@@ -40,6 +41,7 @@ class Logger:
         "level",
         "metrics",
         "parent",
+        "processors",
         "propagate",
         "status",
         "tags",
@@ -58,6 +60,7 @@ class Logger:
         self.propagate: bool
         self.level: LevelManager
         self.formatter: FormatterManager
+        self.processors: ProcessorsManager
         self.handlers: HandlersManager
         self.filters: FiltersManager
         self.context: ContextManager
@@ -104,6 +107,9 @@ class Logger:
 
         self.level = LevelManager(config.min_level or defaults.level.get())
         self.formatter = FormatterManager(config.formatter or defaults.formatter.get())
+        self.processors = ProcessorsManager(
+            *(config.processors or defaults.processors.get())
+        )
         self.handlers = HandlersManager(*(config.handlers or defaults.handlers.get()))
         self.filters = FiltersManager(*(config.filters or defaults.filters.get()))
         self.context = ContextManager(**(config.context or defaults.context.get()))
@@ -200,6 +206,16 @@ class Logger:
         if not record.level.enabled_for(self._container.globals.level.get()):
             return False
 
+        for processor in self._container.globals.processors:
+            try:
+                processed_record = processor.process(record)
+                if processed_record:
+                    record = processed_record
+            except Exception as exc:  # noqa: BLE001
+                sys.stderr.write(
+                    f"Exception in {processor.__class__.__name__}: {exc}\n"
+                )
+
         if self.status.global_filters.enabled and not all(
             f.filter(record) for f in self._container.globals.filters
         ):
@@ -222,6 +238,16 @@ class Logger:
 
         if not record.level.enabled_for(self.level.get()):
             return False
+
+        for processor in self.processors:
+            try:
+                processed_record = processor.process(record)
+                if processed_record:
+                    record = processed_record
+            except Exception as exc:  # noqa: BLE001
+                sys.stderr.write(
+                    f"Exception in {processor.__class__.__name__}: {exc}\n"
+                )
 
         if self.status.filters.enabled and not all(
             f.filter(record) for f in self.filters
@@ -260,8 +286,8 @@ class Logger:
         merged_tags = self._merge_tags(tags)
         merged_context = self._merge_context(extra)
         record = self._create_record(level, message, merged_tags, merged_context)
-        if self._process_global(record):
-            self._process_record(record)
+        self._process_global(record)
+        self._process_record(record)
         return record
 
     def __str__(self) -> str:
