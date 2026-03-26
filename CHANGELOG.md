@@ -1,5 +1,16 @@
 # TurboPrint-logger Changelog
 
+## [v0.2.5](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.4...v0.2.5) (2026-03-26)
+
+### feat
+
+- **processors:** :sparkles: added processor interface ([421b730](https://github.com/Artem-Boker/TurboPrint-logger/commit/421b7305f6f6bb1ebe06364f160303e4e47299c2))
+- **processors:** :sparkles: added new processors classes ([b9910cf](https://github.com/Artem-Boker/TurboPrint-logger/commit/b9910cf2d277c41efc2841c284f2c703f768dcd7))
+
+### fix
+
+- **managers:** :bug: added lock in managers methods ([6213bd5](https://github.com/Artem-Boker/TurboPrint-logger/commit/6213bd51aee4d120331d13675bbc5b1735217845))
+
 ## [v0.2.4](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.3...v0.2.4) (2026-03-25)
 
 ### fix
@@ -16,6 +27,10 @@
 
 - **handlers:** :sparkles: added compress option with gzip module in RotatingFile handlers ([a5ce7c7](https://github.com/Artem-Boker/TurboPrint-logger/commit/a5ce7c7b0089f7cc00e394dc88e37ea7cb07e8f9))
 - **formatters:** :sparkles: added support for orjson in JSONFormatter ([53e281c](https://github.com/Artem-Boker/TurboPrint-logger/commit/53e281c23c5393e9bd70d6577a145e8354702c07))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.4 ([7fb7d37](https://github.com/Artem-Boker/TurboPrint-logger/commit/7fb7d371fb1d13c44a5c6541fc323a4d1a61b054))
 
 ## [v0.2.3](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.2...v0.2.3) (2026-03-21)
 
