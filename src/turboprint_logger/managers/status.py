@@ -24,7 +24,7 @@ class StatusComponent:
     def toggle(self) -> bool:
         with self._lock:
             self.enabled = not self.enabled
-        return self.enabled
+            return self.enabled
 
     def enable(self) -> None:
         with self._lock:
@@ -36,12 +36,13 @@ class StatusComponent:
 
     @contextmanager
     def temporary(self, *, status: bool = True):  # noqa: ANN202
-        original = self.enabled
-        self.enabled = status
-        try:
-            yield
-        finally:
-            self.enabled = original
+        with self._lock:
+            original = self.enabled
+            self.enabled = status
+            try:
+                yield
+            finally:
+                self.enabled = original
 
     def __bool__(self) -> bool:
         with self._lock:

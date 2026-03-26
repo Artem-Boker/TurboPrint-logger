@@ -17,7 +17,8 @@ class FiltersManager:
         self._filters: list[Filter] = list(filters) or []
 
     def get(self) -> tuple[Filter, ...]:
-        return tuple(self._filters)
+        with self._lock:
+            return tuple(self._filters)
 
     def add(self, *filters: Filter) -> None:
         with self._lock:
@@ -37,12 +38,13 @@ class FiltersManager:
 
     @contextmanager
     def temporary(self, *filters: Filter, replace: bool = True):  # noqa: ANN201
-        original = self._filters
-        self._filters = list(filters) if replace else [*self._filters, *filters]
-        try:
-            yield
-        finally:
-            self._filters = original
+        with self._lock:
+            original = self._filters
+            self._filters = list(filters) if replace else [*self._filters, *filters]
+            try:
+                yield
+            finally:
+                self._filters = original
 
     def __len__(self) -> int:
         with self._lock:
@@ -61,7 +63,8 @@ class FiltersManager:
             return filter in self._filters
 
     def __bool__(self) -> bool:
-        return bool(self._filters)
+        with self._lock:
+            return bool(self._filters)
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}(filters_count={len(self._filters)})"

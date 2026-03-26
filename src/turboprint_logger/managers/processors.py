@@ -17,7 +17,8 @@ class ProcessorsManager:
         self._processors: list[Processor] = list(processors) or []
 
     def get(self) -> tuple[Processor, ...]:
-        return tuple(self._processors)
+        with self._lock:
+            return tuple(self._processors)
 
     def add(self, *processors: Processor) -> None:
         with self._lock:
@@ -60,7 +61,8 @@ class ProcessorsManager:
             return self._processors[index]
 
     def __contains__(self, handler: Processor) -> bool:
-        return handler in self._processors
+        with self._lock:
+            return handler in self._processors
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}(processors_count={len(self._processors)})"

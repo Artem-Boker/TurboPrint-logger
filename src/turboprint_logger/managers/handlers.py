@@ -17,7 +17,8 @@ class HandlersManager:
         self._handlers: list[Handler] = list(handlers) or []
 
     def get(self) -> tuple[Handler, ...]:
-        return tuple(self._handlers)
+        with self._lock:
+            return tuple(self._handlers)
 
     def add(self, *handlers: Handler) -> None:
         with self._lock:
@@ -58,7 +59,8 @@ class HandlersManager:
             return self._handlers[index]
 
     def __contains__(self, handler: Handler) -> bool:
-        return handler in self._handlers
+        with self._lock:
+            return handler in self._handlers
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}(handlers_count={len(self._handlers)})"

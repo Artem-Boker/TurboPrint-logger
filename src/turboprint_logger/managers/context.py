@@ -35,12 +35,13 @@ class ContextManager:
 
     @contextmanager
     def temporary(self, *, replace: bool = True, **context):  # noqa: ANN201
-        original = self._context
-        self._context = context if replace else {**self._context, **context}
-        try:
-            yield
-        finally:
-            self._context = original
+        with self._lock:
+            original = self._context
+            self._context = context if replace else {**self._context, **context}
+            try:
+                yield
+            finally:
+                self._context = original
 
     def values(self) -> Iterable[Any]:
         with self._lock:
