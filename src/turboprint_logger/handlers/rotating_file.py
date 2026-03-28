@@ -56,7 +56,7 @@ class RotatingFileHandler(FileHandler):
                 if self.max_lines is not None:
                     try:
                         with path.open("r", encoding=self.encoding) as file:
-                            self._line_count = len(file.readlines())
+                            self._line_count = sum(1 for _ in file)
                     except OSError:
                         self._line_count = 0
                 else:

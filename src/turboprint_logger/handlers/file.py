@@ -12,6 +12,8 @@ from turboprint_logger.exceptions.handlers.file import (
     FileClosedError,
     FileOpenError,
     FileWriteError,
+    InvalidFlushIntervalError,
+    InvalidSeparatorError,
 )
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
@@ -33,6 +35,18 @@ class FileHandler(Handler):
         update_mode: bool = False,
     ) -> None:
         super().__init__(min_level, formatter, filters)
+        if not isinstance(separator, str):
+            msg = "separator must be a string"
+            raise InvalidSeparatorError(msg)
+        if not isinstance(flush_interval, int | float):
+            msg = "flush_interval must be a number"
+            raise InvalidFlushIntervalError(msg)
+        if flush_interval <= 0:
+            msg = "flush_interval must be greater than 0"
+            raise InvalidFlushIntervalError(msg)
+        if not separator:
+            msg = "separator must be a non-empty string"
+            raise InvalidSeparatorError(msg)
         self.file_path = Path(file_path)
         self.mode = "a" if update_mode else "w"
         self.encoding = encoding

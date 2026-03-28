@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.interfaces import InterfaceMethodNotImplementedError
 from turboprint_logger.interfaces import Filter, Formatter
 
 __all__ = ("Handler",)
@@ -30,7 +31,8 @@ class Handler(ABC):
 
     @abstractmethod
     def emit(self, record: Record) -> None:
-        raise NotImplementedError
+        msg = "Handler.emit must be implemented by subclasses"
+        raise InterfaceMethodNotImplementedError(msg)
 
     def __str__(self) -> str:
         return self.__class__.__name__

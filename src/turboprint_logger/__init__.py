@@ -22,7 +22,7 @@ __all__ = (
     "get_logger",
 )
 
-__version__ = "0.2.3"
+__version__ = "0.2.6"
 
 
 def __register_from_package(package, registry_func) -> None:  # noqa: ANN001

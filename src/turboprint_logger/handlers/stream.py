@@ -7,6 +7,7 @@ from typing import TextIO
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.handlers.stream import InvalidStreamError
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
 __all__ = ("StreamHandler",)
@@ -21,6 +22,9 @@ class StreamHandler(Handler):
         filters: list[Filter] | None = None,
     ) -> None:
         super().__init__(min_level, formatter, filters)
+        if not callable(getattr(stream, "write", None)):
+            msg = "stream must provide a callable 'write' method"
+            raise InvalidStreamError(msg)
         self.stream = stream
         self._lock = RLock()
 

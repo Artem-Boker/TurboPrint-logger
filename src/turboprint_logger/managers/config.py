@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from json import loads as json_loads
 from pathlib import Path
+from sys import stderr
 from threading import Event, RLock, Thread
 from time import sleep
 from typing import TYPE_CHECKING, Any, Protocol, TypeAlias, cast
@@ -30,6 +31,7 @@ if TYPE_CHECKING:
 __all__ = ("ConfigManager",)
 
 _ROOT_LOGGER_NAME = "root"
+_MAX_CONFIG_BYTES = 10 * 1024 * 1024
 
 
 class ParserFunc(Protocol):
@@ -82,7 +84,10 @@ class ConfigManager:
             self._factories[key] = factory
 
     def parse_file(self, file_path: str | Path) -> dict[str, Any]:
-        path = Path(file_path)
+        path = Path(file_path).expanduser()
+        if not path.is_file():
+            msg = f"Config file does not exist or is not a file: {path}"
+            raise ConfigParserError(msg)
         suffix = path.suffix.strip().lower().removeprefix(".")
         with self._lock:
             parser = self._parsers.get(suffix)
@@ -90,9 +95,19 @@ class ConfigManager:
             msg = f"Unsupported config extension: {path.suffix or '<none>'}"
             raise ConfigParserError(msg)
         try:
+            size = path.stat().st_size
+            if size > _MAX_CONFIG_BYTES:
+                msg = (
+                    f"Config file {path} is too large: {size} bytes. "
+                    f"Maximum allowed is {_MAX_CONFIG_BYTES} bytes"
+                )
+                raise ConfigParserError(msg)
             source = path.read_text(encoding="utf-8")
         except OSError as exc:
             msg = f"Unable to read config file {path}: {exc}"
+            raise ConfigParserError(msg) from exc
+        except UnicodeDecodeError as exc:
+            msg = f"Config file {path} is not valid UTF-8: {exc}"
             raise ConfigParserError(msg) from exc
         try:
             data = parser(source)
@@ -121,6 +136,9 @@ class ConfigManager:
             msg = "Config key 'loggers' must be a dict"
             raise ConfigSpecError(msg)
         for name, raw_spec in loggers.items():
+            if not isinstance(name, str):
+                msg = f"Logger name must be a string, got: {type(name).__name__}"
+                raise ConfigSpecError(msg)
             if not isinstance(raw_spec, dict):
                 msg = f"Logger config for '{name}' must be a dict"
                 raise ConfigSpecError(msg)
@@ -152,7 +170,14 @@ class ConfigManager:
             thread = self._watch_thread
 
         if load_initial:
-            self.load_file(path)
+            try:
+                self.load_file(path)
+            except Exception:
+                with self._lock:
+                    self._watch_file = None
+                    self._watch_thread = None
+                    self._stop_event.set()
+                raise
 
         if thread:
             thread.start()
@@ -189,8 +214,15 @@ class ConfigManager:
             if last_signature is None:
                 last_signature = signature
             elif signature != last_signature:
-                self.load_file(path)
-                last_signature = signature
+                try:
+                    self.load_file(path)
+                except Exception as exc:  # noqa: BLE001
+                    stderr.write(
+                        f"{exc.__class__.__name__}[ConfigManager]: "
+                        f"Auto-reload failed for {path}: {exc}\n"
+                    )
+                else:
+                    last_signature = signature
             sleep(interval)
 
     def _register_default_factories(self) -> None:
@@ -278,7 +310,7 @@ class ConfigManager:
         if isinstance(spec, str):
             normalized_spec = {"name": spec}
         elif isinstance(spec, dict):
-            normalized_spec = spec
+            normalized_spec = dict(spec)
         else:
             msg = f"Invalid {kind} spec: {spec!r}"
             raise ConfigSpecError(msg)
@@ -330,8 +362,12 @@ class ConfigManager:
         if not isinstance(kwargs, dict):
             msg = "Formatter 'kwargs' must be a dict"
             raise ConfigSpecError(msg)
-        cls = get_formatter(name)
-        return cls(**kwargs)
+        try:
+            cls = get_formatter(name)
+            return cls(**kwargs)
+        except Exception as exc:
+            msg = f"Unable to build formatter '{name}': {exc}"
+            raise ConfigSpecError(msg) from exc
 
     def _build_filter(self, spec: dict[str, Any]) -> Filter:
         name = str(spec.get("name", "")).strip()
@@ -353,8 +389,12 @@ class ConfigManager:
                 self._as_level(item) for item in kwargs["allowed_levels"]
             ]
 
-        cls = get_filter(name)
-        return cls(**kwargs)
+        try:
+            cls = get_filter(name)
+            return cls(**kwargs)
+        except Exception as exc:
+            msg = f"Unable to build filter '{name}': {exc}"
+            raise ConfigSpecError(msg) from exc
 
     def _build_processor(self, spec: dict[str, Any]) -> Processor:
         name = str(spec.get("name", "")).strip()
@@ -366,8 +406,12 @@ class ConfigManager:
             msg = "Processor 'kwargs' must be a dict"
             raise ConfigSpecError(msg)
 
-        cls = get_processor(name)
-        return cls(**kwargs)
+        try:
+            cls = get_processor(name)
+            return cls(**kwargs)
+        except Exception as exc:
+            msg = f"Unable to build processor '{name}': {exc}"
+            raise ConfigSpecError(msg) from exc
 
     def _build_handler(self, spec: dict[str, Any]) -> Handler:
         name = str(spec.get("name", "")).strip()
@@ -395,5 +439,9 @@ class ConfigManager:
                 for filter_spec in kwargs["filters"]
             ]
 
-        cls = get_handler(name)
-        return cls(**kwargs)
+        try:
+            cls = get_handler(name)
+            return cls(**kwargs)
+        except Exception as exc:
+            msg = f"Unable to build handler '{name}': {exc}"
+            raise ConfigSpecError(msg) from exc

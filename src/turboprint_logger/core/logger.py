@@ -85,7 +85,7 @@ class Logger:
 
         if name != _ROOT_LOGGER_NAME:
             parent_name = name.rsplit(".", 1)[0] if "." in name else _ROOT_LOGGER_NAME
-            self.parent = Logger.get_logger(parent_name)
+            self.parent = Logger.get_logger(parent_name, container=container)
         else:
             self.parent = self
 
