@@ -19,9 +19,8 @@ CACHE_DIRS = [
     ".mypy_cache",
     ".ruff_cache",
     ".benchmarks",
-    ".ruff_cache",
 ]
-BUILD_DIRS = ["build", "dist", "docs"]
+BUILD_DIRS = ["build", "dist", "docs/_build"]
 
 
 @session(python=PYTHON_VERSIONS, uv_groups=["tests"])
@@ -54,10 +53,13 @@ def check_format(s: Session) -> None:
 @session(uv_groups=["docs"])
 def docs(s: Session) -> None:
     """Запуск генерации документации"""
-    if Path("docs").exists():
-        rmtree("docs")
-    s.run("sphinx", "docs")
-    s.run("sphinx-quickstart", "docs")
+    docs_source = Path("docs")
+    if not docs_source.exists():
+        s.error("docs source directory does not exist")
+    docs_build = docs_source / "_build"
+    if docs_build.exists():
+        rmtree(docs_build)
+    s.run("sphinx-build", "-b", "html", "docs", "docs/_build/html")
 
 
 @session(uv_groups=["security"])

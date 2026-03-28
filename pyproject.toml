@@ -1,5 +1,5 @@
 [build-system]
-requires = ["uv_build>=0.10,<0.11.0"]
+requires = ["uv_build>=0.10,<0.11"]
 build-backend = "uv_build"
 
 [project.urls]
@@ -21,11 +21,12 @@ json = ["ujson>=5.4.0", "msgspec>=0.20.0", "orjson>=3.11.7"]
 config = ["pyyaml>=6.0.3"]
 
 [dependency-groups]
-builds = ["uv-build>=0.10.10"]
+builds = ["uv_build>=0.10,<0.11"]
 dev = ["nox>=2026.2.9", "nox-uv>=0.7.1"]
 docs = ["sphinx>=9.0.4"]
 formats = ["ruff>=0.15.6"]
 lints = ["ruff>=0.15.6", "ty>=0.0.23"]
+security = ["bandit>=1.8.6", "detect-secrets>=1.5.0", "pip-audit>=2.9.0"]
 tests = [
     "pytest>=9.0.2",
     "pytest-emoji>=0.2.0",
@@ -39,7 +40,7 @@ types = ["types-colorama>=0.4.15.20250801"]
 
 [tool.ruff]
 line-length = 88
-include = ["src/**/*.py", "tests/**/*.py"]
+include = ["noxfile.py", "src/**/*.py", "tests/**/*.py"]
 
 [tool.ruff.lint]
 select = [
@@ -94,7 +95,7 @@ ignore = [
 force-single-line = false
 
 [tool.ruff.lint.per-file-ignores]
-"tests/" = [
+"tests/**/*.py" = [
     "ANN",     # annotations
     "S101",    # assert
     "T20",     # print
@@ -112,7 +113,7 @@ line-ending = "auto"
 respect-ignore-files = true
 include = ["src", "tests"]
 
-[tool.pytest]
+[tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = [
