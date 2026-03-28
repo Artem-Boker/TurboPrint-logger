@@ -1,5 +1,11 @@
 # TurboPrint-logger Changelog
 
+## [v0.2.6](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.5...v0.2.6) (2026-03-28)
+
+### fix
+
+- **project:** :bug: harden config/handlers, replace std errors with custom exceptions ([1829ebd](https://github.com/Artem-Boker/TurboPrint-logger/commit/1829ebd344fe0baf54655a7ea53615ddf32fc388))
+
 ## [v0.2.5](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.4...v0.2.5) (2026-03-26)
 
 ### feat
@@ -10,6 +16,10 @@
 ### fix
 
 - **managers:** :bug: added lock in managers methods ([6213bd5](https://github.com/Artem-Boker/TurboPrint-logger/commit/6213bd51aee4d120331d13675bbc5b1735217845))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.5 ([2ebf4ac](https://github.com/Artem-Boker/TurboPrint-logger/commit/2ebf4acd58c4b7ddb7244da9f64e514af7ed93d9))
 
 ## [v0.2.4](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.3...v0.2.4) (2026-03-25)
 
