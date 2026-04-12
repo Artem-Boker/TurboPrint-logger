@@ -76,7 +76,7 @@ class Container:
             if self._root_logger:
                 result[self._root_logger.name] = self._root_logger.metrics.items()
             for logger in self._loggers.values():
-                result[logger.name] = logger.metrics.items()
+                result[logger.name] = dict(logger.metrics.items())
             return result
 
     def __str__(self) -> str:

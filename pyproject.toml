@@ -118,7 +118,6 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = [
     "-v",               # подробный вывод
-    "--strict",         # строгая проверка
     "--strict-markers", # строгая проверка маркеров
     "--tb=short",       # короткий трейсбек
     "--emoji",          # используем emoji

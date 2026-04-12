@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from threading import RLock
+from threading import Lock
 
 from turboprint_logger.formatters import SimpleFormatter
 from turboprint_logger.interfaces import Formatter
@@ -13,7 +13,7 @@ class FormatterManager:
     __slots__ = ("_formatter", "_lock")
 
     def __init__(self, formatter: Formatter | None = None) -> None:
-        self._lock = RLock()
+        self._lock = Lock()
         self._formatter: Formatter = formatter or SimpleFormatter()
 
     def get(self) -> Formatter:
@@ -29,9 +29,10 @@ class FormatterManager:
         with self._lock:
             original = self._formatter
             self._formatter = formatter
-            try:
-                yield
-            finally:
+        try:
+            yield
+        finally:
+            with self._lock:
                 self._formatter = original
 
     def __str__(self) -> str:

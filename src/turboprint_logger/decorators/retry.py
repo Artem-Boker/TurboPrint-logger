@@ -38,7 +38,7 @@ class RetryDecorator:
             if isinstance(logger, Logger)
             else Logger.get_logger(logger or "root")
         )
-        self.max_attempts = max_attempts
+        self.max_attempts = min(1, max_attempts)
         self.delay = delay
         self.backoff = backoff
         self.exceptions = exceptions

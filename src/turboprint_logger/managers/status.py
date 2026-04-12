@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from threading import RLock
+from threading import Lock
 
 __all__ = ("StatusManager",)
 
@@ -10,7 +10,7 @@ class StatusComponent:
     __slots__ = ("_lock", "enabled")
 
     def __init__(self, *, status: bool = True) -> None:
-        self._lock = RLock()
+        self._lock = Lock()
         self.enabled = status
 
     def get(self) -> bool:
@@ -39,9 +39,10 @@ class StatusComponent:
         with self._lock:
             original = self.enabled
             self.enabled = status
-            try:
-                yield
-            finally:
+        try:
+            yield
+        finally:
+            with self._lock:
                 self.enabled = original
 
     def __bool__(self) -> bool:

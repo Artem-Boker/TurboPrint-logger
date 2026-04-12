@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from contextlib import contextmanager
-from threading import RLock
+from threading import Lock
 
 from turboprint_logger.interfaces import Processor
 
@@ -13,7 +13,7 @@ class ProcessorsManager:
     __slots__ = ("_lock", "_processors")
 
     def __init__(self, *processors: Processor) -> None:
-        self._lock = RLock()
+        self._lock = Lock()
         self._processors: list[Processor] = list(processors) or []
 
     def get(self) -> tuple[Processor, ...]:
@@ -43,9 +43,10 @@ class ProcessorsManager:
             self._processors = (
                 list(processors) if replace else [*self._processors, *processors]
             )
-            try:
-                yield
-            finally:
+        try:
+            yield
+        finally:
+            with self._lock:
                 self._processors = original
 
     def __len__(self) -> int:
@@ -60,9 +61,9 @@ class ProcessorsManager:
         with self._lock:
             return self._processors[index]
 
-    def __contains__(self, handler: Processor) -> bool:
+    def __contains__(self, processor: Processor) -> bool:
         with self._lock:
-            return handler in self._processors
+            return processor in self._processors
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}(processors_count={len(self._processors)})"

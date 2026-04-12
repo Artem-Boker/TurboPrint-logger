@@ -260,7 +260,7 @@ class Logger:
                     handler.handle(record)
                 except Exception as exc:  # noqa: BLE001
                     sys.stderr.write(
-                        f"Exception in {handler.__class__.__name__}: {exc}" + "\n"
+                        f"Exception in {handler.__class__.__name__}: {exc}\n"
                     )
 
         return True

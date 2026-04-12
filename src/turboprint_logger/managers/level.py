@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from threading import RLock
+from threading import Lock
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 
@@ -12,7 +12,7 @@ class LevelManager:
     __slots__ = ("_level", "_lock")
 
     def __init__(self, level: LevelRegistry | None = None) -> None:
-        self._lock = RLock()
+        self._lock = Lock()
         self._level: LevelRegistry = level or Level.NOTSET
 
     def get(self) -> LevelRegistry:
@@ -28,9 +28,10 @@ class LevelManager:
         with self._lock:
             original = self._level
             self._level = level
-            try:
-                yield
-            finally:
+        try:
+            yield
+        finally:
+            with self._lock:
                 self._level = original
 
     def enabled_for(self, level: LevelRegistry) -> bool:

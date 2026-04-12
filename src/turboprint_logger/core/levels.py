@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import cache
+from threading import Lock
 from typing import ClassVar
 
 from colorama import Fore, Style
@@ -53,6 +54,8 @@ def _register_levels(cls: type[Level]) -> type[Level]:
 
 @_register_levels
 class Level:
+    _lock = Lock()
+
     NOTSET = LevelRegistry("NOTSET", 0, Fore.RESET)
     VERBOSE = LevelRegistry("VERBOSE", 10, Fore.LIGHTBLACK_EX)
     DEBUG = LevelRegistry("DEBUG", 20, Fore.MAGENTA)
@@ -78,17 +81,20 @@ class Level:
     @classmethod
     @cache
     def get_by_name(cls, name: str) -> LevelRegistry | None:
-        return cls._by_name.get(name.strip().upper())
+        with cls._lock:
+            return cls._by_name.get(name.strip().upper())
 
     @classmethod
     @cache
     def get_by_level(cls, level: int) -> LevelRegistry | None:
-        return cls._by_level.get(level)
+        with cls._lock:
+            return cls._by_level.get(level)
 
     @classmethod
     @cache
     def all_levels(cls) -> list[LevelRegistry]:
-        return sorted(cls._by_level.values(), key=lambda lvl: lvl.level)
+        with cls._lock:
+            return sorted(cls._by_level.values(), key=lambda lvl: lvl.level)
 
     @classmethod
     def register(  # noqa: C901
@@ -125,12 +131,13 @@ class Level:
                 msg = f"Invalid emoji code: {emoji_name}"
                 raise InvalidLevelEmojiError(msg)
 
-        new_level = LevelRegistry(name_upper, level, color, emoji)
-        cls._by_name[name_upper] = new_level
-        cls._by_level[level] = new_level
-        cls.get_by_name.cache_clear()
-        cls.get_by_level.cache_clear()
-        cls.all_levels.cache_clear()
+        with cls._lock:
+            new_level = LevelRegistry(name_upper, level, color, emoji)
+            cls._by_name[name_upper] = new_level
+            cls._by_level[level] = new_level
+            cls.get_by_name.cache_clear()
+            cls.get_by_level.cache_clear()
+            cls.all_levels.cache_clear()
         return new_level
 
     def __str__(self) -> str:

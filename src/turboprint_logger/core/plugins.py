@@ -42,7 +42,7 @@ def _register(
 ) -> Callable[[_T], _T]:
     def decorator(cls: _T) -> _T:
         if not issubclass(cls, type_):
-            msg = f"{cls.__name__} mist be subclass of {type_.__name__}"
+            msg = f"{cls.__name__} must be subclass of {type_.__name__}"
             raise PluginTypeError(msg)
         with lock:
             key = name or cls.__name__

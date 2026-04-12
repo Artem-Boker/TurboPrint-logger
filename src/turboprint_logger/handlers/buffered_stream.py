@@ -93,4 +93,4 @@ class BufferedStreamHandler(Handler):
             if self._timer is not None:
                 self._timer.cancel()
                 self._timer = None
-        self.flush()
+            self.flush()

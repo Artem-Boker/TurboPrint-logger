@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from contextlib import contextmanager
-from threading import RLock
+from threading import Lock
 from typing import Any
 
 from turboprint_logger.utils.normalizers import normalize_context_key
@@ -14,7 +14,7 @@ class ContextManager:
     __slots__ = ("_context", "_lock")
 
     def __init__(self, **context) -> None:
-        self._lock = RLock()
+        self._lock = Lock()
         self._context: dict[str, Any] = context
 
     def get(self) -> dict[str, Any]:
@@ -38,9 +38,10 @@ class ContextManager:
         with self._lock:
             original = self._context
             self._context = context if replace else {**self._context, **context}
-            try:
-                yield
-            finally:
+        try:
+            yield
+        finally:
+            with self._lock:
                 self._context = original
 
     def values(self) -> Iterable[Any]:

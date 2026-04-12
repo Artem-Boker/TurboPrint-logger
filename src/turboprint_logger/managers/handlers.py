@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from contextlib import contextmanager
-from threading import RLock
+from threading import Lock
 
 from turboprint_logger.interfaces import Handler
 
@@ -13,7 +13,7 @@ class HandlersManager:
     __slots__ = ("_handlers", "_lock")
 
     def __init__(self, *handlers: Handler) -> None:
-        self._lock = RLock()
+        self._lock = Lock()
         self._handlers: list[Handler] = list(handlers) or []
 
     def get(self) -> tuple[Handler, ...]:
@@ -41,9 +41,10 @@ class HandlersManager:
         with self._lock:
             original = self._handlers
             self._handlers = list(handlers) if replace else [*self._handlers, *handlers]
-            try:
-                yield
-            finally:
+        try:
+            yield
+        finally:
+            with self._lock:
                 self._handlers = original
 
     def __len__(self) -> int:

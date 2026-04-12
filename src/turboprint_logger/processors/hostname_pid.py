@@ -11,9 +11,13 @@ __all__ = ("HostnamePidProcessor",)
 
 
 class HostnamePidProcessor(Processor):
+    def __init__(self) -> None:
+        self._hostname = gethostname()
+        self._pid = getpid()
+
     def process(self, record: Record) -> Record:
-        record.context.setdefault("host", gethostname())
-        record.context.setdefault("pid", getpid())
+        record.context.setdefault("host", self._hostname)
+        record.context.setdefault("pid", self._pid)
         record.context.setdefault("thread_id", get_ident())
 
         return record

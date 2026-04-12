@@ -20,14 +20,15 @@ class LocaleManager:
     def set(cls, language: _SUPPORTED_LANGUAGES) -> None:
         cls._local.language = language
 
+    @classmethod
     @contextmanager
-    def temporary(self, language: _SUPPORTED_LANGUAGES):  # noqa: ANN201
-        original = self.get()
-        self.set(language)
+    def temporary(cls, language: _SUPPORTED_LANGUAGES):  # noqa: ANN206
+        original = cls.get()
+        cls.set(language)
         try:
             yield
         finally:
-            self.set(original)
+            cls.set(original)
 
     def __str__(self) -> str:
         return f'{self.__class__.__name__}(locale="{self.get()}")'
