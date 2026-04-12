@@ -18,7 +18,6 @@ class Config:
     handlers: list[Handler] | None = None
     filters: list[Filter] | None = None
     propagate: bool | None = None
-    metrics: dict[LevelRegistry, int] | None = None
     status: bool | None = None
     context: dict[str, Any] | None = None
     tags: set[str] | None = None

@@ -63,6 +63,7 @@ class LoggingAdapter(logging.Handler):
             "processName",
             "relativeCreated",
             "stack_info",
+            "taskName"
             "thread",
             "threadName",
         }

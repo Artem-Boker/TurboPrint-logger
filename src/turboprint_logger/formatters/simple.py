@@ -54,14 +54,14 @@ class SimpleFormatter(Formatter):
         message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
         message = Template(message).safe_substitute(record.context)
 
-        date = record.date_time.date()
+        date_obj = record.date_time.date()
         date_str = (
-            date.strftime(self.date_format) if self.date_format else date.isoformat()
+            date_obj.strftime(self.date_format) if self.date_format else date_obj.isoformat()
         )
 
-        time = record.date_time.time()
+        time_obj = record.date_time.time()
         time_str = (
-            time.strftime(self.time_format) if self.time_format else time.isoformat()
+            time_obj.strftime(self.time_format) if self.time_format else time_obj.isoformat()
         )
 
         record_format = FormatDict(

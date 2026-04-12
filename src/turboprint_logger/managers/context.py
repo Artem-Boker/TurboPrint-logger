@@ -15,7 +15,7 @@ class ContextManager:
 
     def __init__(self, **context) -> None:
         self._lock = Lock()
-        self._context: dict[str, Any] = context
+        self._context: dict[str, Any] = {normalize_context_key(key): value for key, value in context.items()}
 
     def get(self) -> dict[str, Any]:
         with self._lock:
@@ -31,13 +31,14 @@ class ContextManager:
 
     def update(self, **context) -> None:
         with self._lock:
-            self._context.update(context)
+            self._context.update({normalize_context_key(key): value for key, value in context.items()})
 
     @contextmanager
     def temporary(self, *, replace: bool = True, **context):  # noqa: ANN201
+        normalized = {normalize_context_key(key): value for key, value in context.items()}
         with self._lock:
             original = self._context
-            self._context = context if replace else {**self._context, **context}
+            self._context = normalized if replace else {**self._context, **normalized}
         try:
             yield
         finally:

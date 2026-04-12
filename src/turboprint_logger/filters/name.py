@@ -23,7 +23,7 @@ class NameFilter(Filter):
         self.mode = mode.lower()
         self.ignorecase = ignorecase
 
-        if mode == "regex":
+        if self.mode == "regex":
             flags = IGNORECASE if ignorecase else 0
             self._regex = re_compile(pattern, flags)
 

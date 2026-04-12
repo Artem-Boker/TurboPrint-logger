@@ -1,7 +1,15 @@
 from __future__ import annotations
 
 from . import filters, formatters, handlers, processors
-from .core import Config, Container, Level, Logger, get_default_container
+from .core import (
+    Config,
+    Container,
+    Level,
+    LevelRegistry,
+    Record,
+    Logger,
+    get_default_container,
+)
 from .core import plugins as __plugins
 from .integrations.logging import LoggingAdapter
 from .managers import ConfigManager, LocaleManager
@@ -20,6 +28,8 @@ __all__ = (
     "get_container",
     "get_default_container",
     "get_logger",
+    "LevelRegistry",
+    "Record",
 )
 
 __version__ = "0.2.6"

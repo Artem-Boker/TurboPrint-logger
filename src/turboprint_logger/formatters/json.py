@@ -46,21 +46,19 @@ class JSONFormatter(Formatter):
             self._encoder = Encoder(enc_hook=self._default_serializer, order=order)
         elif JSON_MODULE == "orjson":
             self._orjson_option = orjson.OPT_SERIALIZE_NUMPY
+            if sort_keys:
+                self._orjson_option |= orjson.OPT_SORT_KEYS
 
     @staticmethod
     def _default_serializer(obj: Any) -> Any:  # noqa: ANN401, PLR0911
         if isinstance(obj, dict):
             return obj
-        if hasattr(obj, "dict"):
-            return obj.dict() if callable(obj.dict) else obj.dict
-        if hasattr(obj, "to_dict"):
-            return obj.to_dict() if callable(obj.to_dict) else obj.to_dict
-        if hasattr(obj, "__json__"):
-            return obj.__json__() if callable(obj.__json__) else obj.__json__
-        if hasattr(obj, "__dict__"):
-            return obj.__dict__() if callable(obj.__dict__) else obj.__dict__
         if isinstance(obj, (datetime, date, time)):
             return obj.isoformat()
+        for method_name in ("dict", "to_dict","__json__","__dict__"):
+            method_obj = getattr(obj, method_name, None)
+            if callable(method_obj):
+                return method_obj
         return str(obj)
 
     def format(self, record: Record) -> str:
