@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections.abc import Callable
 from functools import wraps
 from itertools import chain
-from string import Template
 from time import perf_counter
 from typing import Any, TypeVar, cast
 
@@ -37,9 +36,9 @@ class EventDecorator:
         self.level = level
         self.error_level = error_level
         self.arg_parser = arg_parser
-        self.entry_message = Template(entry_message)
-        self.exit_message = Template(exit_message)
-        self.exc_message = Template(exc_message)
+        self.entry_message = entry_message
+        self.exit_message = exit_message
+        self.exc_message = exc_message
         self.default_context = default_context
 
     def __call__(self, func: _F) -> _F:
@@ -57,10 +56,9 @@ class EventDecorator:
                 "function": func.__name__,
                 "args": str_args,
             }
-            entry_message = self.entry_message.safe_substitute(entry_extra)
             self.logger(
                 self.level,
-                entry_message,
+                self.entry_message,
                 **filter_reserved(entry_extra),
             )
             start_time = perf_counter()
@@ -76,10 +74,9 @@ class EventDecorator:
                     "duration": str(round(end_time - start_time, 3)),
                     "exception": repr(exc),
                 }
-                exc_message = self.exc_message.safe_substitute(exc_extra)
                 self.logger(
                     self.error_level,
-                    exc_message,
+                    self.exc_message,
                     **filter_reserved(exc_extra),
                 )
                 raise
@@ -92,10 +89,9 @@ class EventDecorator:
                 "duration": str(round(end_time - start_time, 3)),
                 "result": repr(result),
             }
-            exit_message = self.exit_message.safe_substitute(exit_extra)
             self.logger(
                 self.level,
-                exit_message,
+                self.exc_message,
                 **filter_reserved(exit_extra),
             )
             return result

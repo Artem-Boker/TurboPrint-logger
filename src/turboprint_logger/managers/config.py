@@ -121,14 +121,16 @@ class ConfigManager:
             raise ConfigSpecError(msg)
         return data
 
-    def load_file(self, file_path: str | Path) -> dict[str, Any]:
+    def load_file(
+        self, file_path: str | Path, *, merge: bool = False
+    ) -> dict[str, Any]:
         config = self.parse_file(file_path)
-        self.apply(config)
+        self.apply(config, merge=merge)
         with self._lock:
             self._last_loaded = config
         return config
 
-    def apply(self, config: dict[str, Any]) -> None:
+    def apply(self, config: dict[str, Any], *, merge: bool = False) -> None:
         from turboprint_logger.core.logger import Logger  # noqa: PLC0415
 
         loggers = cast(dict[str, Any], config.get("loggers", {}))
@@ -145,7 +147,7 @@ class ConfigManager:
             logger_name = _ROOT_LOGGER_NAME if name == _ROOT_LOGGER_NAME else name
 
             logger = Logger.get_logger(logger_name, container=self._container)
-            self._apply_logger(logger, raw_spec)
+            self._apply_logger(logger, raw_spec, merge=merge)
 
     def enable_auto_reload(
         self,
@@ -231,7 +233,21 @@ class ConfigManager:
         self.register_factory("handler", self._build_handler)
         self.register_factory("processor", self._build_processor)
 
-    def _apply_logger(self, logger: Logger, spec: dict[str, Any]) -> None:
+    def _apply_logger(
+        self, logger: Logger, spec: dict[str, Any], *, merge: bool = False
+    ) -> None:
+        if not merge:
+            if "handlers" in spec:
+                logger.handlers.clear()
+            if "filters" in spec:
+                logger.filters.clear()
+            if "processors" in spec:
+                logger.processors.clear()
+            if "context" in spec:
+                logger.context.clear()
+            if "tags" in spec:
+                logger.tags.clear()
+
         if "min_level" in spec:
             logger.level.set(self._as_level(spec["min_level"]))
 
@@ -250,8 +266,10 @@ class ConfigManager:
                 cast(Handler, self._build_component("handler", item))
                 for item in handlers_spec
             ]
-            logger.handlers.clear()
-            logger.handlers.add(*handlers)
+            if merge:
+                logger.handlers.add(*handlers)
+            else:
+                logger.handlers.add(*handlers)
 
         if "processors" in spec:
             processors_spec = spec["processors"]
@@ -262,8 +280,10 @@ class ConfigManager:
                 cast(Processor, self._build_component("processor", item))
                 for item in processors_spec
             ]
-            logger.processors.clear()
-            logger.processors.add(*processors)
+            if merge:
+                logger.processors.add(*processors)
+            else:
+                logger.processors.add(*processors)
 
         if "filters" in spec:
             filters_spec = spec["filters"]
@@ -274,8 +294,10 @@ class ConfigManager:
                 cast("Filter", self._build_component("filter", item))
                 for item in filters_spec
             ]
-            logger.filters.clear()
-            logger.filters.add(*filters)
+            if merge:
+                logger.filters.add(*filters)
+            else:
+                logger.filters.add(*filters)
 
         if "propagate" in spec:
             logger.propagate = bool(spec["propagate"])
@@ -288,16 +310,20 @@ class ConfigManager:
             if not isinstance(context, dict):
                 msg = "Logger key 'context' must be a dict"
                 raise ConfigSpecError(msg)
-            logger.context.clear()
-            logger.context.update(**context)
+            if merge:
+                logger.context.update(**context)
+            else:
+                logger.context.update(**context)
 
         if "tags" in spec:
             tags = spec["tags"]
             if not isinstance(tags, list):
                 msg = "Logger key 'tags' must be a list"
                 raise ConfigSpecError(msg)
-            logger.tags.clear()
-            logger.tags.add(*[str(tag) for tag in tags])
+            if merge:
+                logger.tags.add(*[str(tag) for tag in tags])
+            else:
+                logger.tags.add(*[str(tag) for tag in tags])
 
     def _build_component(self, kind: str, spec: str | dict[str, Any]) -> object:
         with self._lock:

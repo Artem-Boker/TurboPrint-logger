@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from . import filters, formatters, handlers, processors
+from . import decorators, filters, formatters, handlers, processors
 from .core import (
     Config,
     Container,
@@ -27,10 +27,15 @@ __all__ = (
     "Logger",
     "LoggingAdapter",
     "Record",
+    "decorators",
+    "filters",
+    "formatters",
     "get_container",
     "get_default_container",
     "get_logger",
+    "handlers",
     "install_adapter",
+    "processors",
 )
 
 __version__ = "0.2.6"
