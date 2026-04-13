@@ -1,10 +1,22 @@
 # TurboPrint-logger Changelog
 
+## [v0.2.7](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.6...v0.2.7) (2026-04-13)
+
+### fix
+
+- **project:** :bug: fixed known bugs ([673c43b](https://github.com/Artem-Boker/TurboPrint-logger/commit/673c43b2152e9ea3e8f0bedb898cbd6fc11f8bea))
+- **project:** :bug: fixed known bugs ([f093aa8](https://github.com/Artem-Boker/TurboPrint-logger/commit/f093aa84aab2e85d7048e36a81b4f1772ca69a00))
+- **project:** :bug: fixed known bugs ([ae90bc1](https://github.com/Artem-Boker/TurboPrint-logger/commit/ae90bc10e82728374c5bd6b24e12f9e46c352712))
+
 ## [v0.2.6](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.5...v0.2.6) (2026-03-28)
 
 ### fix
 
 - **project:** :bug: harden config/handlers, replace std errors with custom exceptions ([1829ebd](https://github.com/Artem-Boker/TurboPrint-logger/commit/1829ebd344fe0baf54655a7ea53615ddf32fc388))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.6 ([a08d901](https://github.com/Artem-Boker/TurboPrint-logger/commit/a08d901f27431e5638d346839297de6479c129cb))
 
 ## [v0.2.5](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.4...v0.2.5) (2026-03-26)
 
