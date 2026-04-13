@@ -21,10 +21,9 @@ class LevelFilter(Filter):
     def filter(self, record: Record) -> bool:
         level = record.level
 
-        if self.min_level and level.level < self.min_level.level:
+        if self.min_level is not None and level.level < self.min_level.level:
             return False
-
-        if self.max_level and level.level > self.max_level.level:
+        if self.max_level is not None and level.level > self.max_level.level:
             return False
 
         return not (self.allowed_levels and level not in self.allowed_levels)

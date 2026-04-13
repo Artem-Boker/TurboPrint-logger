@@ -18,7 +18,7 @@ class MetricsManager:
 
     def get(self) -> dict[int, int]:
         with self._lock:
-            return self._metrics
+            return self._metrics.copy()
 
     def add(self, level: LevelRegistry) -> None:
         with self._lock:
@@ -31,7 +31,7 @@ class MetricsManager:
                 return False
             if self._metrics.get(key, 0) <= 1:
                 del self._metrics[key]
-                return False
+                return True
             self._metrics[key] -= 1
             return True
 
@@ -50,7 +50,7 @@ class MetricsManager:
 
     def reset(self, level: LevelRegistry | None = None) -> None:
         with self._lock:
-            if level:
+            if level is not None:
                 self._metrics.pop(level.level, 0)
             else:
                 self._metrics.clear()

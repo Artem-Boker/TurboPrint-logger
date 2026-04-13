@@ -19,7 +19,10 @@ from turboprint_logger.managers.metrics import MetricsManager
 from turboprint_logger.managers.processors import ProcessorsManager
 from turboprint_logger.managers.status import StatusManager
 from turboprint_logger.managers.tags import TagsManager
-from turboprint_logger.utils.normalizers import normalize_logger_name
+from turboprint_logger.utils.normalizers import (
+    normalize_context_key,
+    normalize_logger_name,
+)
 
 __all__ = ("Logger",)
 
@@ -151,15 +154,16 @@ class Logger:
         with cls._get_logger_lock:
             if not container._root_logger:
                 container._root_logger = Logger._create(
-                    _ROOT_LOGGER_NAME, container, config
+                    _ROOT_LOGGER_NAME, container, None
                 )
             if name == _ROOT_LOGGER_NAME:
                 return container._root_logger
-            if name not in container._loggers:
+            existing = container._loggers.get(name)
+            if existing is None:
                 logger = Logger._create(name, container, config)
                 container._loggers[name] = logger
                 return logger
-            return container._loggers[name]
+            return existing
 
     def _merge_tags(self, tags: list[str] | None = None) -> set[str]:
         merged_tags = set()
@@ -172,7 +176,9 @@ class Logger:
         merged_context = {}
         merged_context.update(self._container.globals.context.get())
         merged_context.update(self.context.get())
-        merged_context.update(extra)
+        merged_context.update(
+            {normalize_context_key(key): value for key, value in extra.items()}
+        )
         return merged_context
 
     def _create_record(
@@ -181,10 +187,12 @@ class Logger:
         message: str | Callable[[], str],
         tags: set[str],
         context: dict[str, Any],
+        *,
+        stacklevel: int = 2,
     ) -> Record:
         if isinstance(level, str):
             level = Level.get_by_name(level) or Level.NOTSET
-        frame = sys._getframe(2)
+        frame = sys._getframe(stacklevel)
         code = frame.f_code
         return Record(
             message=message,

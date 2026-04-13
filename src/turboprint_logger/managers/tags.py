@@ -16,10 +16,6 @@ class TagsManager:
 
     def get(self) -> set[str]:
         with self._lock:
-            return self._tags
-
-    def copy(self) -> set[str]:
-        with self._lock:
             return self._tags.copy()
 
     def add(self, *tags: str) -> None:
@@ -62,7 +58,7 @@ class TagsManager:
             return tag in self._tags
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(tags_count={len(self._tags)})"
+        return f"{self.__class__.__name__}(tags_count={len(self)})"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(tags={tuple(self._tags)})"
+        return f"{self.__class__.__name__}(tags={self.get()})"

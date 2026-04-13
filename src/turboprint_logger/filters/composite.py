@@ -12,4 +12,6 @@ class CompositeFilter(Filter):
         self.check = all if all_filters else any
 
     def filter(self, record: Record) -> bool:
+        if not self.filters:
+            return True
         return self.check(f.filter(record) for f in self.filters)

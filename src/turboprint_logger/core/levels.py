@@ -44,8 +44,7 @@ class LevelRegistry:
 
 
 def _register_levels(cls: type[Level]) -> type[Level]:
-    for attr_name in dir(cls):
-        level = getattr(cls, attr_name)
+    for level in vars(cls).values():
         if isinstance(level, LevelRegistry):
             cls._by_name[level.name] = level
             cls._by_level[level.level] = level
@@ -105,39 +104,40 @@ class Level:
         emoji_name: str | None = None,
     ) -> LevelRegistry:
         name_upper = normalize_level_name(name)
-        if name_upper in Level._by_name:
-            msg = f'Level with name "{name_upper}" already exists'
-            raise LevelNameAlreadyExistsError(msg)
-        if level in Level._by_level:
-            msg = f"Level with value {level} already exists"
-            raise LevelValueAlreadyExistsError(msg)
-        if level < 0:
-            msg = f'Level "{name_upper}" cannot be negative: {level}'
-            raise NegativeLevelError(msg)
-        if not isinstance(color, str) or not color:
-            msg = f"Invalid color: {color!r}"
-            raise InvalidLevelColorError(msg)
-        emoji = emoji_name.strip().lower() if emoji_name else emoji_name
-        if emoji and not is_emoji(emoji):
-            if not emoji.startswith(":"):
-                emoji = ":" + emoji
-            if not emoji.endswith(":"):
-                emoji = emoji + ":"
-            for lang in EMOJI_LANGUAGES:
-                emoji = emojize(emoji, variant="emoji_type", language=lang)
-                if is_emoji(emoji):
-                    break
-            if not is_emoji(emoji):
-                msg = f"Invalid emoji code: {emoji_name}"
-                raise InvalidLevelEmojiError(msg)
+        with cls._lock:
+            if name_upper in Level._by_name:
+                msg = f'Level with name "{name_upper}" already exists'
+                raise LevelNameAlreadyExistsError(msg)
+            if level in Level._by_level:
+                msg = f"Level with value {level} already exists"
+                raise LevelValueAlreadyExistsError(msg)
+            if level < 0:
+                msg = f'Level "{name_upper}" cannot be negative: {level}'
+                raise NegativeLevelError(msg)
+            if not isinstance(color, str) or not color:
+                msg = f"Invalid color: {color!r}"
+                raise InvalidLevelColorError(msg)
+            emoji = emoji_name.strip().lower() if emoji_name else emoji_name
+            if emoji and not is_emoji(emoji):
+                if not emoji.startswith(":"):
+                    emoji = ":" + emoji
+                if not emoji.endswith(":"):
+                    emoji = emoji + ":"
+                for lang in EMOJI_LANGUAGES:
+                    emoji = emojize(emoji, variant="emoji_type", language=lang)
+                    if is_emoji(emoji):
+                        break
+                if not is_emoji(emoji):
+                    msg = f"Invalid emoji code: {emoji_name}"
+                    raise InvalidLevelEmojiError(msg)
 
         with cls._lock:
-            new_level = LevelRegistry(name_upper, level, color, emoji)
-            cls._by_name[name_upper] = new_level
-            cls._by_level[level] = new_level
             cls.get_by_name.cache_clear()
             cls.get_by_level.cache_clear()
             cls.all_levels.cache_clear()
+            new_level = LevelRegistry(name_upper, level, color, emoji)
+            cls._by_name[name_upper] = new_level
+            cls._by_level[level] = new_level
         return new_level
 
     def __str__(self) -> str:

@@ -38,7 +38,7 @@ class RetryDecorator:
             if isinstance(logger, Logger)
             else Logger.get_logger(logger or "root")
         )
-        self.max_attempts = min(1, max_attempts)
+        self.max_attempts = max(1, max_attempts)
         self.delay = delay
         self.backoff = backoff
         self.exceptions = exceptions
@@ -83,7 +83,7 @@ class RetryDecorator:
             )
             if last_exc:
                 msg = f"{func.__name__}, last exception: {last_exc}"
-                raise RetryLimitExceededError(msg)
+                raise RetryLimitExceededError(msg) from last_exc
             msg = "Unknown error in retry"
             raise UnknownRetryError(msg)
 

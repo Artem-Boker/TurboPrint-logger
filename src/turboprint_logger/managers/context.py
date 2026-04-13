@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
 from contextlib import contextmanager
 from threading import Lock
 from typing import Any
@@ -15,13 +14,11 @@ class ContextManager:
 
     def __init__(self, **context) -> None:
         self._lock = Lock()
-        self._context: dict[str, Any] = {normalize_context_key(key): value for key, value in context.items()}
+        self._context: dict[str, Any] = {
+            normalize_context_key(key): value for key, value in context.items()
+        }
 
     def get(self) -> dict[str, Any]:
-        with self._lock:
-            return self._context
-
-    def copy(self) -> dict[str, Any]:
         with self._lock:
             return self._context.copy()
 
@@ -31,11 +28,15 @@ class ContextManager:
 
     def update(self, **context) -> None:
         with self._lock:
-            self._context.update({normalize_context_key(key): value for key, value in context.items()})
+            self._context.update(
+                {normalize_context_key(key): value for key, value in context.items()}
+            )
 
     @contextmanager
     def temporary(self, *, replace: bool = True, **context):  # noqa: ANN201
-        normalized = {normalize_context_key(key): value for key, value in context.items()}
+        normalized = {
+            normalize_context_key(key): value for key, value in context.items()
+        }
         with self._lock:
             original = self._context
             self._context = normalized if replace else {**self._context, **normalized}
@@ -45,17 +46,17 @@ class ContextManager:
             with self._lock:
                 self._context = original
 
-    def values(self) -> Iterable[Any]:
+    def values(self) -> list[Any]:
         with self._lock:
-            return self._context.values()
+            return list(self._context.values())
 
-    def keys(self) -> Iterable[Any]:
+    def keys(self) -> list[str]:
         with self._lock:
-            return self._context.keys()
+            return list(self._context.keys())
 
-    def items(self) -> Iterable[tuple[str, Any]]:
+    def items(self) -> list[tuple[str, Any]]:
         with self._lock:
-            return self._context.items()
+            return list(self._context.items())
 
     def __getitem__(self, key: str) -> Any:  # noqa: ANN401
         key = normalize_context_key(key)

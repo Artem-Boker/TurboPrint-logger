@@ -14,7 +14,7 @@ class FiltersManager:
 
     def __init__(self, *filters: Filter) -> None:
         self._lock = Lock()
-        self._filters: list[Filter] = list(filters) or []
+        self._filters: list[Filter] = list(filters)
 
     def get(self) -> tuple[Filter, ...]:
         with self._lock:

@@ -231,9 +231,7 @@ class ConfigManager:
         self.register_factory("handler", self._build_handler)
         self.register_factory("processor", self._build_processor)
 
-    def _apply_logger(
-        self, logger: Logger, spec: dict[str, Any]
-    ) -> None:  # noqa: C901, PLR0912
+    def _apply_logger(self, logger: Logger, spec: dict[str, Any]) -> None:
         if "min_level" in spec:
             logger.level.set(self._as_level(spec["min_level"]))
 

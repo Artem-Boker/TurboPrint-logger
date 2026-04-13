@@ -98,7 +98,12 @@ class FileHandler(Handler):
                 self._file.close()
             self._file = None
             self._closed = False
-            self._open_file()
+            original_mode = self.mode
+            self.mode = "a"
+            try:
+                self._open_file()
+            finally:
+                self.mode = original_mode
             if self._timer is None:
                 self._schedule_flush()
 

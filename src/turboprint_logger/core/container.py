@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from threading import Lock, RLock
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 from weakref import WeakValueDictionary
 
 from turboprint_logger.core.levels import LevelRegistry
@@ -28,7 +28,7 @@ class Container:
         "globals",
     )
 
-    _containers: WeakValueDictionary[str, Container] = WeakValueDictionary()
+    _containers: ClassVar[dict[str, Container]] = {}
     _get_container_lock = Lock()
 
     def __init__(self) -> None:
@@ -54,8 +54,6 @@ class Container:
         self._name = name
         self.globals = GlobalManager()
         self.defaults = DefaultManager()
-
-        self._containers[name] = self
         return self
 
     @classmethod
@@ -72,12 +70,11 @@ class Container:
 
     def get_metrics(self) -> dict[str, dict[LevelRegistry, int]]:
         with self._container_lock:
-            result = {}
+            loggers = []
             if self._root_logger:
-                result[self._root_logger.name] = self._root_logger.metrics.items()
-            for logger in self._loggers.values():
-                result[logger.name] = dict(logger.metrics.items())
-            return result
+                loggers.append(self._root_logger)
+            loggers.extend(self._loggers.values())
+        return {logger.name: logger.metrics.items() for logger in loggers}
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}({self.name})"

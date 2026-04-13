@@ -42,7 +42,7 @@ class SecurityFormatter(Formatter):
             for key, value in item.items():
                 if not isinstance(key, str):
                     masked[key] = value
-                if key in self.sensitive_fields:
+                elif key in self.sensitive_fields:
                     masked[key] = "***"
                 else:
                     masked[key] = self._mask_process(value)

@@ -50,15 +50,15 @@ class JSONFormatter(Formatter):
                 self._orjson_option |= orjson.OPT_SORT_KEYS
 
     @staticmethod
-    def _default_serializer(obj: Any) -> Any:  # noqa: ANN401, PLR0911
+    def _default_serializer(obj: Any) -> Any:  # noqa: ANN401
         if isinstance(obj, dict):
             return obj
         if isinstance(obj, (datetime, date, time)):
             return obj.isoformat()
-        for method_name in ("dict", "to_dict","__json__","__dict__"):
+        for method_name in ("dict", "to_dict", "__json__", "__dict__"):
             method_obj = getattr(obj, method_name, None)
             if callable(method_obj):
-                return method_obj
+                return method_obj()
         return str(obj)
 
     def format(self, record: Record) -> str:

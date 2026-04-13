@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from src.turboprint_logger.utils.reserved import filter_reserved
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.logger import Logger
 
@@ -25,10 +26,14 @@ class LoggingAdapter(logging.Handler):
         super().__init__(level)
 
     def emit(self, record: logging.LogRecord) -> None:
-        custom_logger = Logger.get_logger(record.name)
+        try:
+            custom_logger = Logger.get_logger(record.name)
+        except Exception:
+            self.handleError(record)
+            return
         level = self._convert_level(record.levelno)
         message = record.getMessage()
-        extra = self._extract_extra(record)
+        extra = filter_reserved(self._extract_extra(record))
         custom_logger(level, message, **extra)
 
     def _convert_level(self, levelno: int) -> LevelRegistry:
@@ -63,7 +68,7 @@ class LoggingAdapter(logging.Handler):
             "processName",
             "relativeCreated",
             "stack_info",
-            "taskName"
+            "taskName",
             "thread",
             "threadName",
         }

@@ -9,9 +9,9 @@ from .handlers import HandlersManager
 from .level import LevelManager
 from .locale import LocaleManager
 from .metrics import MetricsManager
+from .processors import ProcessorsManager
 from .status import StatusManager
 from .tags import TagsManager
-from .processors import ProcessorsManager
 
 __all__ = (
     "ConfigManager",
@@ -24,7 +24,7 @@ __all__ = (
     "LevelManager",
     "LocaleManager",
     "MetricsManager",
+    "ProcessorsManager",
     "StatusManager",
     "TagsManager",
-    "ProcessorsManager"
 )

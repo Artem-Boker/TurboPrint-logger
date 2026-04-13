@@ -104,9 +104,16 @@ class TimedRotatingFileHandler(FileHandler):
 
             if self.compress and dst.exists():
                 compressed_path = self._compressed_path(dst)
-                with dst.open("rb") as f_in, gzip_open(compressed_path, "wb") as f_out:
-                    copyfileobj(f_in, f_out)
-                dst.unlink(missing_ok=True)
+                try:
+                    with (
+                        dst.open("rb") as f_in,
+                        gzip_open(compressed_path, "wb") as f_out,
+                    ):
+                        copyfileobj(f_in, f_out)
+                    dst.unlink(missing_ok=True)
+                except Exception:
+                    with suppress(OSError):
+                        compressed_path.unlink(missing_ok=True)
 
     def _write(self, record: Record) -> None:
         with self._lock:

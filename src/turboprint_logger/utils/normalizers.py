@@ -22,7 +22,7 @@ _PATTERN_LEVEL = re.compile(r"[a-z_-]+", re.IGNORECASE)
 _PATTERN_CONTEXT = re.compile(r"[a-z0-9_-]+", re.IGNORECASE)
 
 _BAD_BOUNDARIES = re.compile(r"^[_.-]|[_.-]$", re.IGNORECASE)
-_BAD_DOUBLE = re.compile(r"\.\.|--|__", re.IGNORECASE)
+_BAD_DOUBLE = re.compile(r"[_.-]+", re.IGNORECASE)
 
 
 def _normalize(name: str, pattern: re.Pattern, *, upper: bool = True) -> str | None:

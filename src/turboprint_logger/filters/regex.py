@@ -9,9 +9,7 @@ from turboprint_logger.interfaces import Filter
 
 __all__ = ("RegexFilter",)
 
-_FIELDS = Literal[
-    "message", "level_name", "logger_name", "code", "file", "function", "line"
-]
+_FIELDS = Literal["message", "level_name", "logger_name", "file", "function", "line"]
 
 
 class RegexFilter(Filter):

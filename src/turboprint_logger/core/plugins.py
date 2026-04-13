@@ -15,9 +15,11 @@ __all__ = (
     "get_filter",
     "get_formatter",
     "get_handler",
+    "get_processor",
     "register_filter",
     "register_formatter",
     "register_handler",
+    "register_processor",
 )
 
 _T = TypeVar("_T", bound=type[Handler | Filter | Formatter | Processor])

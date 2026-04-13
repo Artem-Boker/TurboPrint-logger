@@ -4,6 +4,7 @@ from atexit import register as register_exit
 from sys import stdout as default_output
 from threading import RLock, Timer
 from typing import TextIO
+from weakref import ref
 
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
@@ -53,7 +54,14 @@ class BufferedStreamHandler(Handler):
         self._timer: Timer | None = None
         self._closed = False
         self._lock = RLock()
-        register_exit(self.close)
+        _self_ref = ref(self)
+
+        def _atexit_close() -> None:
+            obj = _self_ref()
+            if obj is not None:
+                obj.close()
+
+        register_exit(_atexit_close)
         self._schedule_flush()
 
     def _schedule_flush(self) -> None:
@@ -66,12 +74,12 @@ class BufferedStreamHandler(Handler):
             timer.start()
 
     def _on_timer_flush(self) -> None:
-        if self._closed:
-            return
         try:
             self.flush()
         finally:
-            self._schedule_flush()
+            with self._lock:
+                if not self._closed:
+                    self._schedule_flush()
 
     def emit(self, record: Record) -> None:
         with self._lock:

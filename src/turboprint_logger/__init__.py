@@ -6,12 +6,12 @@ from .core import (
     Container,
     Level,
     LevelRegistry,
-    Record,
     Logger,
+    Record,
     get_default_container,
 )
 from .core import plugins as __plugins
-from .integrations.logging import LoggingAdapter
+from .integrations.logging import LoggingAdapter, install_adapter
 from .managers import ConfigManager, LocaleManager
 
 get_logger = Logger.get_logger
@@ -22,14 +22,15 @@ __all__ = (
     "ConfigManager",
     "Container",
     "Level",
+    "LevelRegistry",
     "LocaleManager",
     "Logger",
     "LoggingAdapter",
+    "Record",
     "get_container",
     "get_default_container",
     "get_logger",
-    "LevelRegistry",
-    "Record",
+    "install_adapter",
 )
 
 __version__ = "0.2.6"

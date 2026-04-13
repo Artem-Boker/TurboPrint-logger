@@ -5,6 +5,11 @@ from gzip import open as gzip_open
 from pathlib import Path
 from shutil import copyfileobj
 
+from src.turboprint_logger.exceptions.handlers.file import (
+    FileClosedError,
+    FileHandlerConfigError,
+    FileWriteError,
+)
 from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.handlers.file import FileHandler
@@ -40,6 +45,9 @@ class RotatingFileHandler(FileHandler):
             encoding=encoding,
             update_mode=update_mode,
         )
+        if max_bytes is None and max_lines is None:
+            msg = f"{self.__class__.__name__} required at least one of max_bytes or max_lines"
+            raise FileHandlerConfigError(msg)
         self.compress = compress
         self.max_bytes = max_bytes
         self.max_lines = max_lines
@@ -49,21 +57,20 @@ class RotatingFileHandler(FileHandler):
         self._update_counts()
 
     def _update_counts(self) -> None:
+        path = Path(self.file_path)
+        size = 0
+        line_count = 0
+        if path.exists():
+            size = path.stat().st_size
+            if self.max_lines is not None:
+                try:
+                    with path.open("r", encoding=self.encoding) as file:
+                        line_count = sum(1 for _ in file)
+                except OSError:
+                    line_count = 0
         with self._lock:
-            path = Path(self.file_path)
-            if path.exists():
-                self._current_size = path.stat().st_size
-                if self.max_lines is not None:
-                    try:
-                        with path.open("r", encoding=self.encoding) as file:
-                            self._line_count = sum(1 for _ in file)
-                    except OSError:
-                        self._line_count = 0
-                else:
-                    self._line_count = 0
-            else:
-                self._current_size = 0
-                self._line_count = 0
+            self._current_size = size
+            self._line_count = line_count
 
     def _should_rotate(self, record: Record) -> bool:  # noqa: ARG002
         if self.max_bytes is not None and self._current_size >= self.max_bytes:
@@ -108,9 +115,16 @@ class RotatingFileHandler(FileHandler):
 
             if self.compress and dst.exists():
                 compressed_path = self._compressed_path(dst)
-                with dst.open("rb") as f_in, gzip_open(compressed_path, "wb") as f_out:
-                    copyfileobj(f_in, f_out)
-                dst.unlink(missing_ok=True)
+                try:
+                    with (
+                        dst.open("rb") as f_in,
+                        gzip_open(compressed_path, "wb") as f_out,
+                    ):
+                        copyfileobj(f_in, f_out)
+                    dst.unlink(missing_ok=True)
+                except Exception:
+                    with suppress(OSError):
+                        compressed_path.unlink(missing_ok=True)
 
     def _write(self, record: Record) -> None:
         with self._lock:
@@ -119,12 +133,20 @@ class RotatingFileHandler(FileHandler):
                 self._rotate()
                 self._open_file()
                 self._closed = False
+                self._schedule_flush()
                 self._update_counts()
-
-            super()._write(record)
 
             formatter = self.formatter or record.logger.formatter.get()
             line = formatter.format(record) + self.separator
+            if self._file and not self._file.closed:
+                try:
+                    self._file.write(line)
+                except Exception as exc:
+                    msg = f"Could not write to file {self.file_path}: {exc}"
+                    raise FileWriteError(msg) from exc
+            else:
+                msg = f"File {self.file_path} is closed"
+                raise FileClosedError
             self._current_size += len(line.encode(self.encoding))
             if self.max_lines is not None:
                 self._line_count += 1

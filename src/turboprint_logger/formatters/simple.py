@@ -56,12 +56,16 @@ class SimpleFormatter(Formatter):
 
         date_obj = record.date_time.date()
         date_str = (
-            date_obj.strftime(self.date_format) if self.date_format else date_obj.isoformat()
+            date_obj.strftime(self.date_format)
+            if self.date_format
+            else date_obj.isoformat()
         )
 
         time_obj = record.date_time.time()
         time_str = (
-            time_obj.strftime(self.time_format) if self.time_format else time_obj.isoformat()
+            time_obj.strftime(self.time_format)
+            if self.time_format
+            else time_obj.isoformat()
         )
 
         record_format = FormatDict(

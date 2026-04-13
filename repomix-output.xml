@@ -1,0 +1,5197 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+CHANGELOG.md
+noxfile.py
+pyproject.toml
+README.md
+src/turboprint_logger/__init__.py
+src/turboprint_logger/core/__init__.py
+src/turboprint_logger/core/config.py
+src/turboprint_logger/core/container.py
+src/turboprint_logger/core/levels.py
+src/turboprint_logger/core/logger.py
+src/turboprint_logger/core/plugins.py
+src/turboprint_logger/core/record.py
+src/turboprint_logger/decorators/__init__.py
+src/turboprint_logger/decorators/deprecated.py
+src/turboprint_logger/decorators/event.py
+src/turboprint_logger/decorators/retry.py
+src/turboprint_logger/decorators/timed.py
+src/turboprint_logger/exceptions/__init__.py
+src/turboprint_logger/exceptions/base.py
+src/turboprint_logger/exceptions/core/__init__.py
+src/turboprint_logger/exceptions/core/base.py
+src/turboprint_logger/exceptions/core/container.py
+src/turboprint_logger/exceptions/core/levels.py
+src/turboprint_logger/exceptions/core/logger.py
+src/turboprint_logger/exceptions/core/plugins.py
+src/turboprint_logger/exceptions/decorators/__init__.py
+src/turboprint_logger/exceptions/decorators/base.py
+src/turboprint_logger/exceptions/decorators/retry.py
+src/turboprint_logger/exceptions/filters/__init__.py
+src/turboprint_logger/exceptions/filters/base.py
+src/turboprint_logger/exceptions/filters/name.py
+src/turboprint_logger/exceptions/formatters/__init__.py
+src/turboprint_logger/exceptions/formatters/base.py
+src/turboprint_logger/exceptions/handlers/__init__.py
+src/turboprint_logger/exceptions/handlers/base.py
+src/turboprint_logger/exceptions/handlers/file.py
+src/turboprint_logger/exceptions/handlers/stream.py
+src/turboprint_logger/exceptions/integrations/__init__.py
+src/turboprint_logger/exceptions/integrations/base.py
+src/turboprint_logger/exceptions/interfaces/__init__.py
+src/turboprint_logger/exceptions/interfaces/base.py
+src/turboprint_logger/exceptions/managers/__init__.py
+src/turboprint_logger/exceptions/managers/base.py
+src/turboprint_logger/exceptions/managers/config.py
+src/turboprint_logger/exceptions/managers/metrics.py
+src/turboprint_logger/exceptions/processors/__init__.py
+src/turboprint_logger/exceptions/processors/base.py
+src/turboprint_logger/exceptions/utils/__init__.py
+src/turboprint_logger/exceptions/utils/base.py
+src/turboprint_logger/exceptions/utils/normalizers.py
+src/turboprint_logger/filters/__init__.py
+src/turboprint_logger/filters/composite.py
+src/turboprint_logger/filters/context.py
+src/turboprint_logger/filters/level.py
+src/turboprint_logger/filters/name.py
+src/turboprint_logger/filters/regex.py
+src/turboprint_logger/filters/tag.py
+src/turboprint_logger/filters/time.py
+src/turboprint_logger/formatters/__init__.py
+src/turboprint_logger/formatters/json.py
+src/turboprint_logger/formatters/regex.py
+src/turboprint_logger/formatters/security.py
+src/turboprint_logger/formatters/simple.py
+src/turboprint_logger/handlers/__init__.py
+src/turboprint_logger/handlers/buffered_stream.py
+src/turboprint_logger/handlers/file.py
+src/turboprint_logger/handlers/rotating_file.py
+src/turboprint_logger/handlers/stream.py
+src/turboprint_logger/handlers/timed_rotating_file.py
+src/turboprint_logger/integrations/__init__.py
+src/turboprint_logger/integrations/logging.py
+src/turboprint_logger/interfaces/__init__.py
+src/turboprint_logger/interfaces/filter.py
+src/turboprint_logger/interfaces/formatter.py
+src/turboprint_logger/interfaces/handler.py
+src/turboprint_logger/interfaces/processor.py
+src/turboprint_logger/managers/__init__.py
+src/turboprint_logger/managers/collections.py
+src/turboprint_logger/managers/config.py
+src/turboprint_logger/managers/context.py
+src/turboprint_logger/managers/filters.py
+src/turboprint_logger/managers/formatter.py
+src/turboprint_logger/managers/handlers.py
+src/turboprint_logger/managers/level.py
+src/turboprint_logger/managers/locale.py
+src/turboprint_logger/managers/metrics.py
+src/turboprint_logger/managers/processors.py
+src/turboprint_logger/managers/status.py
+src/turboprint_logger/managers/tags.py
+src/turboprint_logger/processors/__init__.py
+src/turboprint_logger/processors/hostname_pid.py
+src/turboprint_logger/processors/lazy_message.py
+src/turboprint_logger/utils/__init__.py
+src/turboprint_logger/utils/normalizers.py
+src/turboprint_logger/utils/reserved.py
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="src/turboprint_logger/exceptions/interfaces/__init__.py">
+from __future__ import annotations
+
+from .base import InterfaceException, InterfaceMethodNotImplementedError
+
+__all__ = (
+    "InterfaceException",
+    "InterfaceMethodNotImplementedError",
+)
+</file>
+
+<file path="src/turboprint_logger/exceptions/interfaces/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = (
+    "InterfaceException",
+    "InterfaceMethodNotImplementedError",
+)
+
+
+class InterfaceException(TurboPrintException):
+    """Base exception for interface contract errors."""
+
+
+class InterfaceMethodNotImplementedError(InterfaceException):
+    """Raised when an interface method is not implemented by a subclass."""
+</file>
+
+<file path="src/turboprint_logger/exceptions/processors/__init__.py">
+from __future__ import annotations
+
+from .base import ProcessorException
+
+__all__ = ("ProcessorException",)
+</file>
+
+<file path="src/turboprint_logger/exceptions/processors/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = ("ProcessorException",)
+
+
+class ProcessorException(TurboPrintException):
+    """Base exception for all processors exceptions"""
+</file>
+
+<file path="src/turboprint_logger/processors/lazy_message.py">
+from __future__ import annotations
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Processor
+
+__all__ = ("LazyMessageProcessor",)
+
+
+class LazyMessageProcessor(Processor):
+    def process(self, record: Record) -> Record:
+        if not callable(record.message):
+            return record
+
+        try:
+            record.message = record.message()  # ty:ignore[call-top-callable]
+        except Exception as exc:  # noqa: BLE001
+            record.context["lazy_message_error"] = exc
+            record.message = "<lazy_message_error>"
+            return record
+        return record
+</file>
+
+<file path=".gitignore">
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+.pytest_cache/
+cover/
+.benchmarks/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+pyenv
+.python-version
+
+# pipenv
+pipfile.lock
+
+# UV
+uv.lock
+
+# poetry
+poetry.lock
+#poetry.toml
+
+# pdm
+pdm.lock
+# pdm.toml
+.pdm-python
+.pdm-build/
+
+# pixi
+pixi.lock
+.pixi
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+.idea/
+
+# Abstra
+.abstra/
+
+# VSCode
+.vscode/
+
+# Ruff stuff:
+.ruff_cache/
+
+# PyPI configuration file
+.pypirc
+
+# Cursor
+.cursorignore
+.cursorindexingignore
+
+# Marimo
+marimo/_static/
+marimo/_lsp/
+__marimo__/
+</file>
+
+<file path="src/turboprint_logger/core/__init__.py">
+from __future__ import annotations
+
+from .config import Config
+from .container import Container, get_default_container
+from .levels import Level, LevelRegistry
+from .logger import Logger
+from .record import Record
+
+__all__ = (
+    "Config",
+    "Container",
+    "Level",
+    "LevelRegistry",
+    "Logger",
+    "Record",
+    "get_default_container",
+)
+</file>
+
+<file path="src/turboprint_logger/decorators/__init__.py">
+from __future__ import annotations
+
+from .deprecated import deprecated
+from .event import event
+from .retry import retry
+from .timed import timed
+
+__all__ = ("deprecated", "event", "retry", "timed")
+</file>
+
+<file path="src/turboprint_logger/decorators/deprecated.py">
+from __future__ import annotations
+
+from collections.abc import Callable
+from functools import wraps
+from string import Template
+from typing import Any, TypeVar, cast
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.logger import Logger
+
+__all__ = ("deprecated",)
+
+_F = TypeVar("_F", bound=Callable[..., Any])
+
+
+class DeprecatedDecorator:
+    def __init__(
+        self,
+        message: str = "The ${function} function has been deprecated and will be removed in a future release.",  # noqa: E501
+        logger: str | Logger | None = None,
+        level: LevelRegistry = Level.EVENT,
+    ) -> None:
+        self.logger = (
+            logger
+            if isinstance(logger, Logger)
+            else Logger.get_logger(logger or "root")
+        )
+        self.message = Template(message)
+        self.level = level
+
+    def __call__(self, func: _F) -> _F:
+        @wraps(func)
+        def wrapper(*args, **kwargs):  # noqa: ANN202
+            self.logger(
+                self.level, self.message.safe_substitute(function=func.__name__)
+            )
+            return func(*args, **kwargs)
+
+        return cast(_F, wrapper)
+
+
+deprecated = DeprecatedDecorator
+</file>
+
+<file path="src/turboprint_logger/decorators/timed.py">
+from __future__ import annotations
+
+from collections.abc import Callable
+from functools import wraps
+from string import Template
+from time import perf_counter
+from typing import Any, TypeVar, cast
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.logger import Logger
+
+__all__ = ("timed",)
+
+_F = TypeVar("_F", bound=Callable[..., Any])
+
+
+class TimedDecorator:
+    def __init__(
+        self,
+        logger: str | Logger | None = None,
+        level: LevelRegistry = Level.EVENT,
+        message: str = "${function} completed in ${duration}",
+        duration_round: int = 3,
+    ) -> None:
+        self.logger = (
+            logger
+            if isinstance(logger, Logger)
+            else Logger.get_logger(logger or "root")
+        )
+        self.level = level
+        self.message = Template(message)
+        self.duration_round = duration_round
+
+    def __call__(self, func: _F) -> _F:
+        @wraps(func)
+        def wrapper(*args, **kwargs):  # noqa: ANN202
+            start = perf_counter()
+            try:
+                return func(*args, **kwargs)
+            finally:
+                duration = perf_counter() - start
+                self.logger(
+                    self.level,
+                    self.message.safe_substitute(
+                        function=func.__name__,
+                        duration=round(duration, self.duration_round),
+                    ),
+                )
+
+        return cast(_F, wrapper)
+
+
+timed = TimedDecorator
+</file>
+
+<file path="src/turboprint_logger/exceptions/base.py">
+from __future__ import annotations
+
+__all__ = ("TurboPrintException",)
+
+
+class TurboPrintException(Exception):
+    """Base exception for all TurboPrint exceptions"""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+</file>
+
+<file path="src/turboprint_logger/exceptions/core/container.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.core.base import CoreException
+
+__all__ = ("ContainerException", "ContainerInstantiationError")
+
+
+class ContainerException(CoreException):
+    """Base exception for all container exceptions"""
+
+
+class ContainerInstantiationError(ContainerException):
+    """Exception raised when container cannot be instantiated"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/core/plugins.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.core.base import CoreException
+
+__all__ = (
+    "PluginAlreadyRegisteredError",
+    "PluginException",
+    "PluginNotFoundError",
+    "PluginTypeError",
+)
+
+
+class PluginException(CoreException):
+    """Base exception for all plugins exceptions"""
+
+
+class PluginNotFoundError(PluginException):
+    """Raised when a plugin is not found"""
+
+
+class PluginAlreadyRegisteredError(PluginException):
+    """Raised when a plugin is already registered"""
+
+
+class PluginTypeError(PluginException):
+    """Raised when a plugin is not the correct type"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/decorators/__init__.py">
+from __future__ import annotations
+
+from .base import DecoratorException
+
+__all__ = ("DecoratorException",)
+</file>
+
+<file path="src/turboprint_logger/exceptions/decorators/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = ("DecoratorException",)
+
+
+class DecoratorException(TurboPrintException):
+    """Base exception for all decorators exceptions"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/filters/__init__.py">
+from __future__ import annotations
+
+from .base import FilterException
+
+__all__ = ("FilterException",)
+</file>
+
+<file path="src/turboprint_logger/exceptions/formatters/__init__.py">
+from __future__ import annotations
+
+from .base import FormatterException
+
+__all__ = ("FormatterException",)
+</file>
+
+<file path="src/turboprint_logger/exceptions/formatters/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = ("FormatterException",)
+
+
+class FormatterException(TurboPrintException):
+    """Base exception for all formatters exceptions"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/integrations/__init__.py">
+from __future__ import annotations
+
+from .base import IntegrationException
+
+__all__ = ("IntegrationException",)
+</file>
+
+<file path="src/turboprint_logger/exceptions/integrations/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = ("IntegrationException",)
+
+
+class IntegrationException(TurboPrintException):
+    """Base exception for all integrations exceptions"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/managers/__init__.py">
+from __future__ import annotations
+
+from .base import ManagerException
+
+__all__ = ("ManagerException",)
+</file>
+
+<file path="src/turboprint_logger/exceptions/utils/__init__.py">
+from __future__ import annotations
+
+from .base import UtilException
+
+__all__ = ("UtilException",)
+</file>
+
+<file path="src/turboprint_logger/filters/__init__.py">
+from __future__ import annotations
+
+from .composite import CompositeFilter
+from .context import ContextFilter
+from .level import LevelFilter
+from .name import NameFilter
+from .regex import RegexFilter
+from .tag import TagFilter
+from .time import TimeFilter
+
+__all__ = (
+    "CompositeFilter",
+    "ContextFilter",
+    "LevelFilter",
+    "NameFilter",
+    "RegexFilter",
+    "TagFilter",
+    "TimeFilter",
+)
+</file>
+
+<file path="src/turboprint_logger/filters/composite.py">
+from __future__ import annotations
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Filter
+
+__all__ = ("CompositeFilter",)
+
+
+class CompositeFilter(Filter):
+    def __init__(self, *filters: Filter, all_filters: bool = True) -> None:
+        self.filters = filters
+        self.check = all if all_filters else any
+
+    def filter(self, record: Record) -> bool:
+        return self.check(f.filter(record) for f in self.filters)
+</file>
+
+<file path="src/turboprint_logger/filters/level.py">
+from __future__ import annotations
+
+from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Filter
+
+__all__ = ("LevelFilter",)
+
+
+class LevelFilter(Filter):
+    def __init__(
+        self,
+        min_level: LevelRegistry | None = None,
+        max_level: LevelRegistry | None = None,
+        allowed_levels: list[LevelRegistry] | None = None,
+    ) -> None:
+        self.min_level = min_level
+        self.max_level = max_level
+        self.allowed_levels = allowed_levels
+
+    def filter(self, record: Record) -> bool:
+        level = record.level
+
+        if self.min_level and level.level < self.min_level.level:
+            return False
+
+        if self.max_level and level.level > self.max_level.level:
+            return False
+
+        return not (self.allowed_levels and level not in self.allowed_levels)
+</file>
+
+<file path="src/turboprint_logger/filters/time.py">
+from __future__ import annotations
+
+from datetime import UTC, time
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Filter
+
+__all__ = ("TimeFilter",)
+
+
+class TimeFilter(Filter):
+    def __init__(self, start: time | None = None, end: time | None = None) -> None:
+        self.start = start.replace(tzinfo=UTC) if start else None
+        self.end = end.replace(tzinfo=UTC) if end else None
+
+    def filter(self, record: Record) -> bool:
+        record_time = record.date_time.time().replace(tzinfo=UTC)
+        if self.start and record_time < self.start:
+            return False
+        return not (self.end and record_time > self.end)
+</file>
+
+<file path="src/turboprint_logger/formatters/__init__.py">
+from __future__ import annotations
+
+from .json import JSONFormatter
+from .regex import RegexFormatter
+from .security import SecurityFormatter
+from .simple import SimpleFormatter
+
+__all__ = (
+    "JSONFormatter",
+    "RegexFormatter",
+    "SecurityFormatter",
+    "SimpleFormatter",
+)
+</file>
+
+<file path="src/turboprint_logger/formatters/regex.py">
+from __future__ import annotations
+
+from re import Pattern
+from re import compile as re_compile
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Formatter
+
+__all__ = ("RegexFormatter",)
+
+
+class RegexFormatter(Formatter):
+    def __init__(
+        self,
+        pattern: str | Pattern[str],
+        replacement: str = "",
+        flags: int = 0,
+    ) -> None:
+        if isinstance(pattern, str):
+            self.pattern = re_compile(pattern, flags)
+        else:
+            self.pattern = pattern
+        self.replacement = replacement
+
+    def format(self, record: Record) -> str:
+        message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
+        return self.pattern.sub(self.replacement, message)
+</file>
+
+<file path="src/turboprint_logger/integrations/__init__.py">
+from __future__ import annotations
+
+from .logging import LoggingAdapter
+
+__all__ = ("LoggingAdapter",)
+</file>
+
+<file path="src/turboprint_logger/interfaces/processor.py">
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.interfaces import InterfaceMethodNotImplementedError
+
+__all__ = ("Processor",)
+
+
+class Processor(ABC):
+    __slots__ = ()
+
+    @abstractmethod
+    def process(self, record: Record) -> Record | None:
+        msg = "Processor.process must be implemented by subclasses"
+        raise InterfaceMethodNotImplementedError(msg)
+
+    def __str__(self) -> str:
+        return self.__class__.__name__
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}()"
+</file>
+
+<file path="src/turboprint_logger/processors/__init__.py">
+from __future__ import annotations
+
+from .hostname_pid import HostnamePidProcessor
+from .lazy_message import LazyMessageProcessor
+
+__all__ = ("HostnamePidProcessor", "LazyMessageProcessor")
+</file>
+
+<file path="src/turboprint_logger/processors/hostname_pid.py">
+from __future__ import annotations
+
+from os import getpid
+from socket import gethostname
+from threading import get_ident
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Processor
+
+__all__ = ("HostnamePidProcessor",)
+
+
+class HostnamePidProcessor(Processor):
+    def __init__(self) -> None:
+        self._hostname = gethostname()
+        self._pid = getpid()
+
+    def process(self, record: Record) -> Record:
+        record.context.setdefault("host", self._hostname)
+        record.context.setdefault("pid", self._pid)
+        record.context.setdefault("thread_id", get_ident())
+
+        return record
+</file>
+
+<file path="src/turboprint_logger/utils/__init__.py">
+from __future__ import annotations
+
+__all__ = ()
+</file>
+
+<file path="noxfile.py">
+from pathlib import Path
+from shutil import rmtree
+
+from nox import Session, options
+from nox_uv import session
+
+options.default_venv_backend = "uv"
+options.reuse_existing_virtualenvs = True
+options.sessions = ["clean", "security", "lints", "formats", "tests", "builds", "docs"]
+PYTHON_VERSIONS = ["3.11", "3.12", "3.13", "3.14"]
+REPORT_FILES = [
+    "pip-audit-report.json",
+    "bandit-report.json",
+    "coverage.xml",
+    ".coverage",
+]
+CACHE_DIRS = [
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".benchmarks",
+]
+BUILD_DIRS = ["build", "dist", "docs/_build"]
+
+
+@session(python=PYTHON_VERSIONS, uv_groups=["tests"])
+def tests(s: Session) -> None:
+    """Запуск тестов (coverage)."""
+    s.run("pytest")
+
+
+@session(uv_groups=["lints"])
+def lints(s: Session) -> None:
+    """Запуск статических анализаторов."""
+    s.run("ruff", "check")
+    s.run("ty", "check")
+
+
+@session(uv_groups=["formats"])
+def formats(s: Session) -> None:
+    """Запуск форматеров кода (fix)."""
+    s.run("ruff", "check", "--fix")
+    s.run("ruff", "format")
+
+
+@session(uv_groups=["formats"])
+def check_format(s: Session) -> None:
+    """Проверка форматирования без исправления."""
+    s.run("ruff", "check")
+    s.run("ruff", "format", "--check")
+
+
+@session(uv_groups=["docs"])
+def docs(s: Session) -> None:
+    """Запуск генерации документации"""
+    docs_source = Path("docs")
+    if not docs_source.exists():
+        s.error("docs source directory does not exist")
+    docs_build = docs_source / "_build"
+    if docs_build.exists():
+        rmtree(docs_build)
+    s.run("sphinx-build", "-b", "html", "docs", "docs/_build/html")
+
+
+@session(uv_groups=["security"])
+def security(s: Session) -> None:
+    """Комплексная проверка безопасности"""
+    baseline = Path(".secrets.baseline")
+    if baseline.exists():
+        s.run("detect-secrets", "scan", "--baseline", str(baseline), "src")
+    else:
+        s.run("detect-secrets", "scan", "src")
+
+    s.run("bandit", "-r", "src")
+    s.run("pip-audit")
+
+
+@session(uv_groups=["builds"])
+def builds(s: Session) -> None:
+    """Запуск сборки проекта"""
+    for folder in ("build", "dist"):
+        if Path(folder).exists():
+            rmtree(folder)
+    s.run("build", "--outdir", "dist")
+
+
+def _get_size(path: Path) -> int:
+    if path.is_file():
+        return path.stat().st_size
+    if path.is_dir():
+        size = 0
+        for file in path.rglob("*"):
+            if file.is_file():
+                size += file.stat().st_size
+        return size
+    return 0
+
+
+@session()
+def clean(s: Session) -> None:
+    """Очистка временных и служебных файлов."""
+    total_size = 0
+
+    for folder in [*BUILD_DIRS, *CACHE_DIRS]:
+        path = Path(folder)
+        if path.exists():
+            total_size += _get_size(path)
+            rmtree(path)
+
+    for file in REPORT_FILES:
+        file_path = Path(file)
+        if file_path.exists():
+            total_size += _get_size(file_path)
+            file_path.unlink(missing_ok=True)
+
+    for pycache in Path().rglob("__pycache__"):
+        if pycache.exists():
+            total_size += _get_size(pycache)
+            rmtree(pycache)
+
+    for pyc in Path().rglob("*.pyc"):
+        if pyc.exists():
+            total_size += _get_size(pyc)
+            pyc.unlink(missing_ok=True)
+
+    kb_size = total_size / 1024
+    mb_size = total_size / 1024 / 1024
+
+    s.log(f"Total size: {total_size} bytes // {kb_size:.2f} KB // {mb_size:.2f} MB")
+</file>
+
+<file path="README.md">
+
+</file>
+
+<file path="src/turboprint_logger/decorators/event.py">
+from __future__ import annotations
+
+from collections.abc import Callable
+from functools import wraps
+from itertools import chain
+from string import Template
+from time import perf_counter
+from typing import Any, TypeVar, cast
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.logger import Logger
+from turboprint_logger.utils.reserved import filter_reserved
+
+__all__ = ("event",)
+
+_F = TypeVar("_F", bound=Callable[..., Any])
+
+
+class EventDecorator:
+    def __init__(  # noqa: PLR0913
+        self,
+        logger: str | Logger | None = None,
+        level: LevelRegistry = Level.EVENT,
+        error_level: LevelRegistry = Level.ERROR,
+        arg_parser: Callable[[Any], str] = repr,
+        *,
+        entry_message: str = "Calling ${function}(${args})",
+        exit_message: str = "${function} returned ${result} in ${duration}s",
+        exc_message: str = "${function} raised ${exception} in ${duration}s",
+        **default_context,
+    ) -> None:
+        self.logger = (
+            logger
+            if isinstance(logger, Logger)
+            else Logger.get_logger(logger or "root")
+        )
+        self.level = level
+        self.error_level = error_level
+        self.arg_parser = arg_parser
+        self.entry_message = Template(entry_message)
+        self.exit_message = Template(exit_message)
+        self.exc_message = Template(exc_message)
+        self.default_context = default_context
+
+    def __call__(self, func: _F) -> _F:
+        @wraps(func)
+        def wrapper(*args, **kwargs):  # noqa: ANN202
+            arg_parts = chain(
+                (self.arg_parser(arg) for arg in args),
+                (f"{key}={self.arg_parser(value)}" for key, value in kwargs.items()),
+            )
+            str_args = ", ".join(arg_parts)
+
+            entry_extra: dict[str, Any] = {
+                **self.default_context,
+                "event": "entry",
+                "function": func.__name__,
+                "args": str_args,
+            }
+            entry_message = self.entry_message.safe_substitute(entry_extra)
+            self.logger(
+                self.level,
+                entry_message,
+                **filter_reserved(entry_extra),
+            )
+            start_time = perf_counter()
+
+            try:
+                result = func(*args, **kwargs)
+            except Exception as exc:
+                end_time = perf_counter()
+                exc_extra: dict[str, Any] = {
+                    **self.default_context,
+                    "event": "exception",
+                    "function": func.__name__,
+                    "duration": str(round(end_time - start_time, 3)),
+                    "exception": repr(exc),
+                }
+                exc_message = self.exc_message.safe_substitute(exc_extra)
+                self.logger(
+                    self.error_level,
+                    exc_message,
+                    **filter_reserved(exc_extra),
+                )
+                raise
+
+            end_time = perf_counter()
+            exit_extra: dict[str, Any] = {
+                **self.default_context,
+                "event": "exit",
+                "function": func.__name__,
+                "duration": str(round(end_time - start_time, 3)),
+                "result": repr(result),
+            }
+            exit_message = self.exit_message.safe_substitute(exit_extra)
+            self.logger(
+                self.level,
+                exit_message,
+                **filter_reserved(exit_extra),
+            )
+            return result
+
+        return cast(_F, wrapper)
+
+
+event = EventDecorator
+</file>
+
+<file path="src/turboprint_logger/exceptions/core/__init__.py">
+from __future__ import annotations
+
+from .base import CoreException
+
+__all__ = ("CoreException",)
+</file>
+
+<file path="src/turboprint_logger/exceptions/core/levels.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.core.base import CoreException
+
+__all__ = (
+    "InvalidLevelColorError",
+    "InvalidLevelEmojiError",
+    "LevelException",
+    "LevelNameAlreadyExistsError",
+    "LevelValueAlreadyExistsError",
+    "NegativeLevelError",
+)
+
+
+class LevelException(CoreException):
+    """Base exception for all levels exceptions"""
+
+
+class InvalidLevelColorError(LevelException):
+    """Raised when the level color is invalid"""
+
+
+class InvalidLevelEmojiError(LevelException):
+    """Raised when the level emoji is invalid"""
+
+
+class LevelNameAlreadyExistsError(LevelException):
+    """Raised when the level name already exists"""
+
+
+class LevelValueAlreadyExistsError(LevelException):
+    """Raised when the level value already exists"""
+
+
+class NegativeLevelError(LevelException):
+    """Raised when the level value is negative"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/decorators/retry.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.decorators.base import DecoratorException
+
+__all__ = (
+    "RetryException",
+    "RetryLimitExceededError",
+    "UnknownRetryError",
+)
+
+
+class RetryException(DecoratorException):
+    """Base exception for all retry decorator exceptions"""
+
+
+class RetryLimitExceededError(RetryException):
+    """Raised when the retry limit is exceeded"""
+
+
+class UnknownRetryError(RetryException):
+    """Raised when an unknown error occurs"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/filters/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = ("FilterException",)
+
+
+class FilterException(TurboPrintException):
+    """Base exception for all filters exceptions"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/handlers/__init__.py">
+from __future__ import annotations
+
+from .base import HandlerException
+from .file import (
+    FileClosedError,
+    FileHandlerConfigError,
+    FileHandlerException,
+    FileOpenError,
+    FileWriteError,
+    InvalidFlushIntervalError,
+    InvalidSeparatorError,
+)
+from .stream import (
+    InvalidBufferSizeError,
+    InvalidStreamError,
+    InvalidStreamFlushIntervalError,
+    StreamHandlerException,
+)
+
+__all__ = (
+    "FileClosedError",
+    "FileHandlerConfigError",
+    "FileHandlerException",
+    "FileOpenError",
+    "FileWriteError",
+    "HandlerException",
+    "InvalidBufferSizeError",
+    "InvalidFlushIntervalError",
+    "InvalidSeparatorError",
+    "InvalidStreamError",
+    "InvalidStreamFlushIntervalError",
+    "StreamHandlerException",
+)
+</file>
+
+<file path="src/turboprint_logger/exceptions/handlers/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = ("HandlerException",)
+
+
+class HandlerException(TurboPrintException):
+    """Base exception for all handlers exceptions"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/handlers/stream.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.handlers.base import HandlerException
+
+__all__ = (
+    "InvalidBufferSizeError",
+    "InvalidStreamError",
+    "InvalidStreamFlushIntervalError",
+    "StreamHandlerException",
+)
+
+
+class StreamHandlerException(HandlerException):
+    """Base exception for stream handler errors."""
+
+
+class InvalidStreamError(StreamHandlerException):
+    """Raised when stream object does not support required operations."""
+
+
+class InvalidBufferSizeError(StreamHandlerException):
+    """Raised when buffered stream handler buffer size is invalid."""
+
+
+class InvalidStreamFlushIntervalError(StreamHandlerException):
+    """Raised when buffered stream handler flush interval is invalid."""
+</file>
+
+<file path="src/turboprint_logger/exceptions/managers/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = ("ManagerException",)
+
+
+class ManagerException(TurboPrintException):
+    """Base exception for all managers exceptions"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/utils/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = ("UtilException",)
+
+
+class UtilException(TurboPrintException):
+    """Base exception for all utils exceptions"""
+</file>
+
+<file path="src/turboprint_logger/filters/context.py">
+from __future__ import annotations
+
+from collections.abc import Callable
+from re import Pattern
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Filter
+
+__all__ = ("ContextFilter",)
+
+
+class ContextFilter(Filter):
+    def __init__(
+        self,
+        *,
+        match_all: bool = True,
+        **conditions: object | Callable[[object], bool] | Pattern[str],
+    ) -> None:
+        self.conditions = conditions
+        self.check = all if match_all else any
+
+    @staticmethod
+    def _check_condition(condition: object, actual: object) -> bool:
+        if callable(condition):
+            try:
+                return condition(actual)  # type: ignore[no-any-return]
+            except Exception:  # noqa: BLE001
+                return False
+        elif isinstance(condition, Pattern):
+            return bool(condition.search(str(actual)))  # type: ignore[no-matching-overload]
+        else:
+            return actual == condition
+
+    def filter(self, record: Record) -> bool:
+        context = record.context
+
+        return self.check(
+            self._check_condition(condition, context.get(key))
+            for key, condition in self.conditions.items()
+        )
+</file>
+
+<file path="src/turboprint_logger/filters/regex.py">
+from __future__ import annotations
+
+from re import IGNORECASE, Pattern
+from re import compile as re_compile
+from typing import Literal
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Filter
+
+__all__ = ("RegexFilter",)
+
+_FIELDS = Literal[
+    "message", "level_name", "logger_name", "code", "file", "function", "line"
+]
+
+
+class RegexFilter(Filter):
+    def __init__(
+        self,
+        pattern: str | Pattern,
+        field: _FIELDS | str = "message",
+        *,
+        ignorecase: bool = True,
+    ) -> None:
+        if isinstance(pattern, Pattern):
+            self.regex = pattern
+        else:
+            flags = IGNORECASE if ignorecase else 0
+            self.regex = re_compile(pattern, flags)
+        self.field = field
+        self.ignorecase = ignorecase
+
+    def _get_field_value(self, record: Record) -> str:  # noqa: PLR0911
+        match self.field.lower():
+            case "message":
+                return (
+                    record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
+                )
+            case "level_name":
+                return record.level.name
+            case "logger_name":
+                return record.logger.name
+            case "file":
+                return record.file
+            case "function":
+                return record.function
+            case "line":
+                return str(record.line)
+            case _:
+                return str(record.context.get(self.field, ""))
+
+    def filter(self, record: Record) -> bool:
+        text = self._get_field_value(record)
+        return bool(self.regex.search(text))
+</file>
+
+<file path="src/turboprint_logger/formatters/simple.py">
+from __future__ import annotations
+
+from datetime import datetime
+from string import Template
+from typing import TYPE_CHECKING, Any, TypedDict
+
+from colorama import Style
+
+from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Formatter
+
+if TYPE_CHECKING:
+    from turboprint_logger.core.logger import Logger
+
+__all__ = ("SimpleFormatter",)
+
+
+class FormatDict(TypedDict):
+    message: str
+    level: LevelRegistry
+    level_name: str
+    level_value: int
+    level_emoji: str | None
+    logger: Logger
+    logger_name: str
+    date: str
+    time: str
+    datetime: datetime
+    trace_id: int
+    logger_id: int
+    context: dict[str, Any]
+    tags: set[str]
+    file: str
+    function: str
+    line: int
+
+
+class SimpleFormatter(Formatter):
+    def __init__(
+        self,
+        template: str = "[${date} ${time}] ${logger_name} | ${level_name}: ${message}",
+        date_format: str | None = None,
+        time_format: str | None = None,
+        *,
+        colored: bool = False,
+    ) -> None:
+        self.template = Template(template)
+        self.date_format = date_format
+        self.time_format = time_format
+        self.colored = colored
+
+    def format(self, record: Record) -> str:
+        message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
+        message = Template(message).safe_substitute(record.context)
+
+        date_obj = record.date_time.date()
+        date_str = (
+            date_obj.strftime(self.date_format) if self.date_format else date_obj.isoformat()
+        )
+
+        time_obj = record.date_time.time()
+        time_str = (
+            time_obj.strftime(self.time_format) if self.time_format else time_obj.isoformat()
+        )
+
+        record_format = FormatDict(
+            message=message,
+            level=record.level,
+            level_name=record.level.name,
+            level_value=record.level.level,
+            level_emoji=record.level.emoji,
+            logger=record.logger,
+            logger_name=record.logger.name,
+            date=date_str,
+            time=time_str,
+            datetime=record.date_time,
+            trace_id=record.trace_id,
+            logger_id=record.logger_id,
+            context=record.context,
+            tags=record.tags,
+            file=record.file,
+            function=record.function,
+            line=record.line,
+        )
+
+        output = self.template.safe_substitute(record_format)
+
+        return (
+            f"{record.level.color}{output}{Style.RESET_ALL}" if self.colored else output
+        )
+</file>
+
+<file path="src/turboprint_logger/handlers/stream.py">
+from __future__ import annotations
+
+from contextlib import suppress
+from sys import stdout as default_output
+from threading import RLock
+from typing import TextIO
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.handlers.stream import InvalidStreamError
+from turboprint_logger.interfaces import Filter, Formatter, Handler
+
+__all__ = ("StreamHandler",)
+
+
+class StreamHandler(Handler):
+    def __init__(
+        self,
+        stream: TextIO = default_output,
+        min_level: LevelRegistry = Level.NOTSET,
+        formatter: Formatter | None = None,
+        filters: list[Filter] | None = None,
+    ) -> None:
+        super().__init__(min_level, formatter, filters)
+        if not callable(getattr(stream, "write", None)):
+            msg = "stream must provide a callable 'write' method"
+            raise InvalidStreamError(msg)
+        self.stream = stream
+        self._lock = RLock()
+
+    def emit(self, record: Record) -> None:
+        with self._lock:
+            formatter = self.formatter or record.logger.formatter.get()
+            with suppress(OSError):
+                self.stream.write(formatter.format(record) + "\n")
+</file>
+
+<file path="src/turboprint_logger/integrations/logging.py">
+from __future__ import annotations
+
+import logging
+from typing import Any
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.logger import Logger
+
+__all__ = ("LoggingAdapter", "install_adapter")
+
+_STD_TO_CUSTOM_LEVEL = {
+    logging.NOTSET: Level.NOTSET,
+    logging.DEBUG: Level.DEBUG,
+    logging.INFO: Level.INFO,
+    logging.WARN: Level.WARNING,
+    logging.WARNING: Level.WARNING,
+    logging.ERROR: Level.ERROR,
+    logging.FATAL: Level.CRITICAL,
+    logging.CRITICAL: Level.CRITICAL,
+}
+
+
+class LoggingAdapter(logging.Handler):
+    def __init__(self, level: int = logging.NOTSET) -> None:
+        super().__init__(level)
+
+    def emit(self, record: logging.LogRecord) -> None:
+        custom_logger = Logger.get_logger(record.name)
+        level = self._convert_level(record.levelno)
+        message = record.getMessage()
+        extra = self._extract_extra(record)
+        custom_logger(level, message, **extra)
+
+    def _convert_level(self, levelno: int) -> LevelRegistry:
+        if levelno in _STD_TO_CUSTOM_LEVEL:
+            return _STD_TO_CUSTOM_LEVEL[levelno]
+
+        custom_level = Level.get_by_level(levelno)
+        if custom_level is not None:
+            return custom_level
+
+        return Level.NOTSET
+
+    def _extract_extra(self, record: logging.LogRecord) -> dict[str, Any]:
+        std_attrs = {
+            "args",
+            "asctime",
+            "created",
+            "exc_info",
+            "exc_text",
+            "filename",
+            "funcName",
+            "levelname",
+            "levelno",
+            "lineno",
+            "module",
+            "msecs",
+            "message",
+            "msg",
+            "name",
+            "pathname",
+            "process",
+            "processName",
+            "relativeCreated",
+            "stack_info",
+            "taskName"
+            "thread",
+            "threadName",
+        }
+        return {
+            key: value
+            for key, value in record.__dict__.items()
+            if key not in std_attrs and not key.startswith("_")
+        }
+
+
+def install_adapter(level: int = logging.NOTSET) -> LoggingAdapter:
+    handler = LoggingAdapter(level)
+    logging.root.addHandler(handler)
+    return handler
+</file>
+
+<file path="src/turboprint_logger/interfaces/__init__.py">
+from __future__ import annotations
+
+from .filter import Filter
+from .formatter import Formatter
+from .handler import Handler
+from .processor import Processor
+
+__all__ = ("Filter", "Formatter", "Handler", "Processor")
+</file>
+
+<file path="src/turboprint_logger/interfaces/filter.py">
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.interfaces import InterfaceMethodNotImplementedError
+
+__all__ = ("Filter",)
+
+
+class Filter(ABC):
+    __slots__ = ()
+
+    @abstractmethod
+    def filter(self, record: Record) -> bool:
+        msg = "Filter.filter must be implemented by subclasses"
+        raise InterfaceMethodNotImplementedError(msg)
+
+    def __str__(self) -> str:
+        return self.__class__.__name__
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}()"
+</file>
+
+<file path="src/turboprint_logger/interfaces/formatter.py">
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.interfaces import InterfaceMethodNotImplementedError
+
+__all__ = ("Formatter",)
+
+
+class Formatter(ABC):
+    __slots__ = ()
+
+    @abstractmethod
+    def format(self, record: Record) -> str:
+        msg = "Formatter.format must be implemented by subclasses"
+        raise InterfaceMethodNotImplementedError(msg)
+
+    def __str__(self) -> str:
+        return self.__class__.__name__
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}()"
+</file>
+
+<file path="src/turboprint_logger/interfaces/handler.py">
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.interfaces import InterfaceMethodNotImplementedError
+from turboprint_logger.interfaces import Filter, Formatter
+
+__all__ = ("Handler",)
+
+
+class Handler(ABC):
+    __slots__ = ("filters", "formatter", "level")
+
+    def __init__(
+        self,
+        min_level: LevelRegistry = Level.NOTSET,
+        formatter: Formatter | None = None,
+        filters: list[Filter] | None = None,
+    ) -> None:
+        self.level = min_level
+        self.formatter = formatter
+        self.filters = filters or []
+
+    def handle(self, record: Record) -> None:
+        if record.level.level >= self.level.level and all(
+            f.filter(record) for f in self.filters
+        ):
+            self.emit(record)
+
+    @abstractmethod
+    def emit(self, record: Record) -> None:
+        msg = "Handler.emit must be implemented by subclasses"
+        raise InterfaceMethodNotImplementedError(msg)
+
+    def __str__(self) -> str:
+        return self.__class__.__name__
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f"min_level={self.level}, "
+            f"formatter={self.formatter}, "
+            f"filters={tuple(self.filters)})"
+        )
+</file>
+
+<file path="src/turboprint_logger/managers/locale.py">
+from __future__ import annotations
+
+from contextlib import contextmanager
+from threading import local
+from typing import Literal
+
+__all__ = ("LocaleManager",)
+
+_SUPPORTED_LANGUAGES = Literal["ru_RU", "en_US"]
+
+
+class LocaleManager:
+    _local = local()
+
+    @classmethod
+    def get(cls) -> _SUPPORTED_LANGUAGES:
+        return getattr(cls._local, "language", "en_US")
+
+    @classmethod
+    def set(cls, language: _SUPPORTED_LANGUAGES) -> None:
+        cls._local.language = language
+
+    @classmethod
+    @contextmanager
+    def temporary(cls, language: _SUPPORTED_LANGUAGES):  # noqa: ANN206
+        original = cls.get()
+        cls.set(language)
+        try:
+            yield
+        finally:
+            cls.set(original)
+
+    def __str__(self) -> str:
+        return f'{self.__class__.__name__}(locale="{self.get()}")'
+
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}(locale="{self.get()}")'
+</file>
+
+<file path="src/turboprint_logger/managers/processors.py">
+from __future__ import annotations
+
+from collections.abc import Iterator
+from contextlib import contextmanager
+from threading import Lock
+
+from turboprint_logger.interfaces import Processor
+
+__all__ = ("ProcessorsManager",)
+
+
+class ProcessorsManager:
+    __slots__ = ("_lock", "_processors")
+
+    def __init__(self, *processors: Processor) -> None:
+        self._lock = Lock()
+        self._processors: list[Processor] = list(processors) or []
+
+    def get(self) -> tuple[Processor, ...]:
+        with self._lock:
+            return tuple(self._processors)
+
+    def add(self, *processors: Processor) -> None:
+        with self._lock:
+            self._processors.extend(processors)
+
+    def remove(self, processor: Processor) -> bool:
+        try:
+            with self._lock:
+                self._processors.remove(processor)
+        except ValueError:
+            return False
+        return True
+
+    def clear(self) -> None:
+        with self._lock:
+            self._processors.clear()
+
+    @contextmanager
+    def temporary(self, *processors: Processor, replace: bool = True):  # noqa: ANN201
+        with self._lock:
+            original = self._processors
+            self._processors = (
+                list(processors) if replace else [*self._processors, *processors]
+            )
+        try:
+            yield
+        finally:
+            with self._lock:
+                self._processors = original
+
+    def __len__(self) -> int:
+        with self._lock:
+            return len(self._processors)
+
+    def __iter__(self) -> Iterator[Processor]:
+        with self._lock:
+            return iter(self._processors.copy())
+
+    def __getitem__(self, index: int) -> Processor:
+        with self._lock:
+            return self._processors[index]
+
+    def __contains__(self, processor: Processor) -> bool:
+        with self._lock:
+            return processor in self._processors
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(processors_count={len(self._processors)})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(processors={self._processors})"
+</file>
+
+<file path="src/turboprint_logger/utils/reserved.py">
+from __future__ import annotations
+
+from typing import Any
+
+__all__ = ("filter_reserved",)
+
+_RESERVED_KEYS = ("level", "message", "tags")
+
+
+def filter_reserved(extra: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in extra.items() if key not in _RESERVED_KEYS}
+</file>
+
+<file path="src/turboprint_logger/core/config.py">
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any
+
+from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.interfaces import Filter, Formatter, Handler
+from turboprint_logger.interfaces.processor import Processor
+
+__all__ = ("Config",)
+
+
+@dataclass(slots=True)
+class Config:
+    min_level: LevelRegistry | None = None
+    formatter: Formatter | None = None
+    processors: list[Processor] | None = None
+    handlers: list[Handler] | None = None
+    filters: list[Filter] | None = None
+    propagate: bool | None = None
+    status: bool | None = None
+    context: dict[str, Any] | None = None
+    tags: set[str] | None = None
+</file>
+
+<file path="src/turboprint_logger/core/record.py">
+from __future__ import annotations
+
+from collections.abc import Callable
+from dataclasses import dataclass, field, replace
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING, Any
+
+from turboprint_logger.core.levels import LevelRegistry
+
+if TYPE_CHECKING:
+    from turboprint_logger.core.logger import Logger
+
+__all__ = ("Record",)
+
+
+@dataclass(slots=True)
+class Record:
+    message: str | Callable[[], str]
+    level: LevelRegistry
+    logger: Logger
+    trace_id: int
+    logger_id: int
+    file: str
+    function: str
+    line: int
+    date_time: datetime = field(default_factory=lambda: datetime.now(UTC))
+    context: dict[str, Any] = field(default_factory=dict)
+    tags: set[str] = field(default_factory=set)
+
+    def copy(self) -> Record:
+        return replace(
+            self,
+            context=self.context.copy(),
+            tags=self.tags.copy(),
+        )
+
+    def __str__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f"message={self.message}, "
+            f"level={self.level}, "
+            f"logger={self.logger})"
+        )
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f"message={self.message}, "
+            f"level={self.level!r}, "
+            f"logger={self.logger!r}, "
+            f"trace_id={self.trace_id}, "
+            f"logger_id={self.logger_id}, "
+            f"context_keys={tuple(self.context.keys())}, "
+            f"tags={tuple(self.tags)}, "
+            f"file={self.file}, "
+            f"function={self.function}, "
+            f"line={self.line})"
+        )
+</file>
+
+<file path="src/turboprint_logger/exceptions/__init__.py">
+from __future__ import annotations
+
+from .base import TurboPrintException
+from .interfaces import InterfaceException, InterfaceMethodNotImplementedError
+
+__all__ = (
+    "InterfaceException",
+    "InterfaceMethodNotImplementedError",
+    "TurboPrintException",
+)
+</file>
+
+<file path="src/turboprint_logger/exceptions/core/base.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.base import TurboPrintException
+
+__all__ = ("CoreException",)
+
+
+class CoreException(TurboPrintException):
+    """Base exception for all core exceptions"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/core/logger.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.core.base import CoreException
+
+__all__ = ("LoggerException", "LoggerInstantiationError")
+
+
+class LoggerException(CoreException):
+    """Base exception for all loggers exceptions"""
+
+
+class LoggerInstantiationError(LoggerException):
+    """Exception raised when logger cannot be instantiated"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/filters/name.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.filters.base import FilterException
+
+__all__ = ("InvalidFilterModeError", "NameFilterException")
+
+
+class NameFilterException(FilterException):
+    """Base exception for all name filter exceptions"""
+
+
+class InvalidFilterModeError(NameFilterException):
+    """Raised when the filter mode is invalid"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/managers/config.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.managers.base import ManagerException
+
+__all__ = (
+    "ConfigManagerException",
+    "ConfigParserError",
+    "ConfigReloadError",
+    "ConfigSpecError",
+    "ConfigWatchAlreadyRunningError",
+)
+
+
+class ConfigManagerException(ManagerException):
+    """Base exception for ConfigManager errors"""
+
+
+class ConfigParserError(ConfigManagerException):
+    """Raised when config parsing fails"""
+
+
+class ConfigSpecError(ConfigManagerException):
+    """Raised when config schema/values are invalid"""
+
+
+class ConfigReloadError(ConfigManagerException):
+    """Raised for auto-reload runtime errors"""
+
+
+class ConfigWatchAlreadyRunningError(ConfigReloadError):
+    """Raised when auto-reload is enabled twice"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/managers/metrics.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.managers.base import ManagerException
+
+__all__ = ("MetricsException", "NegativeMetricsCountError")
+
+
+class MetricsException(ManagerException):
+    """Base exception for all metrics managers exceptions"""
+
+
+class NegativeMetricsCountError(MetricsException):
+    """Raised when the metrics count is negative"""
+</file>
+
+<file path="src/turboprint_logger/exceptions/utils/normalizers.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.utils.base import UtilException
+
+__all__ = (
+    "InvalidContainerNameError",
+    "InvalidContextKeyError",
+    "InvalidLevelNameError",
+    "InvalidLoggerNameError",
+    "NormalizerException",
+)
+
+
+class NormalizerException(UtilException):
+    """Base exception for all normalizers utils exceptions"""
+
+
+class InvalidContainerNameError(NormalizerException):
+    """Raised when the container name is invalid"""
+
+
+class InvalidContextKeyError(NormalizerException):
+    """Raised when the context key is invalid"""
+
+
+class InvalidLevelNameError(NormalizerException):
+    """Raised when the level name is invalid"""
+
+
+class InvalidLoggerNameError(NormalizerException):
+    """Raised when the logger name is invalid"""
+</file>
+
+<file path="src/turboprint_logger/filters/name.py">
+from __future__ import annotations
+
+from re import IGNORECASE
+from re import compile as re_compile
+from typing import Literal, get_args
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.filters.name import InvalidFilterModeError
+from turboprint_logger.interfaces import Filter
+
+__all__ = ("NameFilter",)
+
+_MODES = Literal["exact", "startswith", "endswith", "contains", "regex"]
+
+
+class NameFilter(Filter):
+    def __init__(self, pattern: str, mode: _MODES, *, ignorecase: bool = True) -> None:
+        if mode.lower() not in get_args(_MODES):
+            msg = f"Invalid mode: {mode.lower()}"
+            raise InvalidFilterModeError(msg)
+
+        self.pattern = pattern
+        self.mode = mode.lower()
+        self.ignorecase = ignorecase
+
+        if self.mode == "regex":
+            flags = IGNORECASE if ignorecase else 0
+            self._regex = re_compile(pattern, flags)
+
+    def filter(self, record: Record) -> bool:
+        name = record.logger.name
+        pattern = self.pattern
+        if self.ignorecase:
+            name = name.lower()
+            pattern = pattern.lower()
+
+        match self.mode:
+            case "exact":
+                return name == pattern
+            case "startswith":
+                return name.startswith(pattern)
+            case "endswith":
+                return name.endswith(pattern)
+            case "contains":
+                return pattern in name
+            case "regex":
+                return bool(self._regex.search(name))
+            case _:
+                return False
+</file>
+
+<file path="src/turboprint_logger/filters/tag.py">
+from __future__ import annotations
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Filter
+
+__all__ = ("TagFilter",)
+
+
+class TagFilter(Filter):
+    def __init__(
+        self, *required_tags: str, match_all: bool = True, opposite: bool = False
+    ) -> None:
+        self.required = required_tags
+        self.check = all if match_all else any
+        self.opposite = opposite
+
+    def filter(self, record: Record) -> bool:
+        if not self.required:
+            return True
+
+        result = self.check(tag in record.tags for tag in self.required)
+
+        if self.opposite:
+            return not result
+        return result
+</file>
+
+<file path="src/turboprint_logger/handlers/__init__.py">
+from __future__ import annotations
+
+from .buffered_stream import BufferedStreamHandler
+from .file import FileHandler
+from .rotating_file import RotatingFileHandler
+from .stream import StreamHandler
+from .timed_rotating_file import TimedRotatingFileHandler
+
+__all__ = (
+    "BufferedStreamHandler",
+    "FileHandler",
+    "RotatingFileHandler",
+    "StreamHandler",
+    "TimedRotatingFileHandler",
+)
+</file>
+
+<file path="src/turboprint_logger/handlers/timed_rotating_file.py">
+from __future__ import annotations
+
+from contextlib import suppress
+from gzip import open as gzip_open
+from pathlib import Path
+from shutil import copyfileobj
+from time import time
+from typing import Literal
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.record import Record
+from turboprint_logger.handlers.file import FileHandler
+from turboprint_logger.interfaces import Filter, Formatter
+
+__all__ = ("TimedRotatingFileHandler",)
+
+
+class TimedRotatingFileHandler(FileHandler):
+    def __init__(  # noqa: PLR0913
+        self,
+        file_path: str,
+        min_level: LevelRegistry = Level.NOTSET,
+        formatter: Formatter | None = None,
+        filters: list[Filter] | None = None,
+        *,
+        separator: str = "\n",
+        buffer_size: int | None = None,
+        encoding: str = "utf-8",
+        update_mode: bool = False,
+        compress: bool = True,
+        when: Literal["s", "m", "h", "D", "W", "M"] = "h",
+        interval: int = 1,
+        backup_count: int = 0,
+    ) -> None:
+        super().__init__(
+            file_path=file_path,
+            min_level=min_level,
+            formatter=formatter,
+            filters=filters,
+            separator=separator,
+            buffer_size=buffer_size,
+            encoding=encoding,
+            update_mode=update_mode,
+        )
+        self.compress = compress
+        self.when = when.strip()
+        self.interval = max(1, interval)
+        self.backup_count = backup_count
+        self._rotation_seconds = self._get_rotation_seconds()
+        self._rollover_at = self._compute_rollover()
+
+    def _get_rotation_seconds(self) -> int:
+        multipliers = {
+            "s": 1,
+            "m": 60,
+            "h": 60 * 60,
+            "D": 60 * 60 * 24,
+            "W": 60 * 60 * 24 * 7,
+            "M": 60 * 60 * 24 * 30,
+        }
+        return multipliers.get(self.when, multipliers["h"]) * self.interval
+
+    def _compute_rollover(self) -> float:
+        return time() + self._rotation_seconds
+
+    def _should_rotate(self) -> bool:
+        return time() >= self._rollover_at
+
+    def _rotated_path(self, number: int) -> Path:
+        path = Path(self.file_path)
+        suffixes = path.suffixes
+        stem = path.name.removesuffix("".join(suffixes)) if suffixes else path.name
+        new_name = f"{stem}.{number}{''.join(suffixes)}"
+        return path.parent / new_name
+
+    @staticmethod
+    def _compressed_path(path: Path) -> Path:
+        return path.with_suffix(path.suffix + ".gz")
+
+    def _rotate(self) -> None:
+        with self._lock:
+            if self.backup_count <= 0:
+                with suppress(OSError):
+                    Path(self.file_path).unlink(missing_ok=True)
+                return
+
+            for i in range(self.backup_count - 1, 0, -1):
+                src = self._rotated_path(i)
+                dst = self._rotated_path(i + 1)
+                src_gz = self._compressed_path(src)
+                dst_gz = self._compressed_path(dst)
+                if src_gz.exists():
+                    with suppress(OSError):
+                        src_gz.replace(dst_gz)
+                elif src.exists():
+                    with suppress(OSError):
+                        src.replace(dst)
+
+            src = Path(self.file_path)
+            dst = self._rotated_path(1)
+            if src.exists():
+                with suppress(OSError):
+                    src.replace(dst)
+
+            if self.compress and dst.exists():
+                compressed_path = self._compressed_path(dst)
+                with dst.open("rb") as f_in, gzip_open(compressed_path, "wb") as f_out:
+                    copyfileobj(f_in, f_out)
+                dst.unlink(missing_ok=True)
+
+    def _write(self, record: Record) -> None:
+        with self._lock:
+            if self._should_rotate():
+                self.close()
+                self._rotate()
+                self._open_file()
+                self._closed = False
+                self._schedule_flush()
+                self._rollover_at = self._compute_rollover()
+
+            super()._write(record)
+</file>
+
+<file path="src/turboprint_logger/managers/__init__.py">
+from __future__ import annotations
+
+from .collections import DefaultManager, GlobalManager
+from .config import ConfigManager
+from .context import ContextManager
+from .filters import FiltersManager
+from .formatter import FormatterManager
+from .handlers import HandlersManager
+from .level import LevelManager
+from .locale import LocaleManager
+from .metrics import MetricsManager
+from .status import StatusManager
+from .tags import TagsManager
+from .processors import ProcessorsManager
+
+__all__ = (
+    "ConfigManager",
+    "ContextManager",
+    "DefaultManager",
+    "FiltersManager",
+    "FormatterManager",
+    "GlobalManager",
+    "HandlersManager",
+    "LevelManager",
+    "LocaleManager",
+    "MetricsManager",
+    "StatusManager",
+    "TagsManager",
+    "ProcessorsManager"
+)
+</file>
+
+<file path="src/turboprint_logger/managers/collections.py">
+from __future__ import annotations
+
+from typing import Any
+
+from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.interfaces import Filter, Formatter, Handler
+from turboprint_logger.interfaces.processor import Processor
+from turboprint_logger.managers.context import ContextManager
+from turboprint_logger.managers.filters import FiltersManager
+from turboprint_logger.managers.formatter import FormatterManager
+from turboprint_logger.managers.handlers import HandlersManager
+from turboprint_logger.managers.level import LevelManager
+from turboprint_logger.managers.processors import ProcessorsManager
+from turboprint_logger.managers.status import StatusManager
+from turboprint_logger.managers.tags import TagsManager
+
+__all__ = ("DefaultManager", "GlobalManager")
+
+
+class ManagerCollection:
+    __slots__ = (
+        "context",
+        "filters",
+        "formatter",
+        "handlers",
+        "level",
+        "processors",
+        "propagate",
+        "status",
+        "tags",
+    )
+
+    def __init__(  # noqa: PLR0913
+        self,
+        level: LevelRegistry | None = None,
+        formatter: Formatter | None = None,
+        processors: list[Processor] | None = None,
+        handlers: list[Handler] | None = None,
+        filters: list[Filter] | None = None,
+        context: dict[str, Any] | None = None,
+        tags: list[str] | None = None,
+        *,
+        logger_propagate: bool = True,
+        logger_status: bool | None = None,
+    ) -> None:
+        self.level = LevelManager(level)
+        self.formatter = FormatterManager(formatter)
+        self.processors = ProcessorsManager(*(processors or ()))
+        self.handlers = HandlersManager(*(handlers or ()))
+        self.filters = FiltersManager(*(filters or ()))
+        self.context = ContextManager(**(context or {}))
+        self.tags = TagsManager(*(tags or ()))
+        self.status = StatusManager(
+            logger=logger_status if logger_status is not None else True
+        )
+        self.propagate = logger_propagate
+
+    def __str__(self) -> str:
+        return self.__class__.__name__
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f"level={self.level!r}, "
+            f"formatter={self.formatter!r}, "
+            f"processors_count={len(self.processors)}, "
+            f"handlers_count={len(self.handlers)}, "
+            f"filters_count={len(self.filters)}, "
+            f"context_keys={self.context.keys()}, "
+            f"tags_count={len(self.tags)}, "
+            f"status={self.status})"
+        )
+
+
+class GlobalManager(ManagerCollection):
+    pass
+
+
+class DefaultManager(ManagerCollection):
+    pass
+</file>
+
+<file path="src/turboprint_logger/managers/filters.py">
+from __future__ import annotations
+
+from collections.abc import Iterator
+from contextlib import contextmanager
+from threading import Lock
+
+from turboprint_logger.interfaces import Filter
+
+__all__ = ("FiltersManager",)
+
+
+class FiltersManager:
+    __slots__ = ("_filters", "_lock")
+
+    def __init__(self, *filters: Filter) -> None:
+        self._lock = Lock()
+        self._filters: list[Filter] = list(filters) or []
+
+    def get(self) -> tuple[Filter, ...]:
+        with self._lock:
+            return tuple(self._filters)
+
+    def add(self, *filters: Filter) -> None:
+        with self._lock:
+            self._filters.extend(filters)
+
+    def remove(self, filter: Filter) -> bool:  # noqa: A002
+        try:
+            with self._lock:
+                self._filters.remove(filter)
+        except ValueError:
+            return False
+        return True
+
+    def clear(self) -> None:
+        with self._lock:
+            self._filters.clear()
+
+    @contextmanager
+    def temporary(self, *filters: Filter, replace: bool = True):  # noqa: ANN201
+        with self._lock:
+            original = self._filters
+            self._filters = list(filters) if replace else [*self._filters, *filters]
+        try:
+            yield
+        finally:
+            with self._lock:
+                self._filters = original
+
+    def __len__(self) -> int:
+        with self._lock:
+            return len(self._filters)
+
+    def __iter__(self) -> Iterator[Filter]:
+        with self._lock:
+            return iter(self._filters.copy())
+
+    def __getitem__(self, index: int) -> Filter:
+        with self._lock:
+            return self._filters[index]
+
+    def __contains__(self, filter: Filter) -> bool:  # noqa: A002
+        with self._lock:
+            return filter in self._filters
+
+    def __bool__(self) -> bool:
+        with self._lock:
+            return bool(self._filters)
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(filters_count={len(self._filters)})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(filters={self._filters})"
+</file>
+
+<file path="src/turboprint_logger/managers/formatter.py">
+from __future__ import annotations
+
+from contextlib import contextmanager
+from threading import Lock
+
+from turboprint_logger.formatters import SimpleFormatter
+from turboprint_logger.interfaces import Formatter
+
+__all__ = ("FormatterManager",)
+
+
+class FormatterManager:
+    __slots__ = ("_formatter", "_lock")
+
+    def __init__(self, formatter: Formatter | None = None) -> None:
+        self._lock = Lock()
+        self._formatter: Formatter = formatter or SimpleFormatter()
+
+    def get(self) -> Formatter:
+        with self._lock:
+            return self._formatter
+
+    def set(self, formatter: Formatter) -> None:
+        with self._lock:
+            self._formatter = formatter
+
+    @contextmanager
+    def temporary(self, formatter: Formatter):  # noqa: ANN201
+        with self._lock:
+            original = self._formatter
+            self._formatter = formatter
+        try:
+            yield
+        finally:
+            with self._lock:
+                self._formatter = original
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(formatter={self._formatter})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(formatter={self._formatter!r})"
+</file>
+
+<file path="src/turboprint_logger/managers/level.py">
+from __future__ import annotations
+
+from contextlib import contextmanager
+from threading import Lock
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+
+__all__ = ("LevelManager",)
+
+
+class LevelManager:
+    __slots__ = ("_level", "_lock")
+
+    def __init__(self, level: LevelRegistry | None = None) -> None:
+        self._lock = Lock()
+        self._level: LevelRegistry = level or Level.NOTSET
+
+    def get(self) -> LevelRegistry:
+        with self._lock:
+            return self._level
+
+    def set(self, level: LevelRegistry) -> None:
+        with self._lock:
+            self._level = level
+
+    @contextmanager
+    def temporary(self, level: LevelRegistry):  # noqa: ANN201
+        with self._lock:
+            original = self._level
+            self._level = level
+        try:
+            yield
+        finally:
+            with self._lock:
+                self._level = original
+
+    def enabled_for(self, level: LevelRegistry) -> bool:
+        with self._lock:
+            return self._level.enabled_for(level)
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(level_name={self._level.name})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(level={self._level!r})"
+</file>
+
+<file path="src/turboprint_logger/managers/metrics.py">
+from __future__ import annotations
+
+from collections import Counter
+from threading import Lock
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.exceptions.managers.metrics import NegativeMetricsCountError
+
+__all__ = ("MetricsManager",)
+
+
+class MetricsManager:
+    __slots__ = ("_lock", "_metrics")
+
+    def __init__(self) -> None:
+        self._lock = Lock()
+        self._metrics: Counter[int] = Counter()
+
+    def get(self) -> dict[int, int]:
+        with self._lock:
+            return self._metrics
+
+    def add(self, level: LevelRegistry) -> None:
+        with self._lock:
+            self._metrics[level.level] += 1
+
+    def subtract(self, level: LevelRegistry) -> bool:
+        with self._lock:
+            key = level.level
+            if key not in self._metrics:
+                return False
+            if self._metrics.get(key, 0) <= 1:
+                del self._metrics[key]
+                return False
+            self._metrics[key] -= 1
+            return True
+
+    def total(self) -> int:
+        with self._lock:
+            return self._metrics.total()
+
+    def items(self) -> dict[LevelRegistry, int]:
+        with self._lock:
+            result = {}
+            for level_int, count in self._metrics.items():
+                level = Level.get_by_level(level_int)
+                if level:
+                    result[level] = count
+            return result
+
+    def reset(self, level: LevelRegistry | None = None) -> None:
+        with self._lock:
+            if level:
+                self._metrics.pop(level.level, 0)
+            else:
+                self._metrics.clear()
+
+    def __getitem__(self, level: LevelRegistry) -> int:
+        with self._lock:
+            return self._metrics.get(level.level, 0)
+
+    def __delitem__(self, level: LevelRegistry) -> None:
+        with self._lock:
+            del self._metrics[level.level]
+
+    def __setitem__(self, level: LevelRegistry, count: int) -> None:
+        if count < 0:
+            msg = f"Metrics count cannot be negative, got {count}"
+            raise NegativeMetricsCountError(msg)
+        with self._lock:
+            self._metrics[level.level] = count
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(total_metrics={self.total()})"
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}(metrics={self.items()}, total={self.total()})"
+        )
+</file>
+
+<file path="src/turboprint_logger/managers/status.py">
+from __future__ import annotations
+
+from contextlib import contextmanager
+from threading import Lock
+
+__all__ = ("StatusManager",)
+
+
+class StatusComponent:
+    __slots__ = ("_lock", "enabled")
+
+    def __init__(self, *, status: bool = True) -> None:
+        self._lock = Lock()
+        self.enabled = status
+
+    def get(self) -> bool:
+        with self._lock:
+            return self.enabled
+
+    def set(self, status: bool) -> None:  # noqa: FBT001
+        with self._lock:
+            self.enabled = status
+
+    def toggle(self) -> bool:
+        with self._lock:
+            self.enabled = not self.enabled
+            return self.enabled
+
+    def enable(self) -> None:
+        with self._lock:
+            self.enabled = True
+
+    def disable(self) -> None:
+        with self._lock:
+            self.enabled = False
+
+    @contextmanager
+    def temporary(self, *, status: bool = True):  # noqa: ANN202
+        with self._lock:
+            original = self.enabled
+            self.enabled = status
+        try:
+            yield
+        finally:
+            with self._lock:
+                self.enabled = original
+
+    def __bool__(self) -> bool:
+        with self._lock:
+            return self.enabled
+
+    def __str__(self) -> str:
+        return str(self.enabled)
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(status={self.enabled})"
+
+
+class StatusManager:
+    __slots__ = ("filters", "global_filters", "global_handlers", "handlers", "logger")
+
+    def __init__(
+        self,
+        *,
+        logger: bool = True,
+        handlers: bool = True,
+        filters: bool = True,
+        global_handlers: bool = True,
+        global_filters: bool = True,
+    ) -> None:
+        self.logger = StatusComponent(status=logger)
+        self.handlers = StatusComponent(status=handlers)
+        self.filters = StatusComponent(status=filters)
+        self.global_handlers = StatusComponent(status=global_handlers)
+        self.global_filters = StatusComponent(status=global_filters)
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(logger_enabled={self.logger.enabled})"
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f"logger={self.logger}, "
+            f"handlers={self.handlers}, "
+            f"filters={self.filters}, "
+            f"global_handlers={self.global_handlers}, "
+            f"global_filters={self.global_filters})"
+        )
+</file>
+
+<file path="src/turboprint_logger/managers/tags.py">
+from __future__ import annotations
+
+from collections.abc import Iterator
+from contextlib import contextmanager
+from threading import Lock
+
+__all__ = ("TagsManager",)
+
+
+class TagsManager:
+    __slots__ = ("_lock", "_tags")
+
+    def __init__(self, *tags: str) -> None:
+        self._lock = Lock()
+        self._tags: set[str] = set(tags)
+
+    def get(self) -> set[str]:
+        with self._lock:
+            return self._tags
+
+    def copy(self) -> set[str]:
+        with self._lock:
+            return self._tags.copy()
+
+    def add(self, *tags: str) -> None:
+        with self._lock:
+            self._tags.update(tags)
+
+    def remove(self, tag: str) -> None:
+        with self._lock:
+            return self._tags.discard(tag)
+
+    def clear(self) -> None:
+        with self._lock:
+            self._tags.clear()
+
+    @contextmanager
+    def temporary(self, *tags: str, replace: bool = True):  # noqa: ANN201
+        with self._lock:
+            original = self._tags
+            self._tags = set(tags) if replace else {*self._tags, *tags}
+        try:
+            yield
+        finally:
+            with self._lock:
+                self._tags = original
+
+    def __len__(self) -> int:
+        with self._lock:
+            return len(self._tags)
+
+    def __iter__(self) -> Iterator[str]:
+        with self._lock:
+            return iter(self._tags.copy())
+
+    def __getitem__(self, index: int) -> str:
+        with self._lock:
+            return list(self._tags)[index]
+
+    def __contains__(self, tag: str) -> bool:
+        with self._lock:
+            return tag in self._tags
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(tags_count={len(self._tags)})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(tags={tuple(self._tags)})"
+</file>
+
+<file path="src/turboprint_logger/utils/normalizers.py">
+from __future__ import annotations
+
+import re
+
+from turboprint_logger.exceptions.utils.normalizers import (
+    InvalidContainerNameError,
+    InvalidContextKeyError,
+    InvalidLevelNameError,
+    InvalidLoggerNameError,
+)
+
+__all__ = (
+    "normalize_container_name",
+    "normalize_context_key",
+    "normalize_level_name",
+    "normalize_logger_name",
+)
+
+_PATTERN_CONTAINER = re.compile(r"[a-z0-9_-]+", re.IGNORECASE)
+_PATTERN_LOGGER = re.compile(r"[a-z0-9_.-]+", re.IGNORECASE)
+_PATTERN_LEVEL = re.compile(r"[a-z_-]+", re.IGNORECASE)
+_PATTERN_CONTEXT = re.compile(r"[a-z0-9_-]+", re.IGNORECASE)
+
+_BAD_BOUNDARIES = re.compile(r"^[_.-]|[_.-]$", re.IGNORECASE)
+_BAD_DOUBLE = re.compile(r"\.\.|--|__", re.IGNORECASE)
+
+
+def _normalize(name: str, pattern: re.Pattern, *, upper: bool = True) -> str | None:
+    name = name.strip().upper() if upper else name.strip().lower()
+    if not pattern.fullmatch(name):
+        return None
+    if _BAD_BOUNDARIES.search(name):
+        return None
+    if _BAD_DOUBLE.search(name):
+        return None
+    return name
+
+
+def normalize_container_name(name: str) -> str:
+    normal_name = _normalize(name, _PATTERN_CONTAINER, upper=False)
+    if not normal_name:
+        msg = f"Invalid container name: {name}"
+        raise InvalidContainerNameError(msg)
+    return normal_name
+
+
+def normalize_logger_name(name: str) -> str:
+    normal_name = _normalize(name, _PATTERN_LOGGER, upper=False)
+    if not normal_name:
+        msg = f"Invalid logger name: {name}"
+        raise InvalidLoggerNameError(msg)
+    return normal_name
+
+
+def normalize_level_name(name: str) -> str:
+    normal_name = _normalize(name, _PATTERN_LEVEL, upper=True)
+    if not normal_name:
+        msg = f"Invalid level name: {name}"
+        raise InvalidLevelNameError(msg)
+    return normal_name
+
+
+def normalize_context_key(key: str) -> str:
+    normal_name = _normalize(key, _PATTERN_CONTEXT, upper=False)
+    if not normal_name:
+        msg = f"Invalid context key: {key}"
+        raise InvalidContextKeyError(msg)
+    return normal_name
+</file>
+
+<file path="src/turboprint_logger/decorators/retry.py">
+from __future__ import annotations
+
+from collections.abc import Callable
+from functools import wraps
+from string import Template
+from time import sleep
+from typing import Any, TypeVar, cast
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.logger import Logger
+from turboprint_logger.exceptions.decorators.retry import (
+    RetryLimitExceededError,
+    UnknownRetryError,
+)
+
+__all__ = ("retry",)
+
+_F = TypeVar("_F", bound=Callable[..., Any])
+
+
+class RetryDecorator:
+    def __init__(  # noqa: PLR0913
+        self,
+        max_attempts: int = 3,
+        delay: float = 1.0,
+        backoff: float = 2.0,
+        exceptions: tuple[type[Exception], ...] = (Exception,),
+        logger: str | Logger | None = None,
+        success_level: LevelRegistry = Level.SUCCESS,
+        success_message: str = "${function} succeeded after ${attempt} attempt",
+        warning_level: LevelRegistry = Level.WARNING,
+        warning_message: str = "Attempt ${attempt} for ${function} failed: ${exception}",  # noqa: E501
+        error_level: LevelRegistry = Level.ERROR,
+        error_message: str = "Function ${function} failed after ${attempt} attempt",
+    ) -> None:
+        self.logger = (
+            logger
+            if isinstance(logger, Logger)
+            else Logger.get_logger(logger or "root")
+        )
+        self.max_attempts = min(1, max_attempts)
+        self.delay = delay
+        self.backoff = backoff
+        self.exceptions = exceptions
+        self.success_level = success_level
+        self.success_message = Template(success_message)
+        self.warning_level = warning_level
+        self.warning_message = Template(warning_message)
+        self.error_level = error_level
+        self.error_message = Template(error_message)
+
+    def __call__(self, func: _F) -> _F:
+        @wraps(func)
+        def wrapper(*args, **kwargs):  # noqa: ANN202
+            last_exc = None
+            for attempt in range(1, self.max_attempts + 1):
+                try:
+                    result = func(*args, **kwargs)
+                    if attempt > 1:
+                        self.logger(
+                            self.success_level,
+                            self.success_message.safe_substitute(
+                                function=func.__name__, attempt=attempt
+                            ),
+                        )
+                except self.exceptions as exc:
+                    last_exc = exc
+                    self.logger(
+                        self.warning_level,
+                        self.warning_message.safe_substitute(
+                            function=func.__name__, attempt=attempt, exception=exc
+                        ),
+                    )
+                    if attempt < self.max_attempts:
+                        sleep(self.delay * (self.backoff ** (attempt - 1)))
+                else:
+                    return result
+            self.logger(
+                self.error_level,
+                self.error_message.safe_substitute(
+                    function=func.__name__, attempt=attempt
+                ),
+            )
+            if last_exc:
+                msg = f"{func.__name__}, last exception: {last_exc}"
+                raise RetryLimitExceededError(msg)
+            msg = "Unknown error in retry"
+            raise UnknownRetryError(msg)
+
+        return cast(_F, wrapper)
+
+
+retry = RetryDecorator
+</file>
+
+<file path="src/turboprint_logger/exceptions/handlers/file.py">
+from __future__ import annotations
+
+from turboprint_logger.exceptions.handlers.base import HandlerException
+
+__all__ = (
+    "FileClosedError",
+    "FileHandlerConfigError",
+    "FileHandlerException",
+    "FileOpenError",
+    "FileWriteError",
+    "InvalidFlushIntervalError",
+    "InvalidSeparatorError",
+)
+
+
+class FileHandlerException(HandlerException):
+    """Base exception for all file handlers exceptions"""
+
+
+class FileClosedError(FileHandlerException):
+    """Raised when the file is closed"""
+
+
+class FileHandlerConfigError(FileHandlerException):
+    """Raised when file handler configuration is invalid."""
+
+
+class InvalidSeparatorError(FileHandlerConfigError):
+    """Raised when separator is not a non-empty string."""
+
+
+class InvalidFlushIntervalError(FileHandlerConfigError):
+    """Raised when flush interval is invalid."""
+
+
+class FileOpenError(FileHandlerException):
+    """Raised when the file cannot be opened"""
+
+
+class FileWriteError(FileHandlerException):
+    """Raised when the file cannot be written"""
+</file>
+
+<file path="src/turboprint_logger/formatters/security.py">
+from __future__ import annotations
+
+from re import IGNORECASE
+from re import compile as re_compile
+from typing import Any
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Formatter
+
+__all__ = ("SecurityFormatter",)
+
+
+class SecurityFormatter(Formatter):
+    def __init__(
+        self,
+        inner: Formatter,
+        *,
+        sensitive_fields: list[str] | None = None,
+        sensitive_patterns: list[str] | None = None,
+        mask_char: str = "*",
+    ) -> None:
+        self.inner = inner
+        self.sensitive_fields = sensitive_fields or [
+            "password",
+            "token",
+            "secret",
+            "api_key",
+            "auth",
+            "credit_card",
+        ]
+        self.sensitive_patterns = sensitive_patterns or []
+        self._compiled_patterns = [
+            re_compile(pattern, IGNORECASE) for pattern in self.sensitive_patterns
+        ]
+        self.mask_char = mask_char
+
+    def _mask_process(self, item: Any) -> Any:  # noqa: ANN401
+        if isinstance(item, list | tuple | set):
+            return [self._mask_process(i) for i in item]
+        if isinstance(item, dict):
+            masked: dict[str, Any] = {}
+            for key, value in item.items():
+                if not isinstance(key, str):
+                    masked[key] = value
+                if key in self.sensitive_fields:
+                    masked[key] = "***"
+                else:
+                    masked[key] = self._mask_process(value)
+            return masked
+        if isinstance(item, str) and any(
+            pattern.search(item) for pattern in self._compiled_patterns
+        ):
+            return self.mask_char * len(item)
+        return item
+
+    def format(self, record: Record) -> str:
+        masked_context = self._mask_process(record.context)
+
+        message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
+        masked_message = self._mask_process(message)
+
+        new_record = record.copy()
+        new_record.context = masked_context
+        new_record.message = masked_message
+
+        return self.inner.format(new_record)
+</file>
+
+<file path="src/turboprint_logger/managers/handlers.py">
+from __future__ import annotations
+
+from collections.abc import Iterator
+from contextlib import contextmanager
+from threading import Lock
+
+from turboprint_logger.interfaces import Handler
+
+__all__ = ("HandlersManager",)
+
+
+class HandlersManager:
+    __slots__ = ("_handlers", "_lock")
+
+    def __init__(self, *handlers: Handler) -> None:
+        self._lock = Lock()
+        self._handlers: list[Handler] = list(handlers) or []
+
+    def get(self) -> tuple[Handler, ...]:
+        with self._lock:
+            return tuple(self._handlers)
+
+    def add(self, *handlers: Handler) -> None:
+        with self._lock:
+            self._handlers.extend(handlers)
+
+    def remove(self, handler: Handler) -> bool:
+        try:
+            with self._lock:
+                self._handlers.remove(handler)
+        except ValueError:
+            return False
+        return True
+
+    def clear(self) -> None:
+        with self._lock:
+            self._handlers.clear()
+
+    @contextmanager
+    def temporary(self, *handlers: Handler, replace: bool = True):  # noqa: ANN201
+        with self._lock:
+            original = self._handlers
+            self._handlers = list(handlers) if replace else [*self._handlers, *handlers]
+        try:
+            yield
+        finally:
+            with self._lock:
+                self._handlers = original
+
+    def __len__(self) -> int:
+        with self._lock:
+            return len(self._handlers)
+
+    def __iter__(self) -> Iterator[Handler]:
+        with self._lock:
+            return iter(self._handlers.copy())
+
+    def __getitem__(self, index: int) -> Handler:
+        with self._lock:
+            return self._handlers[index]
+
+    def __contains__(self, handler: Handler) -> bool:
+        with self._lock:
+            return handler in self._handlers
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(handlers_count={len(self._handlers)})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(handlers={self._handlers})"
+</file>
+
+<file path="src/turboprint_logger/core/levels.py">
+from __future__ import annotations
+
+from dataclasses import dataclass
+from functools import cache
+from threading import Lock
+from typing import ClassVar
+
+from colorama import Fore, Style
+from emoji import LANGUAGES as EMOJI_LANGUAGES
+from emoji import emojize, is_emoji
+
+from turboprint_logger.exceptions.core.levels import (
+    InvalidLevelColorError,
+    InvalidLevelEmojiError,
+    LevelNameAlreadyExistsError,
+    LevelValueAlreadyExistsError,
+    NegativeLevelError,
+)
+from turboprint_logger.utils.normalizers import normalize_level_name
+
+__all__ = ("Level", "LevelRegistry")
+
+
+@dataclass(frozen=True, slots=True)
+class LevelRegistry:
+    name: str
+    level: int
+    color: str
+    emoji: str | None = None
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.name}[{self.level}])"
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f'name="{self.name}", '
+            f"level={self.level}, "
+            f"emoji={self.emoji})"
+        )
+
+    def enabled_for(self, level: LevelRegistry) -> bool:
+        return self.level >= level.level
+
+
+def _register_levels(cls: type[Level]) -> type[Level]:
+    for attr_name in dir(cls):
+        level = getattr(cls, attr_name)
+        if isinstance(level, LevelRegistry):
+            cls._by_name[level.name] = level
+            cls._by_level[level.level] = level
+    return cls
+
+
+@_register_levels
+class Level:
+    _lock = Lock()
+
+    NOTSET = LevelRegistry("NOTSET", 0, Fore.RESET)
+    VERBOSE = LevelRegistry("VERBOSE", 10, Fore.LIGHTBLACK_EX)
+    DEBUG = LevelRegistry("DEBUG", 20, Fore.MAGENTA)
+    TRACE = LevelRegistry("TRACE", 30, Fore.BLUE)
+    LOG = LevelRegistry("LOG", 40, Fore.CYAN)
+    NOTICE = LevelRegistry("NOTICE", 50, Fore.LIGHTYELLOW_EX)
+    EVENT = LevelRegistry("EVENT", 60, Fore.LIGHTCYAN_EX)
+    PERFORMANCE = LevelRegistry("PERFORMANCE", 70, Fore.CYAN)
+    SUCCESS = LevelRegistry("SUCCESS", 80, Fore.GREEN)
+    SECURITY = LevelRegistry("SECURITY", 90, Fore.LIGHTGREEN_EX)
+    AUDIT = LevelRegistry("AUDIT", 100, Fore.YELLOW)
+    INFO = LevelRegistry("INFO", 110, Fore.LIGHTBLUE_EX)
+    WARNING = LevelRegistry("WARNING", 120, Fore.RED)
+    ERROR = LevelRegistry("ERROR", 130, Fore.LIGHTRED_EX)
+    ALERT = LevelRegistry("ALERT", 140, Style.BRIGHT + Fore.YELLOW)
+    CRITICAL = LevelRegistry("CRITICAL", 150, Style.BRIGHT + Fore.LIGHTRED_EX)
+    FATAL = LevelRegistry("FATAL", 160, Style.BRIGHT + Fore.MAGENTA)
+    EMERGENCY = LevelRegistry("EMERGENCY", 170, Style.BRIGHT + Fore.RED)
+
+    _by_name: ClassVar[dict[str, LevelRegistry]] = {}
+    _by_level: ClassVar[dict[int, LevelRegistry]] = {}
+
+    @classmethod
+    @cache
+    def get_by_name(cls, name: str) -> LevelRegistry | None:
+        with cls._lock:
+            return cls._by_name.get(name.strip().upper())
+
+    @classmethod
+    @cache
+    def get_by_level(cls, level: int) -> LevelRegistry | None:
+        with cls._lock:
+            return cls._by_level.get(level)
+
+    @classmethod
+    @cache
+    def all_levels(cls) -> list[LevelRegistry]:
+        with cls._lock:
+            return sorted(cls._by_level.values(), key=lambda lvl: lvl.level)
+
+    @classmethod
+    def register(  # noqa: C901
+        cls,
+        name: str,
+        level: int,
+        color: str = Fore.RESET,
+        emoji_name: str | None = None,
+    ) -> LevelRegistry:
+        name_upper = normalize_level_name(name)
+        if name_upper in Level._by_name:
+            msg = f'Level with name "{name_upper}" already exists'
+            raise LevelNameAlreadyExistsError(msg)
+        if level in Level._by_level:
+            msg = f"Level with value {level} already exists"
+            raise LevelValueAlreadyExistsError(msg)
+        if level < 0:
+            msg = f'Level "{name_upper}" cannot be negative: {level}'
+            raise NegativeLevelError(msg)
+        if not isinstance(color, str) or not color:
+            msg = f"Invalid color: {color!r}"
+            raise InvalidLevelColorError(msg)
+        emoji = emoji_name.strip().lower() if emoji_name else emoji_name
+        if emoji and not is_emoji(emoji):
+            if not emoji.startswith(":"):
+                emoji = ":" + emoji
+            if not emoji.endswith(":"):
+                emoji = emoji + ":"
+            for lang in EMOJI_LANGUAGES:
+                emoji = emojize(emoji, variant="emoji_type", language=lang)
+                if is_emoji(emoji):
+                    break
+            if not is_emoji(emoji):
+                msg = f"Invalid emoji code: {emoji_name}"
+                raise InvalidLevelEmojiError(msg)
+
+        with cls._lock:
+            new_level = LevelRegistry(name_upper, level, color, emoji)
+            cls._by_name[name_upper] = new_level
+            cls._by_level[level] = new_level
+            cls.get_by_name.cache_clear()
+            cls.get_by_level.cache_clear()
+            cls.all_levels.cache_clear()
+        return new_level
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(levels_count={len(self._by_level)})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(levels_count={len(self._by_level)})"
+</file>
+
+<file path="src/turboprint_logger/managers/context.py">
+from __future__ import annotations
+
+from collections.abc import Iterable
+from contextlib import contextmanager
+from threading import Lock
+from typing import Any
+
+from turboprint_logger.utils.normalizers import normalize_context_key
+
+__all__ = ("ContextManager",)
+
+
+class ContextManager:
+    __slots__ = ("_context", "_lock")
+
+    def __init__(self, **context) -> None:
+        self._lock = Lock()
+        self._context: dict[str, Any] = {normalize_context_key(key): value for key, value in context.items()}
+
+    def get(self) -> dict[str, Any]:
+        with self._lock:
+            return self._context
+
+    def copy(self) -> dict[str, Any]:
+        with self._lock:
+            return self._context.copy()
+
+    def clear(self) -> None:
+        with self._lock:
+            self._context.clear()
+
+    def update(self, **context) -> None:
+        with self._lock:
+            self._context.update({normalize_context_key(key): value for key, value in context.items()})
+
+    @contextmanager
+    def temporary(self, *, replace: bool = True, **context):  # noqa: ANN201
+        normalized = {normalize_context_key(key): value for key, value in context.items()}
+        with self._lock:
+            original = self._context
+            self._context = normalized if replace else {**self._context, **normalized}
+        try:
+            yield
+        finally:
+            with self._lock:
+                self._context = original
+
+    def values(self) -> Iterable[Any]:
+        with self._lock:
+            return self._context.values()
+
+    def keys(self) -> Iterable[Any]:
+        with self._lock:
+            return self._context.keys()
+
+    def items(self) -> Iterable[tuple[str, Any]]:
+        with self._lock:
+            return self._context.items()
+
+    def __getitem__(self, key: str) -> Any:  # noqa: ANN401
+        key = normalize_context_key(key)
+        with self._lock:
+            return self._context[key]
+
+    def __delitem__(self, key: str) -> None:
+        key = normalize_context_key(key)
+        with self._lock:
+            del self._context[key]
+
+    def __setitem__(self, key: str, value: Any) -> None:  # noqa: ANN401
+        key = normalize_context_key(key)
+        with self._lock:
+            self._context[key] = value
+
+    def __str__(self) -> str:
+        return self.__class__.__name__
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(context_keys={self.keys()})"
+</file>
+
+<file path="src/turboprint_logger/core/plugins.py">
+from __future__ import annotations
+
+from collections.abc import Callable
+from threading import RLock
+from typing import TypeVar
+
+from turboprint_logger.exceptions.core.plugins import (
+    PluginAlreadyRegisteredError,
+    PluginNotFoundError,
+    PluginTypeError,
+)
+from turboprint_logger.interfaces import Filter, Formatter, Handler, Processor
+
+__all__ = (
+    "get_filter",
+    "get_formatter",
+    "get_handler",
+    "register_filter",
+    "register_formatter",
+    "register_handler",
+)
+
+_T = TypeVar("_T", bound=type[Handler | Filter | Formatter | Processor])
+_HANDLER = TypeVar("_HANDLER", bound=type[Handler])
+_FILTER = TypeVar("_FILTER", bound=type[Filter])
+_FORMATTER = TypeVar("_FORMATTER", bound=type[Formatter])
+_PROCESSOR = TypeVar("_PROCESSOR", bound=type[Processor])
+
+_handlers_lock = RLock()
+_filters_lock = RLock()
+_formatters_lock = RLock()
+_processors_lock = RLock()
+
+_handlers: dict[str, type[Handler]] = {}
+_filters: dict[str, type[Filter]] = {}
+_formatters: dict[str, type[Formatter]] = {}
+_processors: dict[str, type[Processor]] = {}
+
+
+def _register(
+    type_: _T, lock: RLock, dict_: dict[str, _T], name: str | None = None
+) -> Callable[[_T], _T]:
+    def decorator(cls: _T) -> _T:
+        if not issubclass(cls, type_):
+            msg = f"{cls.__name__} must be subclass of {type_.__name__}"
+            raise PluginTypeError(msg)
+        with lock:
+            key = name or cls.__name__
+            if key in dict_ and dict_[key] is not cls:
+                msg = f"{cls.__name__} {key!r} already registered"
+                raise PluginAlreadyRegisteredError(msg)
+            dict_[key] = cls
+        return cls
+
+    return decorator
+
+
+def _get(dict_: dict[str, _T], type_: _T, name: str) -> _T:
+    try:
+        return dict_[name]
+    except KeyError:
+        msg = f"Unknown {type_.__name__.lower()}: {name}"
+        raise PluginNotFoundError(msg) from None
+
+
+def register_handler(name: str | None = None) -> Callable[[_HANDLER], _HANDLER]:
+    return _register(Handler, _handlers_lock, _handlers, name)  # pyright: ignore[reportReturnType]
+
+
+def get_handler(name: str) -> type[Handler]:
+    return _get(_handlers, Handler, name)
+
+
+def register_filter(name: str | None = None) -> Callable[[_FILTER], _FILTER]:
+    return _register(Filter, _filters_lock, _filters, name)  # pyright: ignore[reportReturnType]
+
+
+def get_filter(name: str) -> type[Filter]:
+    return _get(_filters, Filter, name)
+
+
+def register_formatter(name: str | None = None) -> Callable[[_FORMATTER], _FORMATTER]:
+    return _register(Formatter, _formatters_lock, _formatters, name)  # pyright: ignore[reportReturnType]
+
+
+def get_formatter(name: str) -> type[Formatter]:
+    return _get(_formatters, Formatter, name)
+
+
+def register_processor(name: str | None = None) -> Callable[[_PROCESSOR], _PROCESSOR]:
+    return _register(Processor, _processors_lock, _processors, name)  # pyright: ignore[reportReturnType]
+
+
+def get_processor(name: str) -> type[Processor]:
+    return _get(_processors, Processor, name)
+</file>
+
+<file path="src/turboprint_logger/formatters/json.py">
+from __future__ import annotations
+
+from datetime import date, datetime, time
+from typing import Any
+
+from turboprint_logger.core.record import Record
+from turboprint_logger.interfaces import Formatter
+
+JSON_MODULE = "json"
+try:
+    import orjson
+
+    JSON_MODULE = "orjson"
+except ImportError:
+    try:
+        from msgspec.json import Encoder
+
+        JSON_MODULE = "msgspec"
+    except ImportError:
+        try:
+            from ujson import dumps
+        except ImportError:
+            from json import dumps
+
+__all__ = ("JSONFormatter",)
+
+
+class JSONFormatter(Formatter):
+    def __init__(
+        self,
+        *,
+        include: list[str] | None = None,
+        exclude: list[str] | None = None,
+        rename: dict[str, str] | None = None,
+        sort_keys: bool = False,
+        **extra,
+    ) -> None:
+        self.include = set(include) if include else None
+        self.exclude = set(exclude) if exclude else None
+        self.rename = rename or {}
+        self.extra = extra or {}
+        self.sort_keys = sort_keys
+
+        if JSON_MODULE == "msgspec":
+            order = "sorted" if sort_keys else "deterministic"
+            self._encoder = Encoder(enc_hook=self._default_serializer, order=order)
+        elif JSON_MODULE == "orjson":
+            self._orjson_option = orjson.OPT_SERIALIZE_NUMPY
+            if sort_keys:
+                self._orjson_option |= orjson.OPT_SORT_KEYS
+
+    @staticmethod
+    def _default_serializer(obj: Any) -> Any:  # noqa: ANN401, PLR0911
+        if isinstance(obj, dict):
+            return obj
+        if isinstance(obj, (datetime, date, time)):
+            return obj.isoformat()
+        for method_name in ("dict", "to_dict","__json__","__dict__"):
+            method_obj = getattr(obj, method_name, None)
+            if callable(method_obj):
+                return method_obj
+        return str(obj)
+
+    def format(self, record: Record) -> str:
+        message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
+
+        data: dict[str, Any] = {
+            "message": message,
+            "level": {
+                "name": record.level.name,
+                "value": record.level.level,
+            },
+            "logger": record.logger.name,
+            "timestamp": record.date_time.isoformat(),
+            "caller": {
+                "file": record.file,
+                "function": record.function,
+                "line": record.line,
+            },
+            "context": self._default_serializer({**record.context, **self.extra}),
+        }
+
+        for old, new in self.rename.items():
+            if old in data:
+                data[new] = data.pop(old)
+
+        if self.exclude:
+            data = {
+                key: value for key, value in data.items() if key not in self.exclude
+            }
+
+        if self.include:
+            data = {key: value for key, value in data.items() if key in self.include}
+
+        if JSON_MODULE == "orjson":
+            return orjson.dumps(
+                data, default=self._default_serializer, option=self._orjson_option
+            ).decode("utf-8")
+        if JSON_MODULE == "msgspec":
+            return self._encoder.encode(data).decode("utf-8")
+        return dumps(
+            data,
+            ensure_ascii=False,
+            default=self._default_serializer,
+            sort_keys=self.sort_keys,
+        )
+</file>
+
+<file path="src/turboprint_logger/handlers/rotating_file.py">
+from __future__ import annotations
+
+from contextlib import suppress
+from gzip import open as gzip_open
+from pathlib import Path
+from shutil import copyfileobj
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.record import Record
+from turboprint_logger.handlers.file import FileHandler
+from turboprint_logger.interfaces import Filter, Formatter
+
+__all__ = ("RotatingFileHandler",)
+
+
+class RotatingFileHandler(FileHandler):
+    def __init__(  # noqa: PLR0913
+        self,
+        file_path: str,
+        min_level: LevelRegistry = Level.NOTSET,
+        formatter: Formatter | None = None,
+        filters: list[Filter] | None = None,
+        *,
+        separator: str = "\n",
+        buffer_size: int | None = None,
+        encoding: str = "utf-8",
+        update_mode: bool = False,
+        compress: bool = True,
+        max_bytes: int | None = None,
+        max_lines: int | None = None,
+        backup_count: int = 0,
+    ) -> None:
+        super().__init__(
+            file_path=file_path,
+            min_level=min_level,
+            formatter=formatter,
+            filters=filters,
+            separator=separator,
+            buffer_size=buffer_size,
+            encoding=encoding,
+            update_mode=update_mode,
+        )
+        self.compress = compress
+        self.max_bytes = max_bytes
+        self.max_lines = max_lines
+        self.backup_count = backup_count
+        self._line_count = 0
+        self._current_size = 0
+        self._update_counts()
+
+    def _update_counts(self) -> None:
+        with self._lock:
+            path = Path(self.file_path)
+            if path.exists():
+                self._current_size = path.stat().st_size
+                if self.max_lines is not None:
+                    try:
+                        with path.open("r", encoding=self.encoding) as file:
+                            self._line_count = sum(1 for _ in file)
+                    except OSError:
+                        self._line_count = 0
+                else:
+                    self._line_count = 0
+            else:
+                self._current_size = 0
+                self._line_count = 0
+
+    def _should_rotate(self, record: Record) -> bool:  # noqa: ARG002
+        if self.max_bytes is not None and self._current_size >= self.max_bytes:
+            return True
+        return bool(self.max_lines is not None and self._line_count >= self.max_lines)
+
+    def _rotated_path(self, number: int) -> Path:
+        path = Path(self.file_path)
+        suffixes = path.suffixes
+        stem = path.name.removesuffix("".join(suffixes)) if suffixes else path.name
+        new_name = f"{stem}.{number}{''.join(suffixes)}"
+        return path.parent / new_name
+
+    @staticmethod
+    def _compressed_path(path: Path) -> Path:
+        return path.with_suffix(path.suffix + ".gz")
+
+    def _rotate(self) -> None:
+        with self._lock:
+            if self.backup_count <= 0:
+                with suppress(OSError):
+                    Path(self.file_path).unlink(missing_ok=True)
+                return
+
+            for i in range(self.backup_count - 1, 0, -1):
+                src = self._rotated_path(i)
+                dst = self._rotated_path(i + 1)
+                src_gz = self._compressed_path(src)
+                dst_gz = self._compressed_path(dst)
+                if src_gz.exists():
+                    with suppress(OSError):
+                        src_gz.replace(dst_gz)
+                elif src.exists():
+                    with suppress(OSError):
+                        src.replace(dst)
+
+            src = Path(self.file_path)
+            dst = self._rotated_path(1)
+            if src.exists():
+                with suppress(OSError):
+                    src.replace(dst)
+
+            if self.compress and dst.exists():
+                compressed_path = self._compressed_path(dst)
+                with dst.open("rb") as f_in, gzip_open(compressed_path, "wb") as f_out:
+                    copyfileobj(f_in, f_out)
+                dst.unlink(missing_ok=True)
+
+    def _write(self, record: Record) -> None:
+        with self._lock:
+            if self._should_rotate(record):
+                self.close()
+                self._rotate()
+                self._open_file()
+                self._closed = False
+                self._update_counts()
+
+            super()._write(record)
+
+            formatter = self.formatter or record.logger.formatter.get()
+            line = formatter.format(record) + self.separator
+            self._current_size += len(line.encode(self.encoding))
+            if self.max_lines is not None:
+                self._line_count += 1
+
+    def reopen(self) -> None:
+        super().reopen()
+        self._update_counts()
+</file>
+
+<file path="src/turboprint_logger/managers/config.py">
+from __future__ import annotations
+
+from collections.abc import Callable
+from json import loads as json_loads
+from pathlib import Path
+from sys import stderr
+from threading import Event, RLock, Thread
+from time import sleep
+from typing import TYPE_CHECKING, Any, Protocol, TypeAlias, cast
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.plugins import (
+    get_filter,
+    get_formatter,
+    get_handler,
+    get_processor,
+)
+from turboprint_logger.exceptions.managers.config import (
+    ConfigParserError,
+    ConfigReloadError,
+    ConfigSpecError,
+    ConfigWatchAlreadyRunningError,
+)
+from turboprint_logger.interfaces import Filter, Formatter, Handler
+from turboprint_logger.interfaces.processor import Processor
+
+if TYPE_CHECKING:
+    from turboprint_logger.core.container import Container
+    from turboprint_logger.core.logger import Logger
+
+__all__ = ("ConfigManager",)
+
+_ROOT_LOGGER_NAME = "root"
+_MAX_CONFIG_BYTES = 10 * 1024 * 1024
+
+
+class ParserFunc(Protocol):
+    def __call__(self, source: str) -> dict[str, Any]: ...
+
+
+ComponentFactory: TypeAlias = Callable[[dict[str, Any]], object]
+
+
+class ConfigManager:
+    __slots__ = (
+        "_container",
+        "_factories",
+        "_last_loaded",
+        "_lock",
+        "_parsers",
+        "_stop_event",
+        "_watch_file",
+        "_watch_interval",
+        "_watch_thread",
+    )
+
+    def __init__(self, container: Container | None = None) -> None:
+        from turboprint_logger.core.container import (  # noqa: PLC0415
+            get_default_container,
+        )
+
+        self._container = container or get_default_container()
+        self._lock = RLock()
+        self._parsers: dict[str, ParserFunc] = {}
+        self._factories: dict[str, ComponentFactory] = {}
+        self._last_loaded: dict[str, Any] | None = None
+        self._watch_file: Path | None = None
+        self._watch_interval = 1.0
+        self._watch_thread: Thread | None = None
+        self._stop_event = Event()
+        self.register_parser("json", self._parse_json)
+        self.register_parser("yaml", self._parse_yaml)
+        self.register_parser("yml", self._parse_yaml)
+        self._register_default_factories()
+
+    def register_parser(self, extension: str, parser: ParserFunc) -> None:
+        key = extension.strip().lower().removeprefix(".")
+        with self._lock:
+            self._parsers[key] = parser
+
+    def register_factory(self, name: str, factory: ComponentFactory) -> None:
+        key = name.strip().lower()
+        with self._lock:
+            self._factories[key] = factory
+
+    def parse_file(self, file_path: str | Path) -> dict[str, Any]:
+        path = Path(file_path).expanduser()
+        if not path.is_file():
+            msg = f"Config file does not exist or is not a file: {path}"
+            raise ConfigParserError(msg)
+        suffix = path.suffix.strip().lower().removeprefix(".")
+        with self._lock:
+            parser = self._parsers.get(suffix)
+        if not parser:
+            msg = f"Unsupported config extension: {path.suffix or '<none>'}"
+            raise ConfigParserError(msg)
+        try:
+            size = path.stat().st_size
+            if size > _MAX_CONFIG_BYTES:
+                msg = (
+                    f"Config file {path} is too large: {size} bytes. "
+                    f"Maximum allowed is {_MAX_CONFIG_BYTES} bytes"
+                )
+                raise ConfigParserError(msg)
+            source = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            msg = f"Unable to read config file {path}: {exc}"
+            raise ConfigParserError(msg) from exc
+        except UnicodeDecodeError as exc:
+            msg = f"Config file {path} is not valid UTF-8: {exc}"
+            raise ConfigParserError(msg) from exc
+        try:
+            data = parser(source)
+        except ConfigParserError:
+            raise
+        except Exception as exc:
+            msg = f"Failed to parse config file {path}: {exc}"
+            raise ConfigParserError(msg) from exc
+        if not isinstance(data, dict):
+            msg = "Config root must be an object/dict"
+            raise ConfigSpecError(msg)
+        return data
+
+    def load_file(self, file_path: str | Path) -> dict[str, Any]:
+        config = self.parse_file(file_path)
+        self.apply(config)
+        with self._lock:
+            self._last_loaded = config
+        return config
+
+    def apply(self, config: dict[str, Any]) -> None:
+        from turboprint_logger.core.logger import Logger  # noqa: PLC0415
+
+        loggers = cast(dict[str, Any], config.get("loggers", {}))
+        if not isinstance(loggers, dict):
+            msg = "Config key 'loggers' must be a dict"
+            raise ConfigSpecError(msg)
+        for name, raw_spec in loggers.items():
+            if not isinstance(name, str):
+                msg = f"Logger name must be a string, got: {type(name).__name__}"
+                raise ConfigSpecError(msg)
+            if not isinstance(raw_spec, dict):
+                msg = f"Logger config for '{name}' must be a dict"
+                raise ConfigSpecError(msg)
+            logger_name = _ROOT_LOGGER_NAME if name == _ROOT_LOGGER_NAME else name
+
+            logger = Logger.get_logger(logger_name, container=self._container)
+            self._apply_logger(logger, raw_spec)
+
+    def enable_auto_reload(
+        self,
+        file_path: str | Path,
+        *,
+        interval: float = 1.0,
+        load_initial: bool = True,
+    ) -> None:
+        path = Path(file_path)
+        if interval <= 0:
+            msg = "Auto-reload interval must be > 0"
+            raise ConfigReloadError(msg)
+
+        with self._lock:
+            if self._watch_thread and self._watch_thread.is_alive():
+                msg = "Auto-reload already enabled"
+                raise ConfigWatchAlreadyRunningError(msg)
+            self._watch_file = path
+            self._watch_interval = interval
+            self._stop_event.clear()
+            self._watch_thread = Thread(target=self._watch_loop, daemon=True)
+            thread = self._watch_thread
+
+        if load_initial:
+            try:
+                self.load_file(path)
+            except Exception:
+                with self._lock:
+                    self._watch_file = None
+                    self._watch_thread = None
+                    self._stop_event.set()
+                raise
+
+        if thread:
+            thread.start()
+
+    def disable_auto_reload(self, *, timeout: float = 2.0) -> None:
+        with self._lock:
+            thread = self._watch_thread
+            self._watch_thread = None
+            self._watch_file = None
+            self._stop_event.set()
+        if thread:
+            thread.join(timeout=timeout)
+
+    def is_auto_reload_enabled(self) -> bool:
+        with self._lock:
+            return bool(self._watch_thread and self._watch_thread.is_alive())
+
+    def _watch_loop(self) -> None:
+        last_signature: tuple[int, int] | None = None
+        while not self._stop_event.is_set():
+            with self._lock:
+                path = self._watch_file
+                interval = self._watch_interval
+            if path is None:
+                return
+
+            try:
+                stat = path.stat()
+                signature = (int(stat.st_mtime_ns), stat.st_size)
+            except OSError:
+                sleep(interval)
+                continue
+
+            if last_signature is None:
+                last_signature = signature
+            elif signature != last_signature:
+                try:
+                    self.load_file(path)
+                except Exception as exc:  # noqa: BLE001
+                    stderr.write(
+                        f"{exc.__class__.__name__}[ConfigManager]: "
+                        f"Auto-reload failed for {path}: {exc}\n"
+                    )
+                else:
+                    last_signature = signature
+            sleep(interval)
+
+    def _register_default_factories(self) -> None:
+        self.register_factory("formatter", self._build_formatter)
+        self.register_factory("filter", self._build_filter)
+        self.register_factory("handler", self._build_handler)
+        self.register_factory("processor", self._build_processor)
+
+    def _apply_logger(
+        self, logger: Logger, spec: dict[str, Any]
+    ) -> None:  # noqa: C901, PLR0912
+        if "min_level" in spec:
+            logger.level.set(self._as_level(spec["min_level"]))
+
+        if "formatter" in spec:
+            formatter = cast(
+                Formatter, self._build_component("formatter", spec["formatter"])
+            )
+            logger.formatter.set(formatter)
+
+        if "handlers" in spec:
+            handlers_spec = spec["handlers"]
+            if not isinstance(handlers_spec, list):
+                msg = "Logger key 'handlers' must be a list"
+                raise ConfigSpecError(msg)
+            handlers = [
+                cast(Handler, self._build_component("handler", item))
+                for item in handlers_spec
+            ]
+            logger.handlers.clear()
+            logger.handlers.add(*handlers)
+
+        if "processors" in spec:
+            processors_spec = spec["processors"]
+            if not isinstance(processors_spec, list):
+                msg = "Logger key 'processors' must be a list"
+                raise ConfigSpecError(msg)
+            processors = [
+                cast(Processor, self._build_component("processor", item))
+                for item in processors_spec
+            ]
+            logger.processors.clear()
+            logger.processors.add(*processors)
+
+        if "filters" in spec:
+            filters_spec = spec["filters"]
+            if not isinstance(filters_spec, list):
+                msg = "Logger key 'filters' must be a list"
+                raise ConfigSpecError(msg)
+            filters = [
+                cast("Filter", self._build_component("filter", item))
+                for item in filters_spec
+            ]
+            logger.filters.clear()
+            logger.filters.add(*filters)
+
+        if "propagate" in spec:
+            logger.propagate = bool(spec["propagate"])
+
+        if "status" in spec:
+            logger.status.logger.set(bool(spec["status"]))
+
+        if "context" in spec:
+            context = spec["context"]
+            if not isinstance(context, dict):
+                msg = "Logger key 'context' must be a dict"
+                raise ConfigSpecError(msg)
+            logger.context.clear()
+            logger.context.update(**context)
+
+        if "tags" in spec:
+            tags = spec["tags"]
+            if not isinstance(tags, list):
+                msg = "Logger key 'tags' must be a list"
+                raise ConfigSpecError(msg)
+            logger.tags.clear()
+            logger.tags.add(*[str(tag) for tag in tags])
+
+    def _build_component(self, kind: str, spec: str | dict[str, Any]) -> object:
+        with self._lock:
+            factory = self._factories.get(kind)
+        if not factory:
+            msg = f"Unknown component kind '{kind}'"
+            raise ConfigSpecError(msg)
+
+        normalized_spec: dict[str, Any]
+        if isinstance(spec, str):
+            normalized_spec = {"name": spec}
+        elif isinstance(spec, dict):
+            normalized_spec = dict(spec)
+        else:
+            msg = f"Invalid {kind} spec: {spec!r}"
+            raise ConfigSpecError(msg)
+
+        return factory(normalized_spec)
+
+    @staticmethod
+    def _parse_json(source: str) -> dict[str, Any]:
+        payload = json_loads(source)
+        if not isinstance(payload, dict):
+            msg = "JSON config root must be an object"
+            raise ConfigParserError(msg)
+        return payload
+
+    @staticmethod
+    def _parse_yaml(source: str) -> dict[str, Any]:
+        try:
+            from yaml import safe_load  # noqa: PLC0415
+        except ImportError as exc:
+            msg = (
+                "YAML parser is unavailable. Install 'PyYAML' to load .yaml/.yml files"
+            )
+            raise ConfigParserError(msg) from exc
+        payload = safe_load(source)
+        if payload is None:
+            return {}
+        if not isinstance(payload, dict):
+            msg = "YAML config root must be an object"
+            raise ConfigParserError(msg)
+        return payload
+
+    @staticmethod
+    def _as_level(value: object) -> LevelRegistry:
+        if isinstance(value, LevelRegistry):
+            return value
+        if isinstance(value, str):
+            level = Level.get_by_name(value)
+            if level:
+                return level
+        msg = f"Unknown level: {value!r}"
+        raise ConfigSpecError(msg)
+
+    def _build_formatter(self, spec: dict[str, Any]) -> Formatter:
+        name = str(spec.get("name", "")).strip()
+        kwargs = spec.get("kwargs", {})
+        if not name:
+            msg = "Formatter spec requires non-empty 'name'"
+            raise ConfigSpecError(msg)
+        if not isinstance(kwargs, dict):
+            msg = "Formatter 'kwargs' must be a dict"
+            raise ConfigSpecError(msg)
+        try:
+            cls = get_formatter(name)
+            return cls(**kwargs)
+        except Exception as exc:
+            msg = f"Unable to build formatter '{name}': {exc}"
+            raise ConfigSpecError(msg) from exc
+
+    def _build_filter(self, spec: dict[str, Any]) -> Filter:
+        name = str(spec.get("name", "")).strip()
+        kwargs = spec.get("kwargs", {})
+        if not name:
+            msg = "Filter spec requires non-empty 'name'"
+            raise ConfigSpecError(msg)
+        if not isinstance(kwargs, dict):
+            msg = "Filter 'kwargs' must be a dict"
+            raise ConfigSpecError(msg)
+
+        kwargs = dict(kwargs)
+        if "min_level" in kwargs:
+            kwargs["min_level"] = self._as_level(kwargs["min_level"])
+        if "max_level" in kwargs:
+            kwargs["max_level"] = self._as_level(kwargs["max_level"])
+        if "allowed_levels" in kwargs and isinstance(kwargs["allowed_levels"], list):
+            kwargs["allowed_levels"] = [
+                self._as_level(item) for item in kwargs["allowed_levels"]
+            ]
+
+        try:
+            cls = get_filter(name)
+            return cls(**kwargs)
+        except Exception as exc:
+            msg = f"Unable to build filter '{name}': {exc}"
+            raise ConfigSpecError(msg) from exc
+
+    def _build_processor(self, spec: dict[str, Any]) -> Processor:
+        name = str(spec.get("name", "")).strip()
+        kwargs = spec.get("kwargs", {})
+        if not name:
+            msg = "Processor spec requires non-empty 'name'"
+            raise ConfigSpecError(msg)
+        if not isinstance(kwargs, dict):
+            msg = "Processor 'kwargs' must be a dict"
+            raise ConfigSpecError(msg)
+
+        try:
+            cls = get_processor(name)
+            return cls(**kwargs)
+        except Exception as exc:
+            msg = f"Unable to build processor '{name}': {exc}"
+            raise ConfigSpecError(msg) from exc
+
+    def _build_handler(self, spec: dict[str, Any]) -> Handler:
+        name = str(spec.get("name", "")).strip()
+        kwargs = spec.get("kwargs", {})
+        if not name:
+            msg = "Handler spec requires non-empty 'name'"
+            raise ConfigSpecError(msg)
+        if not isinstance(kwargs, dict):
+            msg = "Handler 'kwargs' must be a dict"
+            raise ConfigSpecError(msg)
+
+        kwargs = dict(kwargs)
+        if "min_level" in kwargs:
+            kwargs["min_level"] = self._as_level(kwargs["min_level"])
+        if "formatter" in kwargs:
+            kwargs["formatter"] = self._build_component(
+                "formatter", kwargs["formatter"]
+            )
+        if "filters" in kwargs:
+            if not isinstance(kwargs["filters"], list):
+                msg = "Handler key 'filters' must be a list"
+                raise ConfigSpecError(msg)
+            kwargs["filters"] = [
+                self._build_component("filter", filter_spec)
+                for filter_spec in kwargs["filters"]
+            ]
+
+        try:
+            cls = get_handler(name)
+            return cls(**kwargs)
+        except Exception as exc:
+            msg = f"Unable to build handler '{name}': {exc}"
+            raise ConfigSpecError(msg) from exc
+</file>
+
+<file path="CHANGELOG.md">
+# TurboPrint-logger Changelog
+
+## [v0.2.6](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.5...v0.2.6) (2026-03-28)
+
+### fix
+
+- **project:** :bug: harden config/handlers, replace std errors with custom exceptions ([1829ebd](https://github.com/Artem-Boker/TurboPrint-logger/commit/1829ebd344fe0baf54655a7ea53615ddf32fc388))
+
+## [v0.2.5](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.4...v0.2.5) (2026-03-26)
+
+### feat
+
+- **processors:** :sparkles: added processor interface ([421b730](https://github.com/Artem-Boker/TurboPrint-logger/commit/421b7305f6f6bb1ebe06364f160303e4e47299c2))
+- **processors:** :sparkles: added new processors classes ([b9910cf](https://github.com/Artem-Boker/TurboPrint-logger/commit/b9910cf2d277c41efc2841c284f2c703f768dcd7))
+
+### fix
+
+- **managers:** :bug: added lock in managers methods ([6213bd5](https://github.com/Artem-Boker/TurboPrint-logger/commit/6213bd51aee4d120331d13675bbc5b1735217845))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.5 ([2ebf4ac](https://github.com/Artem-Boker/TurboPrint-logger/commit/2ebf4acd58c4b7ddb7244da9f64e514af7ed93d9))
+
+## [v0.2.4](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.3...v0.2.4) (2026-03-25)
+
+### fix
+
+- **project:** :bug: fixed several bugs ([6923bbb](https://github.com/Artem-Boker/TurboPrint-logger/commit/6923bbb37bca0a2afe1258dd11dc7952145a5315))
+- **project:** :bug: fixed several bugs ([aa932d5](https://github.com/Artem-Boker/TurboPrint-logger/commit/aa932d50307220439bd369f9c384bb5e003981f6))
+- **handlers:** :bug: fixed compress files bugs ([8994bbd](https://github.com/Artem-Boker/TurboPrint-logger/commit/8994bbd3fce5fefe0ffe95fb6f602d85affe1032))
+
+### refactor
+
+- **project:** :art: added **all** static variable to all project files ([1418202](https://github.com/Artem-Boker/TurboPrint-logger/commit/14182028d01d4987acba90ffa6235d80e7a14fb4))
+
+### feat
+
+- **handlers:** :sparkles: added compress option with gzip module in RotatingFile handlers ([a5ce7c7](https://github.com/Artem-Boker/TurboPrint-logger/commit/a5ce7c7b0089f7cc00e394dc88e37ea7cb07e8f9))
+- **formatters:** :sparkles: added support for orjson in JSONFormatter ([53e281c](https://github.com/Artem-Boker/TurboPrint-logger/commit/53e281c23c5393e9bd70d6577a145e8354702c07))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.4 ([7fb7d37](https://github.com/Artem-Boker/TurboPrint-logger/commit/7fb7d371fb1d13c44a5c6541fc323a4d1a61b054))
+
+## [v0.2.3](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.2...v0.2.3) (2026-03-21)
+
+### feat
+
+- **handlers:** :sparkles: added timed rotating file handler ([65a6839](https://github.com/Artem-Boker/TurboPrint-logger/commit/65a6839eda3ddce54c9b2f8ac3dda82d4a93ad44))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.3 ([6fd0e07](https://github.com/Artem-Boker/TurboPrint-logger/commit/6fd0e077b4d8274bc53ee9bde6c436d59e984c08))
+
+## [v0.2.2](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.1...v0.2.2) (2026-03-21)
+
+### fix
+
+- **handlers:** :bug: fixed buffer reset timer and atexit ([e2f5ce1](https://github.com/Artem-Boker/TurboPrint-logger/commit/e2f5ce19a84a562a836ac82fac7159fb914357f4))
+- **logger:** :bug: fix logger propagate handling and added version in project init file ([7b8d3b5](https://github.com/Artem-Boker/TurboPrint-logger/commit/7b8d3b5fe5a9936643cb8aa7f78828a5bda2a743))
+- **handlers:** :bug: fixed buffer timer ([cb89d51](https://github.com/Artem-Boker/TurboPrint-logger/commit/cb89d51e78377546e4d59e6b61fc2db802da3169))
+- **plugins:** :bug: fixed register all plugins ([71b084f](https://github.com/Artem-Boker/TurboPrint-logger/commit/71b084f2d8fad3b8b61e2fe6d0ef6edc2a3db7d1))
+
+### feat
+
+- **managers:** :sparkles: added config manager with yaml, json config parsers ([eacb0c9](https://github.com/Artem-Boker/TurboPrint-logger/commit/eacb0c95265983cb082bf8e316b9047d5c23af5b))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.2 ([8336a0c](https://github.com/Artem-Boker/TurboPrint-logger/commit/8336a0cf0fd6181c7f6b5a000510d845a0cf6d49))
+
+## [v0.2.1](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.0...v0.2.1) (2026-03-21)
+
+### refactor
+
+- **handlers:** :sparkles: add separator arg in file handler and remove Path in \_open_file ([f138164](https://github.com/Artem-Boker/TurboPrint-logger/commit/f138164ce14ab7ece75e809968a5e4c1bf149fb0))
+- **decorators:** :art: applying field filtering logic to utils ([5bb2fe9](https://github.com/Artem-Boker/TurboPrint-logger/commit/5bb2fe95dd3538cd0ddbc29180cc01620207baaa))
+
+### feat
+
+- **handlers:** :sparkles: add rotating file handler based on standard file handler ([c88a44a](https://github.com/Artem-Boker/TurboPrint-logger/commit/c88a44a326fa67e433c72566768baf2304f97759))
+- **handlers:** :sparkles: added buffer reset timer and fixed handling errors ([693f324](https://github.com/Artem-Boker/TurboPrint-logger/commit/693f324b477e3d6bb4a9bb02527b03caa74a7432))
+
+### fix
+
+- **levels:** :bug: fix emoji in register new level ([b02ab9d](https://github.com/Artem-Boker/TurboPrint-logger/commit/b02ab9d869c52f81bd0918def13f81c0e025b309))
+- **logger:** :bug: fix logger status with False in create new logger managers ([9742d8c](https://github.com/Artem-Boker/TurboPrint-logger/commit/9742d8c47f157e7b53219188680239843ee0ad24))
+- **record:** :bug: fix date_time initialization ([c79e8e0](https://github.com/Artem-Boker/TurboPrint-logger/commit/c79e8e0b9188085cad103b4a29e4e9c9a57f365e))
+- **formatters:** :bug: fix mask dict in security formatter ([69f8f52](https://github.com/Artem-Boker/TurboPrint-logger/commit/69f8f52531dcd3cedfbb0f6888bcbd0cdcd616cf))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.1 ([e272eef](https://github.com/Artem-Boker/TurboPrint-logger/commit/e272eef184cb09ebc058e0de6112e2161cba712a))
+
+## [v0.2.0](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.1.0...v0.2.0) (2026-03-21)
+
+### feat
+
+- **exceptions:** :sparkles: added custom exceptions from SourceCraft AI ([ee0447d](https://github.com/Artem-Boker/TurboPrint-logger/commit/ee0447db20f9eea1c8059f331e9d234b1af950e3))
+- **formatters:** :sparkles: add support for msgspec in json formatter ([9f469ad](https://github.com/Artem-Boker/TurboPrint-logger/commit/9f469ade61c4daf7f78e533c147c39bc532812bd))
+
+### fix
+
+- **exceptions:** :sparkles: edit custom exceptions with SourceCraft AI ([b2355b5](https://github.com/Artem-Boker/TurboPrint-logger/commit/b2355b5cdb3e9a443911de1e823c4ac08c5872b8))
+- **project:** :bug: fix errors in record processing and add context update in manager ([8d5bc86](https://github.com/Artem-Boker/TurboPrint-logger/commit/8d5bc8626ced20e6e7cf0d87a96db228286d1df5))
+- **core:** :bug: fix get_container bug and init import ([25327a0](https://github.com/Artem-Boker/TurboPrint-logger/commit/25327a0fcafbcb5298c107c89dd9f4aafe22ee5c))
+
+### refactor
+
+- **exceptions:** :recycle: edit custom exceptions ([f5c425c](https://github.com/Artem-Boker/TurboPrint-logger/commit/f5c425c3c1ecde85116e37b555e7956315ac152a))
+
+### chore
+
+- **git:** :wrench: update gitignore file ([270e059](https://github.com/Artem-Boker/TurboPrint-logger/commit/270e059688c4613309caff8ac24e21fbdc86aad3))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.0 ([ee758bc](https://github.com/Artem-Boker/TurboPrint-logger/commit/ee758bc61c630a3e2dfa2fd1bc62bd97ace40b59))
+</file>
+
+<file path="src/turboprint_logger/core/container.py">
+from __future__ import annotations
+
+from threading import Lock, RLock
+from typing import TYPE_CHECKING
+from weakref import WeakValueDictionary
+
+from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.exceptions.core.container import ContainerInstantiationError
+from turboprint_logger.managers.collections import DefaultManager, GlobalManager
+from turboprint_logger.utils.normalizers import normalize_container_name
+
+if TYPE_CHECKING:
+    from turboprint_logger.core.logger import Logger
+
+__all__ = ("Container", "get_default_container")
+
+_DEFAULT_CONTAINER_NAME = "default"
+
+
+class Container:
+    __slots__ = (
+        "__weakref__",
+        "_container_lock",
+        "_loggers",
+        "_name",
+        "_root_logger",
+        "defaults",
+        "globals",
+    )
+
+    _containers: WeakValueDictionary[str, Container] = WeakValueDictionary()
+    _get_container_lock = Lock()
+
+    def __init__(self) -> None:
+        self._container_lock: RLock
+        self._root_logger: Logger | None
+        self._loggers: WeakValueDictionary[str, Logger]
+        self._name: str
+        self.globals: GlobalManager
+        self.defaults: DefaultManager
+        msg = "Container cannot be instantiated directly. Use Container.get_container()"
+        raise ContainerInstantiationError(msg)
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @classmethod
+    def _create(cls, name: str = _DEFAULT_CONTAINER_NAME) -> Container:
+        self = super().__new__(cls)
+        self._container_lock = RLock()
+        self._root_logger = None
+        self._loggers = WeakValueDictionary()
+        self._name = name
+        self.globals = GlobalManager()
+        self.defaults = DefaultManager()
+
+        self._containers[name] = self
+        return self
+
+    @classmethod
+    def get_container(cls, name: str = _DEFAULT_CONTAINER_NAME) -> Container:
+        name = normalize_container_name(name)
+        with cls._get_container_lock:
+            if name == _DEFAULT_CONTAINER_NAME:
+                return _DEFAULT_CONTAINER
+            if name not in cls._containers:
+                container = Container._create(name)
+                cls._containers[name] = container
+                return container
+            return cls._containers[name]
+
+    def get_metrics(self) -> dict[str, dict[LevelRegistry, int]]:
+        with self._container_lock:
+            result = {}
+            if self._root_logger:
+                result[self._root_logger.name] = self._root_logger.metrics.items()
+            for logger in self._loggers.values():
+                result[logger.name] = dict(logger.metrics.items())
+            return result
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.name})"
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f"name={self.name}, "
+            f"loggers={tuple(self._loggers.keys())}, "
+            f"globals={self.globals!r}, "
+            f"defaults={self.defaults!r})"
+        )
+
+
+_DEFAULT_CONTAINER = Container._create(_DEFAULT_CONTAINER_NAME)
+
+
+def get_default_container() -> Container:
+    return _DEFAULT_CONTAINER
+</file>
+
+<file path="src/turboprint_logger/handlers/buffered_stream.py">
+from __future__ import annotations
+
+from atexit import register as register_exit
+from sys import stdout as default_output
+from threading import RLock, Timer
+from typing import TextIO
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.handlers.stream import (
+    InvalidBufferSizeError,
+    InvalidStreamError,
+    InvalidStreamFlushIntervalError,
+)
+from turboprint_logger.interfaces import Filter, Formatter, Handler
+
+__all__ = ("BufferedStreamHandler",)
+
+
+class BufferedStreamHandler(Handler):
+    def __init__(  # noqa: PLR0913
+        self,
+        stream: TextIO = default_output,
+        buffer_size: int = 1_000,
+        flush_interval: int = 60,
+        min_level: LevelRegistry = Level.NOTSET,
+        formatter: Formatter | None = None,
+        filters: list[Filter] | None = None,
+    ) -> None:
+        super().__init__(min_level, formatter, filters)
+        if not callable(getattr(stream, "write", None)):
+            msg = "stream must provide a callable 'write' method"
+            raise InvalidStreamError(msg)
+        if not callable(getattr(stream, "flush", None)):
+            msg = "stream must provide a callable 'flush' method"
+            raise InvalidStreamError(msg)
+        if not isinstance(buffer_size, int):
+            msg = "buffer_size must be an integer"
+            raise InvalidBufferSizeError(msg)
+        if buffer_size < 1:
+            msg = "buffer_size must be greater than 0"
+            raise InvalidBufferSizeError(msg)
+        if not isinstance(flush_interval, int | float):
+            msg = "flush_interval must be a number"
+            raise InvalidStreamFlushIntervalError(msg)
+        if flush_interval <= 0:
+            msg = "flush_interval must be greater than 0"
+            raise InvalidStreamFlushIntervalError(msg)
+        self.stream = stream
+        self.buffer: list[str] = []
+        self.buffer_size = buffer_size
+        self.flush_interval = flush_interval
+        self._timer: Timer | None = None
+        self._closed = False
+        self._lock = RLock()
+        register_exit(self.close)
+        self._schedule_flush()
+
+    def _schedule_flush(self) -> None:
+        with self._lock:
+            if self._closed:
+                return
+            timer = Timer(interval=self.flush_interval, function=self._on_timer_flush)
+            timer.daemon = True
+            self._timer = timer
+            timer.start()
+
+    def _on_timer_flush(self) -> None:
+        if self._closed:
+            return
+        try:
+            self.flush()
+        finally:
+            self._schedule_flush()
+
+    def emit(self, record: Record) -> None:
+        with self._lock:
+            formatter = self.formatter or record.logger.formatter.get()
+            self.buffer.append(formatter.format(record))
+            if len(self.buffer) >= self.buffer_size:
+                self.flush()
+
+    def flush(self) -> None:
+        with self._lock:
+            if self.buffer:
+                self.stream.write("\n".join(self.buffer) + "\n")
+                self.stream.flush()
+                self.buffer.clear()
+
+    def close(self) -> None:
+        with self._lock:
+            self._closed = True
+            if self._timer is not None:
+                self._timer.cancel()
+                self._timer = None
+            self.flush()
+</file>
+
+<file path="src/turboprint_logger/handlers/file.py">
+from __future__ import annotations
+
+from atexit import register as register_exit
+from pathlib import Path
+from sys import stderr
+from threading import RLock, Timer
+from typing import IO
+
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.handlers.file import (
+    FileClosedError,
+    FileOpenError,
+    FileWriteError,
+    InvalidFlushIntervalError,
+    InvalidSeparatorError,
+)
+from turboprint_logger.interfaces import Filter, Formatter, Handler
+
+__all__ = ("FileHandler",)
+
+
+class FileHandler(Handler):
+    def __init__(  # noqa: PLR0913
+        self,
+        file_path: str,
+        min_level: LevelRegistry = Level.NOTSET,
+        formatter: Formatter | None = None,
+        filters: list[Filter] | None = None,
+        *,
+        separator: str = "\n",
+        buffer_size: int | None = None,
+        flush_interval: int = 60,
+        encoding: str = "utf-8",
+        update_mode: bool = False,
+    ) -> None:
+        super().__init__(min_level, formatter, filters)
+        if not isinstance(separator, str):
+            msg = "separator must be a string"
+            raise InvalidSeparatorError(msg)
+        if not isinstance(flush_interval, int | float):
+            msg = "flush_interval must be a number"
+            raise InvalidFlushIntervalError(msg)
+        if flush_interval <= 0:
+            msg = "flush_interval must be greater than 0"
+            raise InvalidFlushIntervalError(msg)
+        if not separator:
+            msg = "separator must be a non-empty string"
+            raise InvalidSeparatorError(msg)
+        self.file_path = Path(file_path)
+        self.mode = "a" if update_mode else "w"
+        self.encoding = encoding
+        self.buffer_size = 1 if not buffer_size or buffer_size < 1 else buffer_size
+        self.separator = separator
+        self.flush_interval = flush_interval
+        self._timer: Timer | None = None
+        self._closed = False
+        self._file: IO | None = None
+        self._lock = RLock()
+        self._open_file()
+        register_exit(self.close)
+        self._schedule_flush()
+
+    def _schedule_flush(self) -> None:
+        with self._lock:
+            if self._closed:
+                return
+            timer = Timer(interval=self.flush_interval, function=self._flush)
+            timer.daemon = True
+            self._timer = timer
+            timer.start()
+
+    def _flush(self) -> None:
+        try:
+            with self._lock:
+                if self._closed:
+                    return
+                if self._file and not self._file.closed:
+                    self._file.flush()
+        finally:
+            self._schedule_flush()
+
+    def _open_file(self) -> None:
+        with self._lock:
+            try:
+                self.file_path.parent.mkdir(parents=True, exist_ok=True)
+                self.file_path.touch(exist_ok=True)
+                self._file = self.file_path.open(
+                    self.mode, encoding=self.encoding, buffering=self.buffer_size
+                )
+            except Exception as exc:
+                msg = f"Could not open file {self.file_path}: {exc}"
+                raise FileOpenError(msg) from exc
+
+    def reopen(self) -> None:
+        with self._lock:
+            if self._file and not self._file.closed:
+                self._file.close()
+            self._file = None
+            self._closed = False
+            self._open_file()
+            if self._timer is None:
+                self._schedule_flush()
+
+    def close(self) -> None:
+        with self._lock:
+            self._closed = True
+            if self._timer is not None:
+                self._timer.cancel()
+                self._timer = None
+            if self._file and not self._file.closed:
+                self._file.close()
+            self._file = None
+
+    def _write(self, record: Record) -> None:
+        with self._lock:
+            if not self._file:
+                self._open_file()
+            formatter = self.formatter or record.logger.formatter.get()
+            if self._file and not self._file.closed:
+                try:
+                    self._file.write(formatter.format(record) + self.separator)
+                except Exception as exc:
+                    msg = f"Could not write to file {self.file_path}: {exc}"
+                    raise FileWriteError(msg) from exc
+            else:
+                msg = f"File {self.file_path} is closed"
+                raise FileClosedError(msg)
+
+    def emit(self, record: Record) -> None:
+        try:
+            self._write(record)
+        except Exception as exc:  # noqa: BLE001
+            stderr.write(
+                f"{exc.__class__.__name__}[{self.__class__.__name__}]: {exc}\n"
+            )
+            self.reopen()
+            try:
+                self._write(record)
+            except Exception as exc:  # noqa: BLE001
+                stderr.write(
+                    f"{exc.__class__.__name__}[{self.__class__.__name__}]: Failed to write to {self.file_path}: {exc}\n"  # noqa: E501
+                )
+</file>
+
+<file path="src/turboprint_logger/__init__.py">
+from __future__ import annotations
+
+from . import filters, formatters, handlers, processors
+from .core import (
+    Config,
+    Container,
+    Level,
+    LevelRegistry,
+    Record,
+    Logger,
+    get_default_container,
+)
+from .core import plugins as __plugins
+from .integrations.logging import LoggingAdapter
+from .managers import ConfigManager, LocaleManager
+
+get_logger = Logger.get_logger
+get_container = Container.get_container
+
+__all__ = (
+    "Config",
+    "ConfigManager",
+    "Container",
+    "Level",
+    "LocaleManager",
+    "Logger",
+    "LoggingAdapter",
+    "get_container",
+    "get_default_container",
+    "get_logger",
+    "LevelRegistry",
+    "Record",
+)
+
+__version__ = "0.2.6"
+
+
+def __register_from_package(package, registry_func) -> None:  # noqa: ANN001
+    if not hasattr(package, "__all__"):
+        return
+    for name in package.__all__:
+        cls = getattr(package, name)
+        registry_func(name)(cls)
+
+
+__register_from_package(filters, __plugins.register_filter)
+__register_from_package(formatters, __plugins.register_formatter)
+__register_from_package(handlers, __plugins.register_handler)
+__register_from_package(processors, __plugins.register_processor)
+</file>
+
+<file path="src/turboprint_logger/core/logger.py">
+from __future__ import annotations
+
+import sys
+from collections.abc import Callable
+from threading import Lock, RLock
+from typing import Any
+
+from turboprint_logger.core.config import Config
+from turboprint_logger.core.container import Container, get_default_container
+from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.core.logger import LoggerInstantiationError
+from turboprint_logger.managers.context import ContextManager
+from turboprint_logger.managers.filters import FiltersManager
+from turboprint_logger.managers.formatter import FormatterManager
+from turboprint_logger.managers.handlers import HandlersManager
+from turboprint_logger.managers.level import LevelManager
+from turboprint_logger.managers.metrics import MetricsManager
+from turboprint_logger.managers.processors import ProcessorsManager
+from turboprint_logger.managers.status import StatusManager
+from turboprint_logger.managers.tags import TagsManager
+from turboprint_logger.utils.normalizers import normalize_logger_name
+
+__all__ = ("Logger",)
+
+
+_ROOT_LOGGER_NAME = "root".strip().lower()
+_DEFAULT_CONTAINER = get_default_container()
+
+
+class Logger:
+    __slots__ = (
+        "__weakref__",
+        "_container",
+        "_logger_id",
+        "_name",
+        "context",
+        "filters",
+        "formatter",
+        "handlers",
+        "level",
+        "metrics",
+        "parent",
+        "processors",
+        "propagate",
+        "status",
+        "tags",
+    )
+    _get_logger_lock = RLock()
+    _trace_counter = 0
+    _trace_counter_lock = Lock()
+    _logger_counter = 0
+    _logger_counter_lock = Lock()
+
+    def __init__(self) -> None:
+        self._name: str
+        self._logger_id: int
+        self._container: Container
+        self.parent: Logger
+        self.propagate: bool
+        self.level: LevelManager
+        self.formatter: FormatterManager
+        self.processors: ProcessorsManager
+        self.handlers: HandlersManager
+        self.filters: FiltersManager
+        self.context: ContextManager
+        self.tags: TagsManager
+        self.metrics: MetricsManager
+        self.status: StatusManager
+        msg = "Logger cannot be instantiated directly. Use Logger.get_logger()"
+        raise LoggerInstantiationError(msg)
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @classmethod
+    def _create(
+        cls, name: str, container: Container, config: Config | None = None
+    ) -> Logger:
+        config = config or Config()
+        self = super().__new__(cls)
+        self._logger_id = self._next_logger_id()
+        self._container = container
+
+        if name != _ROOT_LOGGER_NAME:
+            parent_name = name.rsplit(".", 1)[0] if "." in name else _ROOT_LOGGER_NAME
+            self.parent = Logger.get_logger(parent_name, container=container)
+        else:
+            self.parent = self
+
+        self._name = name
+        self.propagate = (
+            config.propagate
+            if config.propagate is not None
+            else container.defaults.propagate
+        )
+
+        self._create_managers(config)
+
+        if name != _ROOT_LOGGER_NAME:
+            self._container._loggers[name] = self
+        return self
+
+    def _create_managers(self, config: Config) -> None:
+        defaults = self._container.defaults
+
+        self.level = LevelManager(config.min_level or defaults.level.get())
+        self.formatter = FormatterManager(config.formatter or defaults.formatter.get())
+        self.processors = ProcessorsManager(
+            *(config.processors or defaults.processors.get())
+        )
+        self.handlers = HandlersManager(*(config.handlers or defaults.handlers.get()))
+        self.filters = FiltersManager(*(config.filters or defaults.filters.get()))
+        self.context = ContextManager(**(config.context or defaults.context.get()))
+        self.tags = TagsManager(*(config.tags or defaults.tags.get()))
+        self.metrics = MetricsManager()
+        logger_status = (
+            config.status
+            if config.status is not None
+            else defaults.status.logger.enabled
+        )
+        self.status = StatusManager(
+            logger=logger_status,
+            handlers=defaults.status.handlers.enabled,
+            filters=defaults.status.filters.enabled,
+            global_handlers=defaults.status.global_handlers.enabled,
+            global_filters=defaults.status.global_filters.enabled,
+        )
+
+    @classmethod
+    def _next_logger_id(cls) -> int:
+        with cls._logger_counter_lock:
+            cls._logger_counter += 1
+            return cls._logger_counter
+
+    @classmethod
+    def _generate_trace_id(cls) -> int:
+        with cls._trace_counter_lock:
+            cls._trace_counter += 1
+            return cls._trace_counter
+
+    @classmethod
+    def get_logger(
+        cls,
+        name: str = _ROOT_LOGGER_NAME,
+        config: Config | None = None,
+        container: Container = _DEFAULT_CONTAINER,
+    ) -> Logger:
+        name = normalize_logger_name(name)
+        with cls._get_logger_lock:
+            if not container._root_logger:
+                container._root_logger = Logger._create(
+                    _ROOT_LOGGER_NAME, container, config
+                )
+            if name == _ROOT_LOGGER_NAME:
+                return container._root_logger
+            if name not in container._loggers:
+                logger = Logger._create(name, container, config)
+                container._loggers[name] = logger
+                return logger
+            return container._loggers[name]
+
+    def _merge_tags(self, tags: list[str] | None = None) -> set[str]:
+        merged_tags = set()
+        merged_tags.update(self._container.globals.tags.get())
+        merged_tags.update(self.tags.get())
+        merged_tags.update(tags or [])
+        return merged_tags
+
+    def _merge_context(self, extra: dict[str, Any]) -> dict[str, Any]:
+        merged_context = {}
+        merged_context.update(self._container.globals.context.get())
+        merged_context.update(self.context.get())
+        merged_context.update(extra)
+        return merged_context
+
+    def _create_record(
+        self,
+        level: LevelRegistry | str,
+        message: str | Callable[[], str],
+        tags: set[str],
+        context: dict[str, Any],
+    ) -> Record:
+        if isinstance(level, str):
+            level = Level.get_by_name(level) or Level.NOTSET
+        frame = sys._getframe(2)
+        code = frame.f_code
+        return Record(
+            message=message,
+            level=level,
+            logger=self,
+            logger_id=self._logger_id,
+            trace_id=self._generate_trace_id(),
+            file=code.co_filename,
+            function=code.co_name,
+            line=frame.f_lineno,
+            context=context,
+            tags=tags,
+        )
+
+    def _process_global(self, record: Record) -> bool:
+        if not self._container.globals.status.logger.enabled:
+            return False
+
+        if not record.level.enabled_for(self._container.globals.level.get()):
+            return False
+
+        for processor in self._container.globals.processors:
+            try:
+                processed_record = processor.process(record)
+                if processed_record:
+                    record = processed_record
+            except Exception as exc:  # noqa: BLE001
+                sys.stderr.write(
+                    f"Exception in {processor.__class__.__name__}: {exc}\n"
+                )
+
+        if self.status.global_filters.enabled and not all(
+            f.filter(record) for f in self._container.globals.filters
+        ):
+            return False
+
+        if self.status.global_handlers.enabled:
+            for handler in self._container.globals.handlers:
+                try:
+                    handler.handle(record)
+                except Exception as exc:  # noqa: BLE001
+                    sys.stderr.write(
+                        f"Exception in {handler.__class__.__name__}: {exc}\n"
+                    )
+
+        return True
+
+    def _process_local(self, record: Record) -> bool:
+        if not self.status.logger.enabled:
+            return False
+
+        if not record.level.enabled_for(self.level.get()):
+            return False
+
+        for processor in self.processors:
+            try:
+                processed_record = processor.process(record)
+                if processed_record:
+                    record = processed_record
+            except Exception as exc:  # noqa: BLE001
+                sys.stderr.write(
+                    f"Exception in {processor.__class__.__name__}: {exc}\n"
+                )
+
+        if self.status.filters.enabled and not all(
+            f.filter(record) for f in self.filters
+        ):
+            return False
+
+        if self.status.handlers.enabled:
+            for handler in self.handlers:
+                try:
+                    handler.handle(record)
+                except Exception as exc:  # noqa: BLE001
+                    sys.stderr.write(
+                        f"Exception in {handler.__class__.__name__}: {exc}\n"
+                    )
+
+        return True
+
+    def _process_record(self, record: Record) -> None:
+        current = self
+        while current:
+            if not current._process_local(record):
+                return
+            if not current.propagate or current is current.parent:
+                break
+            current = current.parent
+        self.metrics.add(record.level)
+
+    def __call__(
+        self,
+        level: LevelRegistry | str,
+        message: str | Callable[[], str],
+        *,
+        tags: list[str] | None = None,
+        **extra,
+    ) -> Record:
+        merged_tags = self._merge_tags(tags)
+        merged_context = self._merge_context(extra)
+        record = self._create_record(level, message, merged_tags, merged_context)
+        self._process_global(record)
+        self._process_record(record)
+        return record
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.name})"
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f'name="{self.name}", '
+            f"logger_id={self._logger_id}, "
+            f'container_name="{self._container.name}", '
+            f"propagate={self.propagate}, "
+            f"min_level={self.level.get()!r}, "
+            f"formatter={self.formatter.get()}, "
+            f"filters={self.filters.get()}, "
+            f"handlers={self.handlers.get()}, "
+            f"context_keys={tuple(self.context.keys())}, "
+            f"tags={tuple(self.tags.get())}, "
+            f"status={self.status})"
+        )
+</file>
+
+<file path="pyproject.toml">
+[build-system]
+requires = ["uv_build>=0.10,<0.11"]
+build-backend = "uv_build"
+
+[project.urls]
+Homepage = "https://github.com/Artem-Boker/TurboPrint-logger"
+Repository = "https://github.com/Artem-Boker/TurboPrint-logger.git"
+
+[project]
+name = "TurboPrint-logger"
+version = "0.2.6"
+description = "This is your favorite logger"
+authors = [{ name = "Artem-Boker" }]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = ["colorama>=0.4.6", "emoji>=2.15.0"]
+
+[project.optional-dependencies]
+json = ["ujson>=5.4.0", "msgspec>=0.20.0", "orjson>=3.11.7"]
+config = ["pyyaml>=6.0.3"]
+
+[dependency-groups]
+builds = ["uv_build>=0.10,<0.11"]
+dev = ["nox>=2026.2.9", "nox-uv>=0.7.1"]
+docs = ["sphinx>=9.0.4"]
+formats = ["ruff>=0.15.6"]
+lints = ["ruff>=0.15.6", "ty>=0.0.23"]
+security = ["bandit>=1.8.6", "detect-secrets>=1.5.0", "pip-audit>=2.9.0"]
+tests = [
+    "pytest>=9.0.2",
+    "pytest-emoji>=0.2.0",
+    "pytest-instafail>=0.5.0",
+    "pytest-mock>=3.15.1",
+    "pytest-random-order>=1.2.0",
+    "pytest-sugar>=1.1.1",
+    "pytest-timeout>=2.4.0",
+]
+types = ["types-colorama>=0.4.15.20250801"]
+
+[tool.ruff]
+line-length = 88
+include = ["noxfile.py", "src/**/*.py", "tests/**/*.py"]
+
+[tool.ruff.lint]
+select = [
+    "F",    # pyflakes
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "C",    # McCabe complexity
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "UP",   # pyupgrade
+    "YTT",  # flake8-2020
+    "ANN",  # flake8-annotations (optional)
+    "S",    # flake8-bandit (partial security)
+    "BLE",  # flake8-blind-except
+    "FBT",  # flake8-boolean-trap
+    "C4",   # flake8-comprehensions
+    "DTZ",  # flake8-datetimez
+    "T10",  # flake8-debugger
+    "EM",   # flake8-errmsg
+    "EXE",  # flake8-executable
+    "ISC",  # flake8-implicit-str-concat
+    "ICN",  # flake8-import-conventions
+    "G",    # flake8-logging-format
+    "PIE",  # flake8-pie
+    "T20",  # flake8-print
+    "PYI",  # flake8-pyi
+    "PT",   # flake8-pytest-style
+    "Q",    # flake8-quotes
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "SIM",  # flake8-simplify
+    "TID",  # flake8-tidy-imports
+    "ARG",  # flake8-unused-arguments
+    "PTH",  # flake8-use-pathlib
+    "ERA",  # eradicate (removing commented out code)
+    "PD",   # pandas-vet
+    "PGH",  # pygrep-hooks
+    "PL",   # pylint (partially)
+    "TRY",  # tryceratops
+    "FLY",  # flynt
+    "NPY",  # NumPy-specific rules
+    "PERF", # Perflint
+    "RUF",  # Ruff-specific rules
+]
+ignore = [
+    "ANN002", # *args
+    "ANN003", # **kwargs
+]
+
+[tool.ruff.lint.isort]
+force-single-line = false
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "ANN",     # annotations
+    "S101",    # assert
+    "T20",     # print
+    "PLR2004", # magic numbers
+    "PT009",   # unittest-style
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ty.src]
+respect-ignore-files = true
+include = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "-v",               # подробный вывод
+    "--strict-markers", # строгая проверка маркеров
+    "--tb=short",       # короткий трейсбек
+    "--emoji",          # используем emoji
+    "--random-order",   # случайный порядок тестов (pytest-random-order)
+]
+markers = [
+    "slow: тесты, требующие много времени",
+    "integration: тесты, использующие внешние сервисы или БД",
+    "benchmark: тесты производительности (pytest-benchmark)",
+    "profile: тесты для профилирования (pytest-profiling)",
+]
+</file>
+
+</files>
