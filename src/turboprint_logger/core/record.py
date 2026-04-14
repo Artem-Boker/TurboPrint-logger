@@ -5,7 +5,7 @@ from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
-from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.core.levels import Level
 
 if TYPE_CHECKING:
     from turboprint_logger.core.logger import Logger
@@ -16,7 +16,7 @@ __all__ = ("Record",)
 @dataclass(slots=True)
 class Record:
     message: str | Callable[[], str]
-    level: LevelRegistry
+    level: Level
     logger: Logger
     trace_id: int
     logger_id: int

@@ -6,7 +6,7 @@ from string import Template
 from time import perf_counter
 from typing import Any, TypeVar, cast
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, Level
 from turboprint_logger.core.logger import Logger
 
 __all__ = ("timed",)
@@ -18,7 +18,7 @@ class TimedDecorator:
     def __init__(
         self,
         logger: str | Logger | None = None,
-        level: LevelRegistry = Level.EVENT,
+        level: Level = Level.EVENT,
         message: str = "${function} completed in ${duration}",
         duration_round: int = 3,
     ) -> None:

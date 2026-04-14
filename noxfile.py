@@ -125,5 +125,12 @@ def clean(s: Session) -> None:
 
     kb_size = total_size / 1024
     mb_size = total_size / 1024 / 1024
+    gb_size = total_size / 1024 / 1024 / 1024
 
-    s.log(f"Total size: {total_size} bytes // {kb_size:.2f} KB // {mb_size:.2f} MB")
+    s.log(
+        f"Total size: "
+        f"{total_size} B // "
+        f"{kb_size:.2f} KB // "
+        f"{mb_size:.2f} MB // "
+        f"{gb_size:.2f} GB"
+    )

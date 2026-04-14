@@ -11,9 +11,8 @@ __all__ = ("HostnamePidProcessor",)
 
 
 class HostnamePidProcessor(Processor):
-    _hostname = gethostname()
-
     def __init__(self) -> None:
+        self._hostname = gethostname()
         self._pid = getpid()
 
     def process(self, record: Record) -> Record:

@@ -7,7 +7,7 @@ from typing import Any
 
 from turboprint_logger.core.config import Config
 from turboprint_logger.core.container import Container, get_default_container
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, Level
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.core.logger import LoggerInstantiationError
 from turboprint_logger.managers.context import ContextManager
@@ -183,7 +183,7 @@ class Logger:
 
     def _create_record(
         self,
-        level: LevelRegistry | str,
+        level: Level | str,
         message: str | Callable[[], str],
         tags: set[str],
         context: dict[str, Any],
@@ -207,12 +207,12 @@ class Logger:
             tags=tags,
         )
 
-    def _process_global(self, record: Record) -> bool:
+    def _process_global(self, record: Record) -> Record | None:
         if not self._container.globals.status.logger.enabled:
-            return False
+            return None
 
         if not record.level.enabled_for(self._container.globals.level.get()):
-            return False
+            return None
 
         for processor in self._container.globals.processors:
             try:
@@ -227,7 +227,7 @@ class Logger:
         if self.status.global_filters.enabled and not all(
             f.filter(record) for f in self._container.globals.filters
         ):
-            return False
+            return None
 
         if self.status.global_handlers.enabled:
             for handler in self._container.globals.handlers:
@@ -238,14 +238,14 @@ class Logger:
                         f"Exception in {handler.__class__.__name__}: {exc}\n"
                     )
 
-        return True
+        return record
 
-    def _process_local(self, record: Record) -> bool:
+    def _process_local(self, record: Record) -> Record | None:
         if not self.status.logger.enabled:
-            return False
+            return None
 
         if not record.level.enabled_for(self.level.get()):
-            return False
+            return None
 
         for processor in self.processors:
             try:
@@ -260,7 +260,7 @@ class Logger:
         if self.status.filters.enabled and not all(
             f.filter(record) for f in self.filters
         ):
-            return False
+            return None
 
         if self.status.handlers.enabled:
             for handler in self.handlers:
@@ -271,21 +271,24 @@ class Logger:
                         f"Exception in {handler.__class__.__name__}: {exc}\n"
                     )
 
-        return True
+        return record
 
-    def _process_record(self, record: Record) -> None:
+    def _process_record(self, record: Record) -> Record:
         current = self
         while current:
-            if not current._process_local(record):
-                return
+            current_record = current._process_local(record)
+            if not current_record:
+                return record
+            record = current_record
             if not current.propagate or current is current.parent:
                 break
             current = current.parent
         self.metrics.add(record.level)
+        return record
 
     def __call__(
         self,
-        level: LevelRegistry | str,
+        level: Level | str,
         message: str | Callable[[], str],
         *,
         tags: list[str] | None = None,
@@ -294,8 +297,9 @@ class Logger:
         merged_tags = self._merge_tags(tags)
         merged_context = self._merge_context(extra)
         record = self._create_record(level, message, merged_tags, merged_context)
-        self._process_global(record)
-        self._process_record(record)
+        record = self._process_global(record)
+        if record:
+            record = self._process_record(record)
         return record
 
     def __str__(self) -> str:

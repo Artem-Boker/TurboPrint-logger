@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.core.levels import Level
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 from turboprint_logger.interfaces.processor import Processor
 from turboprint_logger.managers.context import ContextManager
@@ -32,7 +32,7 @@ class ManagerCollection:
 
     def __init__(  # noqa: PLR0913
         self,
-        level: LevelRegistry | None = None,
+        level: Level | None = None,
         formatter: Formatter | None = None,
         processors: list[Processor] | None = None,
         handlers: list[Handler] | None = None,

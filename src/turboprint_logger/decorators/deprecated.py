@@ -5,7 +5,7 @@ from functools import wraps
 from string import Template
 from typing import Any, TypeVar, cast
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, Level
 from turboprint_logger.core.logger import Logger
 
 __all__ = ("deprecated",)
@@ -18,7 +18,7 @@ class DeprecatedDecorator:
         self,
         message: str = "The ${function} function has been deprecated and will be removed in a future release.",  # noqa: E501
         logger: str | Logger | None = None,
-        level: LevelRegistry = Level.EVENT,
+        level: Level = Level.EVENT,
     ) -> None:
         self.logger = (
             logger

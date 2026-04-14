@@ -6,7 +6,7 @@ from sys import stderr
 from threading import RLock, Timer
 from typing import IO
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, Level
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers.file import (
     FileClosedError,
@@ -24,7 +24,7 @@ class FileHandler(Handler):
     def __init__(  # noqa: PLR0913
         self,
         file_path: str,
-        min_level: LevelRegistry = Level.NOTSET,
+        min_level: Level = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
         *,
@@ -71,13 +71,11 @@ class FileHandler(Handler):
             timer.start()
 
     def _flush(self) -> None:
-        try:
-            with self._lock:
-                if self._closed:
-                    return
-                if self._file and not self._file.closed:
-                    self._file.flush()
-        finally:
+        with self._lock:
+            if self._closed:
+                return
+            if self._file and not self._file.closed:
+                self._file.flush()
             self._schedule_flush()
 
     def _open_file(self) -> None:

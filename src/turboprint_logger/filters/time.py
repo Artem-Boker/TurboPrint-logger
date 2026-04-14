@@ -14,7 +14,7 @@ class TimeFilter(Filter):
         self.end = end.replace(tzinfo=UTC) if end else None
 
     def filter(self, record: Record) -> bool:
-        record_time = record.date_time.timetz()
+        record_time = record.date_time.astimezone(UTC).time().replace(tzinfo=UTC)
         if self.start and record_time < self.start:
             return False
         return not (self.end and record_time > self.end)

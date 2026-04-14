@@ -24,7 +24,7 @@ class TagsManager:
 
     def remove(self, tag: str) -> None:
         with self._lock:
-            return self._tags.discard(tag)
+            self._tags.discard(tag)
 
     def clear(self) -> None:
         with self._lock:

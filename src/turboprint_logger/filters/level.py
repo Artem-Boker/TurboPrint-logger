@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Filter
 
@@ -10,9 +10,9 @@ __all__ = ("LevelFilter",)
 class LevelFilter(Filter):
     def __init__(
         self,
-        min_level: LevelRegistry | None = None,
-        max_level: LevelRegistry | None = None,
-        allowed_levels: list[LevelRegistry] | None = None,
+        min_level: Level | None = None,
+        max_level: Level | None = None,
+        allowed_levels: list[Level] | None = None,
     ) -> None:
         self.min_level = min_level
         self.max_level = max_level

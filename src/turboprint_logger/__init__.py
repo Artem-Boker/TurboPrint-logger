@@ -1,16 +1,18 @@
 from __future__ import annotations
 
+from contextlib import suppress as __suppress
+
 from . import decorators, filters, formatters, handlers, processors
 from .core import (
     Config,
     Container,
     Level,
-    LevelRegistry,
     Logger,
     Record,
     get_default_container,
 )
 from .core import plugins as __plugins
+from .exceptions.core.plugins import PluginAlreadyRegisteredError as __PARE
 from .integrations.logging import LoggingAdapter, install_adapter
 from .managers import ConfigManager, LocaleManager
 
@@ -22,7 +24,6 @@ __all__ = (
     "ConfigManager",
     "Container",
     "Level",
-    "LevelRegistry",
     "LocaleManager",
     "Logger",
     "LoggingAdapter",
@@ -46,7 +47,8 @@ def __register_from_package(package, registry_func) -> None:  # noqa: ANN001
         return
     for name in package.__all__:
         cls = getattr(package, name)
-        registry_func(name)(cls)
+        with __suppress(__PARE):
+            registry_func(name)(cls)
 
 
 __register_from_package(filters, __plugins.register_filter)

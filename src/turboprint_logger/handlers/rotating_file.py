@@ -5,13 +5,13 @@ from gzip import open as gzip_open
 from pathlib import Path
 from shutil import copyfileobj
 
-from src.turboprint_logger.exceptions.handlers.file import (
+from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.handlers.file import (
     FileClosedError,
     FileHandlerConfigError,
     FileWriteError,
 )
-from turboprint_logger.core.levels import Level, LevelRegistry
-from turboprint_logger.core.record import Record
 from turboprint_logger.handlers.file import FileHandler
 from turboprint_logger.interfaces import Filter, Formatter
 
@@ -22,7 +22,7 @@ class RotatingFileHandler(FileHandler):
     def __init__(  # noqa: PLR0913
         self,
         file_path: str,
-        min_level: LevelRegistry = Level.NOTSET,
+        min_level: Level = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
         *,
@@ -146,7 +146,7 @@ class RotatingFileHandler(FileHandler):
                     raise FileWriteError(msg) from exc
             else:
                 msg = f"File {self.file_path} is closed"
-                raise FileClosedError
+                raise FileClosedError(msg)
             self._current_size += len(line.encode(self.encoding))
             if self.max_lines is not None:
                 self._line_count += 1

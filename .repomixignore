@@ -1,0 +1,63 @@
+# Исключить тесты
+tests/
+test/
+*_test.py
+test_*.py
+tests.py
+testing/
+__pycache__/
+
+# Исключить CI/CD и конфиги сборки
+.github/
+.gitlab/
+.jenkins/
+.drone.yml
+.travis.yml
+.git/
+*.toml
+!pyproject.toml
+*.yaml
+*.yml
+Dockerfile*
+docker-compose*.yml
+Makefile
+*.ini
+*.cfg
+*.json
+!repomix.config.json
+
+# Исключить документацию
+docs/
+*.md
+*.rst
+*.txt
+README*
+CHANGELOG*
+LICENSE*
+CONTRIBUTING*
+
+# Исключить виртуальные окружения и кэш
+.venv/
+venv/
+env/
+.env
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+htmlcov/
+
+# Исключить файлы IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Исключить временные файлы и логи
+*.log
+*.tmp
+*.bak
+*.orig
