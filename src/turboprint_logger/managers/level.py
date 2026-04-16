@@ -3,7 +3,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 from threading import Lock
 
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 
 __all__ = ("LevelManager",)
 

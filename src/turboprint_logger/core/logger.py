@@ -7,7 +7,7 @@ from typing import Any
 
 from turboprint_logger.core.config import Config
 from turboprint_logger.core.container import Container, get_default_container
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.core.logger import LoggerInstantiationError
 from turboprint_logger.managers.context import ContextManager
@@ -21,6 +21,7 @@ from turboprint_logger.managers.status import StatusManager
 from turboprint_logger.managers.tags import TagsManager
 from turboprint_logger.utils.normalizers import (
     normalize_context_key,
+    normalize_level_name,
     normalize_logger_name,
 )
 
@@ -33,7 +34,6 @@ _DEFAULT_CONTAINER = get_default_container()
 
 class Logger:
     __slots__ = (
-        "__weakref__",
         "_container",
         "_logger_id",
         "_name",
@@ -100,9 +100,6 @@ class Logger:
         )
 
         self._create_managers(config)
-
-        if name != _ROOT_LOGGER_NAME:
-            self._container._loggers[name] = self
         return self
 
     def _create_managers(self, config: Config) -> None:
@@ -191,7 +188,7 @@ class Logger:
         stacklevel: int = 2,
     ) -> Record:
         if isinstance(level, str):
-            level = Level.get_by_name(level) or Level.NOTSET
+            level = Level.get_by_name(normalize_level_name(level)) or Level.NOTSET
         frame = sys._getframe(stacklevel)
         code = frame.f_code
         return Record(
@@ -216,9 +213,10 @@ class Logger:
 
         for processor in self._container.globals.processors:
             try:
-                processed_record = processor.process(record)
-                if processed_record:
-                    record = processed_record
+                processed_record = processor.process(record.copy())
+                if processed_record is None:
+                    return None
+                record = processed_record
             except Exception as exc:  # noqa: BLE001
                 sys.stderr.write(
                     f"Exception in {processor.__class__.__name__}: {exc}\n"
@@ -249,8 +247,8 @@ class Logger:
 
         for processor in self.processors:
             try:
-                processed_record = processor.process(record)
-                if processed_record:
+                processed_record = processor.process(record.copy())
+                if processed_record is None:
                     record = processed_record
             except Exception as exc:  # noqa: BLE001
                 sys.stderr.write(
@@ -273,17 +271,17 @@ class Logger:
 
         return record
 
-    def _process_record(self, record: Record) -> Record:
+    def _process_record(self, record: Record) -> Record | None:
         current = self
-        while current:
+        record = current._process_local(record)
+        if record is None:
+            return None
+        self.metrics.add(record.level)
+        while current.propagate and current is not current.parent:
             current_record = current._process_local(record)
-            if not current_record:
-                return record
-            record = current_record
-            if not current.propagate or current is current.parent:
+            if current_record is None:
                 break
             current = current.parent
-        self.metrics.add(record.level)
         return record
 
     def __call__(
@@ -292,15 +290,18 @@ class Logger:
         message: str | Callable[[], str],
         *,
         tags: list[str] | None = None,
+        stacklevel: int = 2,
         **extra,
-    ) -> Record:
+    ) -> Record | None:
         merged_tags = self._merge_tags(tags)
         merged_context = self._merge_context(extra)
-        record = self._create_record(level, message, merged_tags, merged_context)
-        record = self._process_global(record)
-        if record:
-            record = self._process_record(record)
-        return record
+        record = self._create_record(
+            level, message, merged_tags, merged_context, stacklevel=stacklevel
+        )
+        processed = self._process_global(record)
+        if processed is None:
+            return None
+        return self._process_record(processed)
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}({self.name})"

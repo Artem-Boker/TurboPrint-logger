@@ -51,9 +51,7 @@ class SimpleFormatter(Formatter):
         self.colored = colored
 
     def format(self, record: Record) -> str:
-        message = (
-            record.message() if callable(record.message) else record.message
-        )  # ty:ignore[call-top-callable]
+        message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
         message = Template(message).safe_substitute(record.context)
 
         date_obj = record.date_time.date()

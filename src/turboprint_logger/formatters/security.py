@@ -20,15 +20,18 @@ class SecurityFormatter(Formatter):
         mask_char: str = "*",
     ) -> None:
         self.inner = inner
-        self.sensitive_fields = sensitive_fields or [
+        self.sensitive_fields = [
+            pattern.strip().lower() for pattern in sensitive_fields or [
             "password",
             "token",
             "secret",
             "api_key",
             "auth",
             "credit_card",
+        ]]
+        self.sensitive_patterns = [
+            pattern.strip().lower() for pattern in sensitive_patterns or []
         ]
-        self.sensitive_patterns = sensitive_patterns or []
         self._compiled_patterns = [
             re_compile(pattern, IGNORECASE) for pattern in self.sensitive_patterns
         ]
@@ -40,12 +43,14 @@ class SecurityFormatter(Formatter):
         if isinstance(item, dict):
             masked: dict[str, Any] = {}
             for key, value in item.items():
-                if not isinstance(key, str):
-                    masked[key] = value
-                elif key in self.sensitive_fields:
-                    masked[key] = "***"
+                if isinstance(key, str):
+                    normal_key = key.strip().lower()
+                    if normal_key in self.sensitive_fields:
+                        masked[normal_key] = "***"
+                    else:
+                        masked[normal_key] = self._mask_process(value)
                 else:
-                    masked[key] = self._mask_process(value)
+                    masked[key] = value
             return masked
         if isinstance(item, str) and any(
             pattern.search(item) for pattern in self._compiled_patterns
@@ -56,7 +61,11 @@ class SecurityFormatter(Formatter):
     def format(self, record: Record) -> str:
         masked_context = self._mask_process(record.context)
 
-        message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
+        message = (
+            record.message()  # ty:ignore[call-top-callable]
+            if callable(record.message)
+            else record.message
+        )
         masked_message = self._mask_process(message)
 
         new_record = record.copy()

@@ -14,7 +14,10 @@ authors = [{ name = "Artem-Boker" }]
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11"
-dependencies = ["colorama>=0.4.6", "emoji>=2.15.0"]
+dependencies = [
+    "colorama>=0.4.6",
+    "emoji>=2.15.0",
+]
 
 [project.optional-dependencies]
 json = ["ujson>=5.4.0", "msgspec>=0.20.0", "orjson>=3.11.7"]
@@ -120,8 +123,8 @@ addopts = [
     "-v",               # подробный вывод
     "--strict-markers", # строгая проверка маркеров
     "--tb=short",       # короткий трейсбек
-    "--emoji",          # используем emoji
-    "--random-order",   # случайный порядок тестов (pytest-random-order)
+    # "--emoji",          # используем emoji
+    # "--random-order",   # случайный порядок тестов (pytest-random-order)
 ]
 markers = [
     "slow: тесты, требующие много времени",

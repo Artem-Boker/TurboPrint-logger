@@ -3,9 +3,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from turboprint_logger.utils.reserved import filter_reserved
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.logger import Logger
+from turboprint_logger.utils.reserved import filter_reserved
 
 __all__ = ("LoggingAdapter", "install_adapter")
 

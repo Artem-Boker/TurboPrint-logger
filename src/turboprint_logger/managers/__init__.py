@@ -13,6 +13,7 @@ from .processors import ProcessorsManager
 from .status import StatusManager
 from .tags import TagsManager
 
+# TODO: изменить контекстные менеджеры - temporary
 __all__ = (
     "ConfigManager",
     "ContextManager",

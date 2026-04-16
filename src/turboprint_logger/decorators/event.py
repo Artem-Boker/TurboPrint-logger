@@ -6,7 +6,7 @@ from itertools import chain
 from time import perf_counter
 from typing import Any, TypeVar, cast
 
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.logger import Logger
 from turboprint_logger.utils.reserved import filter_reserved
 

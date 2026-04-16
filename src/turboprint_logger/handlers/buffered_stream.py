@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-from atexit import register as register_exit
 from sys import stdout as default_output
 from threading import RLock, Timer
 from typing import TextIO
-from weakref import ref
 
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers.stream import (
     InvalidBufferSizeError,
@@ -54,14 +52,6 @@ class BufferedStreamHandler(Handler):
         self._timer: Timer | None = None
         self._closed = False
         self._lock = RLock()
-        _self_ref = ref(self)
-
-        def _atexit_close() -> None:
-            obj = _self_ref()
-            if obj is not None:
-                obj.close()
-
-        register_exit(_atexit_close)
         self._schedule_flush()
 
     def _schedule_flush(self) -> None:
@@ -91,9 +81,10 @@ class BufferedStreamHandler(Handler):
     def flush(self) -> None:
         with self._lock:
             if self.buffer:
-                self.stream.write("\n".join(self.buffer) + "\n")
-                self.stream.flush()
+                data = "\n".join(self.buffer) + "\n"
                 self.buffer.clear()
+                self.stream.write(data)
+                self.stream.flush()
 
     def close(self) -> None:
         with self._lock:

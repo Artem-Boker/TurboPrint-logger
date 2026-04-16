@@ -8,7 +8,7 @@ from threading import Event, RLock, Thread
 from time import sleep
 from typing import TYPE_CHECKING, Any, Protocol, TypeAlias, cast
 
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.plugins import (
     get_filter,
     get_formatter,

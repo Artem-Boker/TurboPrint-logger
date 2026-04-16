@@ -18,7 +18,7 @@ __all__ = (
 
 _PATTERN_CONTAINER = re.compile(r"[a-z0-9_-]+", re.IGNORECASE)
 _PATTERN_LOGGER = re.compile(r"[a-z0-9_.-]+", re.IGNORECASE)
-_PATTERN_LEVEL = re.compile(r"[a-z_-]+", re.IGNORECASE)
+_PATTERN_LEVEL = re.compile(r"[a-z0-9_-]+", re.IGNORECASE)
 _PATTERN_CONTEXT = re.compile(r"[a-z0-9_-]+", re.IGNORECASE)
 
 _BAD_BOUNDARIES = re.compile(r"^[_.-]|[_.-]$", re.IGNORECASE)
@@ -27,6 +27,8 @@ _BAD_DOUBLE = re.compile(r"[_.-]{2,}", re.IGNORECASE)
 
 def _normalize(name: str, pattern: re.Pattern, *, upper: bool = True) -> str | None:
     name = name.strip().upper() if upper else name.strip().lower()
+    if not name:
+        return None
     if not pattern.fullmatch(name):
         return None
     if _BAD_BOUNDARIES.search(name):

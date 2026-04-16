@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from threading import Lock, RLock
 from typing import TYPE_CHECKING, ClassVar
-from weakref import WeakValueDictionary
 
 from turboprint_logger.core.levels import Level
 from turboprint_logger.exceptions.core.container import ContainerInstantiationError
@@ -19,7 +18,6 @@ _DEFAULT_CONTAINER_NAME = "default"
 
 class Container:
     __slots__ = (
-        "__weakref__",
         "_container_lock",
         "_loggers",
         "_name",
@@ -34,7 +32,7 @@ class Container:
     def __init__(self) -> None:
         self._container_lock: RLock
         self._root_logger: Logger | None
-        self._loggers: WeakValueDictionary[str, Logger]
+        self._loggers: dict[str, Logger]
         self._name: str
         self.globals: GlobalManager
         self.defaults: DefaultManager
@@ -50,7 +48,7 @@ class Container:
         self = super().__new__(cls)
         self._container_lock = RLock()
         self._root_logger = None
-        self._loggers = WeakValueDictionary()
+        self._loggers = {}
         self._name = name
         self.globals = GlobalManager()
         self.defaults = DefaultManager()
@@ -74,7 +72,7 @@ class Container:
             if self._root_logger:
                 loggers.append(self._root_logger)
             loggers.extend(self._loggers.values())
-        return {logger.name: logger.metrics.items() for logger in loggers}
+            return {logger.name: logger.metrics.items() for logger in loggers}
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}({self.name})"

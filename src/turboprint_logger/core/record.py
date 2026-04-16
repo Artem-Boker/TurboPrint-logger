@@ -3,7 +3,12 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Any
+from os import getpid
+from socket import gethostname
+from sys import exc_info
+from threading import get_ident
+from types import TracebackType
+from typing import TYPE_CHECKING, Any, TypeAlias
 
 from turboprint_logger.core.levels import Level
 
@@ -11,6 +16,10 @@ if TYPE_CHECKING:
     from turboprint_logger.core.logger import Logger
 
 __all__ = ("Record",)
+
+ExcInfo: TypeAlias = (
+    tuple[type[BaseException], BaseException, TracebackType] | tuple[None, None, None]
+)
 
 
 @dataclass(slots=True)
@@ -26,6 +35,10 @@ class Record:
     date_time: datetime = field(default_factory=lambda: datetime.now(UTC))
     context: dict[str, Any] = field(default_factory=dict)
     tags: set[str] = field(default_factory=set)
+    process_name: str = field(default_factory=gethostname)
+    process_id: int = field(default_factory=getpid)
+    thread_id: int = field(default_factory=get_ident)
+    exception_info: ExcInfo = field(default_factory=exc_info)
 
     def copy(self) -> Record:
         return replace(
@@ -54,5 +67,9 @@ class Record:
             f"tags={tuple(self.tags)}, "
             f"file={self.file}, "
             f"function={self.function}, "
-            f"line={self.line})"
+            f"line={self.line}, "
+            f"process_name={self.process_name!r}, "
+            f"process_id={self.process_id}, "
+            f"thread_id={self.thread_id}, "
+            f"exception_info={self.exception_info})"
         )

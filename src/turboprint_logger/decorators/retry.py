@@ -6,7 +6,7 @@ from string import Template
 from time import sleep
 from typing import Any, TypeVar, cast
 
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.logger import Logger
 from turboprint_logger.exceptions.decorators.retry import (
     RetryLimitExceededError,

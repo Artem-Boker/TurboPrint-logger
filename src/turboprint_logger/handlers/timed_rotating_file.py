@@ -7,7 +7,7 @@ from shutil import copyfileobj
 from time import time
 from typing import Literal
 
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.record import Record
 from turboprint_logger.handlers.file import FileHandler
 from turboprint_logger.interfaces import Filter, Formatter

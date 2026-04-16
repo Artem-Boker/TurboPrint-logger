@@ -5,7 +5,7 @@ from gzip import open as gzip_open
 from pathlib import Path
 from shutil import copyfileobj
 
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers.file import (
     FileClosedError,
@@ -72,10 +72,11 @@ class RotatingFileHandler(FileHandler):
             self._current_size = size
             self._line_count = line_count
 
-    def _should_rotate(self, record: Record) -> bool:  # noqa: ARG002
-        if self.max_bytes is not None and self._current_size >= self.max_bytes:
-            return True
-        return bool(self.max_lines is not None and self._line_count >= self.max_lines)
+    def _should_rotate(self, _record: Record) -> bool:
+        with self._lock:
+            if self.max_bytes is not None and self._current_size >= self.max_bytes:
+                return True
+            return self.max_lines is not None and self._line_count >= self.max_lines
 
     def _rotated_path(self, number: int) -> Path:
         path = Path(self.file_path)

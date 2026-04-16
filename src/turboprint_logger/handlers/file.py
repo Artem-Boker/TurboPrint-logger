@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from atexit import register as register_exit
 from pathlib import Path
 from sys import stderr
 from threading import RLock, Timer
 from typing import IO
 
-from turboprint_logger.core.levels import Level, Level
+from turboprint_logger.core.levels import Level
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers.file import (
     FileClosedError,
@@ -58,7 +57,6 @@ class FileHandler(Handler):
         self._file: IO | None = None
         self._lock = RLock()
         self._open_file()
-        register_exit(self.close)
         self._schedule_flush()
 
     def _schedule_flush(self) -> None:
