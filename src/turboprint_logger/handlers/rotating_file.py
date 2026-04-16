@@ -5,7 +5,7 @@ from gzip import open as gzip_open
 from pathlib import Path
 from shutil import copyfileobj
 
-from turboprint_logger.core.levels import Level
+from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers.file import (
     FileClosedError,
@@ -22,7 +22,7 @@ class RotatingFileHandler(FileHandler):
     def __init__(  # noqa: PLR0913
         self,
         file_path: str,
-        min_level: Level = Level.NOTSET,
+        min_level: LevelRegistry = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
         *,
@@ -46,7 +46,7 @@ class RotatingFileHandler(FileHandler):
             update_mode=update_mode,
         )
         if max_bytes is None and max_lines is None:
-            msg = f"{self.__class__.__name__} required at least one of max_bytes or max_lines"
+            msg = f"{self.__class__.__name__} required at least one of max_bytes or max_lines"  # noqa: E501
             raise FileHandlerConfigError(msg)
         self.compress = compress
         self.max_bytes = max_bytes
@@ -123,7 +123,7 @@ class RotatingFileHandler(FileHandler):
                     ):
                         copyfileobj(f_in, f_out)
                     dst.unlink(missing_ok=True)
-                except Exception:
+                except Exception:  # noqa: BLE001
                     with suppress(OSError):
                         compressed_path.unlink(missing_ok=True)
 

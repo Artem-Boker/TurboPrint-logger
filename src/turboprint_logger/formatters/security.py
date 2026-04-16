@@ -21,14 +21,17 @@ class SecurityFormatter(Formatter):
     ) -> None:
         self.inner = inner
         self.sensitive_fields = [
-            pattern.strip().lower() for pattern in sensitive_fields or [
-            "password",
-            "token",
-            "secret",
-            "api_key",
-            "auth",
-            "credit_card",
-        ]]
+            pattern.strip().lower()
+            for pattern in sensitive_fields
+            or [
+                "password",
+                "token",
+                "secret",
+                "api_key",
+                "auth",
+                "credit_card",
+            ]
+        ]
         self.sensitive_patterns = [
             pattern.strip().lower() for pattern in sensitive_patterns or []
         ]

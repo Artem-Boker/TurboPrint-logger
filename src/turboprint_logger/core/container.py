@@ -3,7 +3,7 @@ from __future__ import annotations
 from threading import Lock, RLock
 from typing import TYPE_CHECKING, ClassVar
 
-from turboprint_logger.core.levels import Level
+from turboprint_logger.core.levels import LevelRegistry
 from turboprint_logger.exceptions.core.container import ContainerInstantiationError
 from turboprint_logger.managers.collections import DefaultManager, GlobalManager
 from turboprint_logger.utils.normalizers import normalize_container_name
@@ -66,7 +66,7 @@ class Container:
                 return container
             return cls._containers[name]
 
-    def get_metrics(self) -> dict[str, dict[Level, int]]:
+    def get_metrics(self) -> dict[str, dict[LevelRegistry, int]]:
         with self._container_lock:
             loggers = []
             if self._root_logger:

@@ -7,7 +7,7 @@ from typing import Any
 
 from turboprint_logger.core.config import Config
 from turboprint_logger.core.container import Container, get_default_container
-from turboprint_logger.core.levels import Level
+from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.core.logger import LoggerInstantiationError
 from turboprint_logger.managers.context import ContextManager
@@ -180,7 +180,7 @@ class Logger:
 
     def _create_record(
         self,
-        level: Level | str,
+        level: LevelRegistry | str,
         message: str | Callable[[], str],
         tags: set[str],
         context: dict[str, Any],
@@ -248,7 +248,7 @@ class Logger:
         for processor in self.processors:
             try:
                 processed_record = processor.process(record.copy())
-                if processed_record is None:
+                if processed_record is not None:
                     record = processed_record
             except Exception as exc:  # noqa: BLE001
                 sys.stderr.write(
@@ -273,9 +273,10 @@ class Logger:
 
     def _process_record(self, record: Record) -> Record | None:
         current = self
-        record = current._process_local(record)
-        if record is None:
+        process_record = current._process_local(record)
+        if process_record is None:
             return None
+        record = process_record
         self.metrics.add(record.level)
         while current.propagate and current is not current.parent:
             current_record = current._process_local(record)
@@ -286,7 +287,7 @@ class Logger:
 
     def __call__(
         self,
-        level: Level | str,
+        level: LevelRegistry | str,
         message: str | Callable[[], str],
         *,
         tags: list[str] | None = None,

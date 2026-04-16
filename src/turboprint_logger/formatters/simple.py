@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, TypedDict
 
 from colorama import Style
 
-from turboprint_logger.core.levels import Level
+from turboprint_logger.core.levels import LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Formatter
 
@@ -18,7 +18,7 @@ __all__ = ("SimpleFormatter",)
 
 class FormatDict(TypedDict):
     message: str
-    level: Level
+    level: LevelRegistry
     level_name: str
     level_value: int
     level_emoji: str | None
@@ -51,7 +51,11 @@ class SimpleFormatter(Formatter):
         self.colored = colored
 
     def format(self, record: Record) -> str:
-        message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
+        message = (
+            record.message()  # ty:ignore[call-top-callable]
+            if callable(record.message)
+            else record.message
+        )
         message = Template(message).safe_substitute(record.context)
 
         date_obj = record.date_time.date()
@@ -72,7 +76,7 @@ class SimpleFormatter(Formatter):
             message=message,
             level=record.level,
             level_name=record.level.name,
-            level_value=record.level.level,
+            level_value=record.level.value,
             level_emoji=record.level.emoji,
             logger=record.logger,
             logger_name=record.logger.name,

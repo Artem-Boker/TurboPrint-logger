@@ -55,20 +55,20 @@ class JSONFormatter(Formatter):
             return obj
         if isinstance(obj, (datetime, date, time)):
             return obj.isoformat()
-        # for method_name in ("dict", "to_dict"):
-        #     method_obj = getattr(obj, method_name, None)
-        #     if callable(method_obj):
-        #         return method_obj()
         return str(obj)
 
     def format(self, record: Record) -> str:
-        message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
+        message = (
+            record.message()  # ty:ignore[call-top-callable]
+            if callable(record.message)
+            else record.message
+        )
 
         data: dict[str, Any] = {
             "message": message,
             "level": {
                 "name": record.level.name,
-                "value": record.level.level,
+                "value": record.level.value,
             },
             "logger": record.logger.name,
             "timestamp": record.date_time.isoformat(),

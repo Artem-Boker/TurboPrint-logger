@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from turboprint_logger.core.levels import Level
+from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.logger import Logger
 from turboprint_logger.utils.reserved import filter_reserved
 
@@ -28,7 +28,7 @@ class LoggingAdapter(logging.Handler):
     def emit(self, record: logging.LogRecord) -> None:
         try:
             custom_logger = Logger.get_logger(record.name)
-        except Exception:
+        except Exception:  # noqa: BLE001
             self.handleError(record)
             return
         level = self._convert_level(record.levelno)
@@ -36,7 +36,7 @@ class LoggingAdapter(logging.Handler):
         extra = filter_reserved(self._extract_extra(record))
         custom_logger(level, message, **extra)
 
-    def _convert_level(self, levelno: int) -> Level:
+    def _convert_level(self, levelno: int) -> LevelRegistry:
         if levelno in _STD_TO_CUSTOM_LEVEL:
             return _STD_TO_CUSTOM_LEVEL[levelno]
 

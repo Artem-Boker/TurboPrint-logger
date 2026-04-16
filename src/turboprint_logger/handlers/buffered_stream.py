@@ -4,7 +4,7 @@ from sys import stdout as default_output
 from threading import RLock, Timer
 from typing import TextIO
 
-from turboprint_logger.core.levels import Level
+from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers.stream import (
     InvalidBufferSizeError,
@@ -22,7 +22,7 @@ class BufferedStreamHandler(Handler):
         stream: TextIO = default_output,
         buffer_size: int = 1_000,
         flush_interval: int = 60,
-        min_level: Level = Level.NOTSET,
+        min_level: LevelRegistry = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
     ) -> None:

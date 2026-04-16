@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from weakref import finalize
 
-from turboprint_logger.core.levels import Level
+from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.interfaces import InterfaceMethodNotImplementedError
 from turboprint_logger.interfaces import Filter, Formatter
@@ -16,7 +16,7 @@ class Handler(ABC):
 
     def __init__(
         self,
-        min_level: Level = Level.NOTSET,
+        min_level: LevelRegistry = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
     ) -> None:
@@ -26,7 +26,7 @@ class Handler(ABC):
         self._finalizer = finalize(self, self.close)
 
     def handle(self, record: Record) -> None:
-        if record.level.level >= self.level.level and all(
+        if record.level.value >= self.level.value and all(
             f.filter(record) for f in self.filters
         ):
             self.emit(record)

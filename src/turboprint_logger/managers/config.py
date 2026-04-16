@@ -8,7 +8,7 @@ from threading import Event, RLock, Thread
 from time import sleep
 from typing import TYPE_CHECKING, Any, Protocol, TypeAlias, cast
 
-from turboprint_logger.core.levels import Level
+from turboprint_logger.core.levels import Level, LevelRegistry
 from turboprint_logger.core.plugins import (
     get_filter,
     get_formatter,
@@ -233,7 +233,7 @@ class ConfigManager:
         self.register_factory("handler", self._build_handler)
         self.register_factory("processor", self._build_processor)
 
-    def _apply_logger(
+    def _apply_logger(  # noqa: C901, PLR0912, PLR0915
         self, logger: Logger, spec: dict[str, Any], *, merge: bool = False
     ) -> None:
         if not merge:
@@ -369,8 +369,8 @@ class ConfigManager:
         return payload
 
     @staticmethod
-    def _as_level(value: object) -> Level:
-        if isinstance(value, Level):
+    def _as_level(value: object) -> LevelRegistry:
+        if isinstance(value, LevelRegistry):
             return value
         if isinstance(value, str):
             level = Level.get_by_name(value)
