@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 from threading import Lock
 from typing import Any, ClassVar
 
 from colorama import Fore, Style
-from emoji import emojize, is_emoji
+from emoji import emojize, purely_emoji
 
 from turboprint_logger.exceptions.core.levels import (
     InvalidLevelColorError,
@@ -45,11 +44,20 @@ class LevelRegistry:
         self._name = normalize_level_name(name)
         self._value = value
         self._color = color
-        self._raw_emoji = (
-            alias_emoji_code.lower()
-            if alias_emoji_code and not alias_emoji_code.isspace()
-            else None
-        )
+        if alias_emoji_code and alias_emoji_code.strip():
+            self._raw_emoji = alias_emoji_code.strip().lower()
+            self._raw_emoji = (
+                ":" + self._raw_emoji
+                if not self._raw_emoji.startswith(":")
+                else self._raw_emoji
+            )
+            self._raw_emoji = (
+                self._raw_emoji + ":"
+                if not self._raw_emoji.endswith(":")
+                else self._raw_emoji
+            )
+        else:
+            self._raw_emoji = None
         self._emoji = (
             emojize(self._raw_emoji, variant="emoji_type", language="alias")
             if self._raw_emoji
@@ -64,10 +72,8 @@ class LevelRegistry:
         if not self._color or self._color.isspace():
             msg = f"Level {self._name} has invalid color: {self._color}"
             raise InvalidLevelColorError(msg)
-        if self._raw_emoji and not is_emoji(
-            emojize(self._raw_emoji, variant="text_type", language="alias").strip()
-        ):
-            msg = f"Invalid emoji code: {self._emoji}"
+        if self._emoji and not purely_emoji(self._emoji):
+            msg = f"Invalid emoji code: {self._raw_emoji}"
             raise InvalidLevelEmojiError(msg)
 
     def enabled_for(self, level: LevelRegistry) -> bool:
@@ -97,8 +103,6 @@ class LevelMeta(type):
     _standard_levels: tuple[LevelRegistry, ...]
     _custom_levels: ClassVar[list[LevelRegistry]] = []
     _custom_levels_lock: ClassVar[Lock] = Lock()
-    standard_levels: Callable[[], list[LevelRegistry]]
-    custom_levels: Callable[[], list[LevelRegistry]]
 
     def __init__(
         cls, name: str, bases: tuple[type, ...], attrs: dict[str, Any], /, **kwds
@@ -119,40 +123,34 @@ class LevelMeta(type):
     def __repr__(cls) -> str:
         return (
             f"{cls.__name__}("
-            f"standard_levels={[str(level) for level in cls.standard_levels()]}, "
-            f"custom_levels={[str(level) for level in cls.custom_levels()]})"
+            f"standard_levels={[str(level) for level in cls.standard_levels()]}, "  # type: ignore[reportAttributeAccessIssue]
+            f"custom_levels={[str(level) for level in cls.custom_levels()]})"  # type: ignore[reportAttributeAccessIssue]
         )
 
 
 class Level(metaclass=LevelMeta):
-    NOTSET = LevelRegistry("NOTSET", 0, Fore.RESET, ":white_circle:")
+    NOTSET = LevelRegistry("NOTSET", 0, Fore.RESET, "white_circle")
     VERBOSE = LevelRegistry(
-        "VERBOSE", 10, Fore.LIGHTBLACK_EX, ":magnifying_glass_tilted_left:"
+        "VERBOSE", 10, Fore.LIGHTBLACK_EX, "magnifying_glass_tilted_left"
     )
-    DEBUG = LevelRegistry("DEBUG", 20, Fore.MAGENTA, ":bug:")
-    TRACE = LevelRegistry("TRACE", 30, Fore.BLUE, ":detective: ")
-    LOG = LevelRegistry("LOG", 40, Fore.CYAN, ":page_facing_up:")
-    NOTICE = LevelRegistry("NOTICE", 50, Fore.LIGHTYELLOW_EX, ":loudspeaker:")
-    EVENT = LevelRegistry("EVENT", 60, Fore.LIGHTCYAN_EX, ":bullseye:")
-    PERFORMANCE = LevelRegistry(
-        "PERFORMANCE", 70, Fore.LIGHTMAGENTA_EX, ":high_voltage:"
-    )
-    SUCCESS = LevelRegistry("SUCCESS", 80, Fore.GREEN, ":check_mark_button:")
-    SECURITY = LevelRegistry("SECURITY", 90, Fore.LIGHTGREEN_EX, ":locked:")
-    AUDIT = LevelRegistry("AUDIT", 100, Fore.YELLOW, ":eye: ")
-    INFO = LevelRegistry("INFO", 110, Fore.LIGHTBLUE_EX, ":information: ")
-    WARNING = LevelRegistry("WARNING", 120, Fore.YELLOW, ":warning: ")
-    ERROR = LevelRegistry("ERROR", 130, Fore.LIGHTRED_EX, ":cross_mark:")
-    ALERT = LevelRegistry(
-        "ALERT", 140, Style.BRIGHT + Fore.YELLOW, ":police_car_light:"
-    )
+    DEBUG = LevelRegistry("DEBUG", 20, Fore.MAGENTA, "bug")
+    TRACE = LevelRegistry("TRACE", 30, Fore.BLUE, "footprints")
+    LOG = LevelRegistry("LOG", 40, Fore.CYAN, "page_facing_up")
+    NOTICE = LevelRegistry("NOTICE", 50, Fore.LIGHTYELLOW_EX, "loudspeaker")
+    EVENT = LevelRegistry("EVENT", 60, Fore.LIGHTCYAN_EX, "bullseye")
+    PERFORMANCE = LevelRegistry("PERFORMANCE", 70, Fore.LIGHTMAGENTA_EX, "high_voltage")
+    SUCCESS = LevelRegistry("SUCCESS", 80, Fore.GREEN, "check_mark_button")
+    SECURITY = LevelRegistry("SECURITY", 90, Fore.LIGHTGREEN_EX, "locked")
+    AUDIT = LevelRegistry("AUDIT", 100, Fore.LIGHTYELLOW_EX, "clipboard")
+    INFO = LevelRegistry("INFO", 110, Fore.LIGHTBLUE_EX, "information")
+    WARNING = LevelRegistry("WARNING", 120, Fore.YELLOW, "warning")
+    ERROR = LevelRegistry("ERROR", 130, Fore.LIGHTRED_EX, "cross_mark")
+    ALERT = LevelRegistry("ALERT", 140, Style.BRIGHT + Fore.YELLOW, "police_car_light")
     CRITICAL = LevelRegistry(
-        "CRITICAL", 150, Style.BRIGHT + Fore.LIGHTRED_EX, ":collision:"
+        "CRITICAL", 150, Style.BRIGHT + Fore.LIGHTRED_EX, "collision"
     )
-    FATAL = LevelRegistry(
-        "FATAL", 160, Style.BRIGHT + Fore.RED, ":skull_and_crossbones: "
-    )
-    EMERGENCY = LevelRegistry("EMERGENCY", 170, Style.BRIGHT + Fore.RED, ":ambulance:")
+    FATAL = LevelRegistry("FATAL", 160, Style.BRIGHT + Fore.RED, "skull_and_crossbones")
+    EMERGENCY = LevelRegistry("EMERGENCY", 170, Style.BRIGHT + Fore.RED, "ambulance")
 
     @classmethod
     def get_by_name(cls, name: str) -> LevelRegistry | None:
