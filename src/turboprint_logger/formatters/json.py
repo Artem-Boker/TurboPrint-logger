@@ -77,7 +77,7 @@ class JSONFormatter(Formatter):
                 "function": record.function,
                 "line": record.line,
             },
-            "context": self._default_serializer({**record.context, **self.extra}),
+            "context": {**record.context, **self.extra},
         }
 
         for old, new in self.rename.items():

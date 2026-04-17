@@ -39,8 +39,8 @@ class RetryDecorator:
             else Logger.get_logger(logger or "root")
         )
         self.max_attempts = max(1, max_attempts)
-        self.delay = delay
-        self.backoff = backoff
+        self.delay = max(0.0, delay)
+        self.backoff = max(0.0, backoff)
         self.exceptions = exceptions
         self.success_level = success_level
         self.success_message = Template(success_message)

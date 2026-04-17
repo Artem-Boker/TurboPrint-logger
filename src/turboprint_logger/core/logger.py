@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Callable
-from threading import Lock, RLock
+from threading import Lock
 from typing import Any
 
 from turboprint_logger.core.config import Config
@@ -49,7 +49,6 @@ class Logger:
         "status",
         "tags",
     )
-    _get_logger_lock = RLock()
     _trace_counter = 0
     _trace_counter_lock = Lock()
     _logger_counter = 0
@@ -88,7 +87,7 @@ class Logger:
 
         if name != _ROOT_LOGGER_NAME:
             parent_name = name.rsplit(".", 1)[0] if "." in name else _ROOT_LOGGER_NAME
-            self.parent = Logger.get_logger(parent_name, container=container)
+            self.parent = Logger.get_logger(parent_name, config, container)
         else:
             self.parent = self
 
@@ -148,7 +147,7 @@ class Logger:
         container: Container = _DEFAULT_CONTAINER,
     ) -> Logger:
         name = normalize_logger_name(name)
-        with cls._get_logger_lock:
+        with container._container_lock:
             if not container._root_logger:
                 container._root_logger = Logger._create(
                     _ROOT_LOGGER_NAME, container, None
@@ -248,8 +247,9 @@ class Logger:
         for processor in self.processors:
             try:
                 processed_record = processor.process(record.copy())
-                if processed_record is not None:
-                    record = processed_record
+                if processed_record is None:
+                    return None
+                record = processed_record
             except Exception as exc:  # noqa: BLE001
                 sys.stderr.write(
                     f"Exception in {processor.__class__.__name__}: {exc}\n"
@@ -278,6 +278,7 @@ class Logger:
             return None
         record = process_record
         self.metrics.add(record.level)
+        current = current.parent
         while current.propagate and current is not current.parent:
             current_record = current._process_local(record)
             if current_record is None:

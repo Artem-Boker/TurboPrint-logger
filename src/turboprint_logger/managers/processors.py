@@ -39,14 +39,13 @@ class ProcessorsManager:
     @contextmanager
     def temporary(self, *processors: Processor, replace: bool = True):  # noqa: ANN201
         with self._lock:
-            original = self._processors
+            original = self._processors.copy()
             self._processors = (
                 list(processors) if replace else [*self._processors, *processors]
             )
-        try:
-            yield
-        finally:
-            with self._lock:
+            try:
+                yield
+            finally:
                 self._processors = original
 
     def __len__(self) -> int:

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable
+from threading import Lock
 from typing import Any, ClassVar
 
 from colorama import Fore, Style
@@ -12,18 +14,14 @@ from turboprint_logger.exceptions.core.levels import (
     LevelValueAlreadyExistsError,
     NegativeLevelError,
 )
+from turboprint_logger.exceptions.utils.normalizers import InvalidLevelNameError
 from turboprint_logger.utils.normalizers import normalize_level_name
 
 __all__ = ("Level", "LevelRegistry")
 
 
 class LevelRegistry:
-    __slots__ = ("_color", "_emoji", "_name", "_value")
-
-    _name: str
-    _value: int
-    _color: str
-    _emoji: str | None
+    __slots__ = ("_color", "_emoji", "_name", "_raw_emoji", "_value")
 
     @property
     def name(self) -> str:
@@ -39,11 +37,7 @@ class LevelRegistry:
 
     @property
     def emoji(self) -> str | None:
-        return (
-            emojize(self._emoji, variant="emoji_type", language="alias")
-            if self._emoji
-            else None
-        )
+        return self._emoji
 
     def __init__(
         self, name: str, value: int, color: str, alias_emoji_code: str | None = None
@@ -51,19 +45,33 @@ class LevelRegistry:
         self._name = normalize_level_name(name)
         self._value = value
         self._color = color
-        self._emoji = alias_emoji_code.lower() if alias_emoji_code else alias_emoji_code
-        self.__post_init__()
+        self._raw_emoji = (
+            alias_emoji_code.lower()
+            if alias_emoji_code and not alias_emoji_code.isspace()
+            else None
+        )
+        self._emoji = (
+            emojize(self._raw_emoji, variant="emoji_type", language="alias")
+            if self._raw_emoji
+            else None
+        )
+        self._validate()
 
-    def __post_init__(self) -> None:
+    def _validate(self) -> None:
         if self._value < 0:
             msg = f"Level {self._name} cannot be negative: {self._value}"
             raise NegativeLevelError(msg)
         if not self._color or self._color.isspace():
             msg = f"Level {self._name} has invalid color: {self._color}"
             raise InvalidLevelColorError(msg)
-        if self._emoji and not is_emoji(emojize(self._emoji, language="alias").strip()):
+        if self._raw_emoji and not is_emoji(
+            emojize(self._raw_emoji, variant="text_type", language="alias").strip()
+        ):
             msg = f"Invalid emoji code: {self._emoji}"
             raise InvalidLevelEmojiError(msg)
+
+    def enabled_for(self, level: LevelRegistry) -> bool:
+        return self.value >= level.value
 
     def __str__(self) -> str:
         return f"{self.emoji or ''}{self.name}[{self.value}]"
@@ -76,11 +84,22 @@ class LevelRegistry:
             f"emoji={self.emoji})"
         )
 
-    def enabled_for(self, level: LevelRegistry) -> bool:
-        return self.value >= level.value
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, LevelRegistry):
+            return self.value == other.value and self.name == other.name
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash((self.name, self.value))
 
 
 class LevelMeta(type):
+    _standard_levels: tuple[LevelRegistry, ...]
+    _custom_levels: ClassVar[list[LevelRegistry]] = []
+    _custom_levels_lock: ClassVar[Lock] = Lock()
+    standard_levels: Callable[[], list[LevelRegistry]]
+    custom_levels: Callable[[], list[LevelRegistry]]
+
     def __init__(
         cls, name: str, bases: tuple[type, ...], attrs: dict[str, Any], /, **kwds
     ) -> None:
@@ -91,10 +110,18 @@ class LevelMeta(type):
         )
 
     def __str__(cls) -> str:
-        return cls.__str__()
+        return (
+            f"{cls.__name__}("
+            f"standard_levels_count={len(cls._standard_levels)}, "
+            f"custom_levels_count={len(cls._custom_levels)})"
+        )
 
     def __repr__(cls) -> str:
-        return cls.__repr__()
+        return (
+            f"{cls.__name__}("
+            f"standard_levels={[str(level) for level in cls.standard_levels()]}, "
+            f"custom_levels={[str(level) for level in cls.custom_levels()]})"
+        )
 
 
 class Level(metaclass=LevelMeta):
@@ -127,17 +154,17 @@ class Level(metaclass=LevelMeta):
     )
     EMERGENCY = LevelRegistry("EMERGENCY", 170, Style.BRIGHT + Fore.RED, ":ambulance:")
 
-    _standard_levels: tuple[LevelRegistry, ...]
-    _custom_levels: ClassVar[list[LevelRegistry]] = []
-
     @classmethod
     def get_by_name(cls, name: str) -> LevelRegistry | None:
-        name = normalize_level_name(name)
+        try:
+            normalized = normalize_level_name(name)
+        except InvalidLevelNameError:
+            return None
         for level in cls._standard_levels:
-            if level.name == name:
+            if level.name == normalized:
                 return level
         for level in cls._custom_levels:
-            if level.name == name:
+            if level.name == normalized:
                 return level
         return None
 
@@ -175,38 +202,33 @@ class Level(metaclass=LevelMeta):
         color: str = Fore.RESET,
         emoji_alias: str | None = None,
     ) -> LevelRegistry:
-        for level in cls._standard_levels:
-            if level.name == name:
-                msg = f"Level {name} is a standard level"
-                raise LevelNameAlreadyExistsError(msg)
-            if level.value == value:
-                msg = f"Level value {value} is a standard level"
-                raise LevelValueAlreadyExistsError(msg)
+        normalized = normalize_level_name(name)
+        with cls._custom_levels_lock:
+            for level in cls._standard_levels:
+                if level.name == normalized:
+                    msg = f"Level {normalized} is a standard level"
+                    raise LevelNameAlreadyExistsError(msg)
+                if level.value == value:
+                    msg = f"Level value {value} is a standard level"
+                    raise LevelValueAlreadyExistsError(msg)
 
-        for level in cls._custom_levels:
-            if level.name == name:
-                msg = f"Level {name} is already registered"
-                raise LevelNameAlreadyExistsError(msg)
-            if level.value == value:
-                msg = f"Level value {value} is already registered"
-                raise LevelValueAlreadyExistsError(msg)
+            for level in cls._custom_levels:
+                if level.name == normalized:
+                    msg = f"Level {normalized} is already registered"
+                    raise LevelNameAlreadyExistsError(msg)
+                if level.value == value:
+                    msg = f"Level value {value} is already registered"
+                    raise LevelValueAlreadyExistsError(msg)
 
-        new_level = LevelRegistry(name, value, color, emoji_alias)
-        cls._custom_levels.append(new_level)
-        return new_level
+            new_level = LevelRegistry(normalized, value, color, emoji_alias)
+            cls._custom_levels.append(new_level)
+            return new_level
 
     @classmethod
     def unregister(cls, name_or_value: str | int) -> bool:
-        for level in cls._custom_levels:
-            if name_or_value in (level.name, level.value):
-                cls._custom_levels.remove(level)
-                return True
-        return False
-
-    @classmethod
-    def __str__(cls) -> str:
-        return f"{cls.__name__}(standard_levels_count={len(cls._standard_levels)}, custom_levels_count={len(cls._custom_levels)})"  # noqa: E501
-
-    @classmethod
-    def __repr__(cls) -> str:
-        return f"{cls.__name__}(standard_levels={[str(level) for level in cls.standard_levels()]}, custom_levels={[str(level) for level in cls.custom_levels()]})"  # noqa: E501
+        with cls._custom_levels_lock:
+            for level in cls._custom_levels:
+                if name_or_value in (level.name, level.value):
+                    cls._custom_levels.remove(level)
+                    return True
+            return False

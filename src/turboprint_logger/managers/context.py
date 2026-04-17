@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from threading import Lock
+from threading import RLock
 from typing import Any
 
 from turboprint_logger.utils.normalizers import normalize_context_key
@@ -13,7 +13,7 @@ class ContextManager:
     __slots__ = ("_context", "_lock")
 
     def __init__(self, **context) -> None:
-        self._lock = Lock()
+        self._lock = RLock()
         self._context: dict[str, Any] = {
             normalize_context_key(key): value for key, value in context.items()
         }
@@ -38,12 +38,11 @@ class ContextManager:
             normalize_context_key(key): value for key, value in context.items()
         }
         with self._lock:
-            original = self._context
+            original = self._context.copy()
             self._context = normalized if replace else {**self._context, **normalized}
-        try:
-            yield
-        finally:
-            with self._lock:
+            try:
+                yield
+            finally:
                 self._context = original
 
     def values(self) -> list[Any]:

@@ -47,11 +47,10 @@ class SecurityFormatter(Formatter):
             masked: dict[str, Any] = {}
             for key, value in item.items():
                 if isinstance(key, str):
-                    normal_key = key.strip().lower()
-                    if normal_key in self.sensitive_fields:
-                        masked[normal_key] = "***"
+                    if key.strip().lower() in self.sensitive_fields:
+                        masked[key] = "***"
                     else:
-                        masked[normal_key] = self._mask_process(value)
+                        masked[key] = self._mask_process(value)
                 else:
                     masked[key] = value
             return masked
