@@ -1,5 +1,15 @@
 # TurboPrint-logger Changelog
 
+## [v0.3.0](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.7...v0.3.0) (2026-04-17)
+
+### fix
+
+- **project:** :bug: fixed known bugs ([778a5c8](https://github.com/Artem-Boker/TurboPrint-logger/commit/778a5c835740115ddc5638314ec0fc75dae38442))
+- **project:** :bug: fixed known bugs ([81f460b](https://github.com/Artem-Boker/TurboPrint-logger/commit/81f460b85a116b24bdeec8704b4036c571803dfe))
+- **project:** :bug: fixed known bugs ([5d565db](https://github.com/Artem-Boker/TurboPrint-logger/commit/5d565db7e37d3178366479c358935e0fe5d36224))
+- **project:** :bug: fixed known bugs ([684e644](https://github.com/Artem-Boker/TurboPrint-logger/commit/684e64456915cbe367f625692352c002e7e19c12))
+- **project:** :bug: fixed known bugs ([c39321c](https://github.com/Artem-Boker/TurboPrint-logger/commit/c39321cf4b3ba7a4e3927f05d65208e9ba4f4b5f))
+
 ## [v0.2.7](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.6...v0.2.7) (2026-04-13)
 
 ### fix
@@ -7,6 +17,10 @@
 - **project:** :bug: fixed known bugs ([673c43b](https://github.com/Artem-Boker/TurboPrint-logger/commit/673c43b2152e9ea3e8f0bedb898cbd6fc11f8bea))
 - **project:** :bug: fixed known bugs ([f093aa8](https://github.com/Artem-Boker/TurboPrint-logger/commit/f093aa84aab2e85d7048e36a81b4f1772ca69a00))
 - **project:** :bug: fixed known bugs ([ae90bc1](https://github.com/Artem-Boker/TurboPrint-logger/commit/ae90bc10e82728374c5bd6b24e12f9e46c352712))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.2.7 ([d5462f7](https://github.com/Artem-Boker/TurboPrint-logger/commit/d5462f70315eff6277c127e5a14be36ba1bc85d9))
 
 ## [v0.2.6](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.5...v0.2.6) (2026-03-28)
 
@@ -47,7 +61,7 @@
 
 ### feat
 
-- **handlers:** :sparkles: added compress option with gzip module in RotatingFile handlers ([a5ce7c7](https://github.com/Artem-Boker/TurboPrint-logger/commit/a5ce7c7b0089f7cc00e394dc88e37ea7cb07e8f9))
+- **handlers:** :sparkles: added compress option with gzip module in RotatinFile handlers ([a5ce7c7](https://github.com/Artem-Boker/TurboPrint-logger/commit/a5ce7c7b0089f7cc00e394dc88e37ea7cb07e8f9))
 - **formatters:** :sparkles: added support for orjson in JSONFormatter ([53e281c](https://github.com/Artem-Boker/TurboPrint-logger/commit/53e281c23c5393e9bd70d6577a145e8354702c07))
 
 ### docs
