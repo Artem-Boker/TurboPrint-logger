@@ -203,16 +203,14 @@ class Logger:
             tags=tags,
         )
 
-    def _process_global(self, record: Record) -> Record | None:
-        if not self._container.globals.status.logger.enabled:
-            return None
-
-        if not record.level.enabled_for(self._container.globals.level.get()):
-            return None
-
-        for processor in self._container.globals.processors:
+    def _apply_processors_start(
+        self,
+        processors: ProcessorsManager,
+        record: Record,
+    ) -> Record | None:
+        for processor in processors:
             try:
-                processed_record = processor.process(record.copy())
+                processed_record = processor.start(record.copy())
                 if processed_record is None:
                     return None
                 record = processed_record
@@ -220,22 +218,81 @@ class Logger:
                 sys.stderr.write(
                     f"Exception in {processor.__class__.__name__}: {exc}\n"
                 )
+        return record
 
-        if self.status.global_filters.enabled and not all(
-            f.filter(record) for f in self._container.globals.filters
-        ):
+    def _apply_processors_end(
+        self,
+        processors: ProcessorsManager,
+        record: Record,
+    ) -> Record | None:
+        for processor in reversed(processors.get()):
+            try:
+                processed_record = processor.end(record.copy())
+                if processed_record is None:
+                    return None
+                record = processed_record
+            except Exception as exc:  # noqa: BLE001
+                sys.stderr.write(
+                    f"Exception in {processor.__class__.__name__}: {exc}\n"
+                )
+        return record
+
+    def _apply_handlers(
+        self,
+        handlers: HandlersManager,
+        record: Record,
+    ) -> None:
+        for handler in handlers:
+            try:
+                handler.handle(record)
+            except Exception as exc:  # noqa: BLE001
+                sys.stderr.write(f"Exception in {handler.__class__.__name__}: {exc}\n")
+
+    def _apply_filters(
+        self,
+        filters: FiltersManager,
+        record: Record,
+        *,
+        enabled: bool,
+    ) -> Record | None:
+        if enabled and not all(f.filter(record) for f in filters):
+            return None
+        return record
+
+    def _process_global(self, record: Record) -> Record | None:
+        if not self._container.globals.status.logger.enabled:
             return None
 
-        if self.status.global_handlers.enabled:
-            for handler in self._container.globals.handlers:
-                try:
-                    handler.handle(record)
-                except Exception as exc:  # noqa: BLE001
-                    sys.stderr.write(
-                        f"Exception in {handler.__class__.__name__}: {exc}\n"
-                    )
+        if not record.level.enabled_for(self._container.globals.level.get()):
+            return None
 
-        return record
+        processed = self._apply_processors_start(
+            self._container.globals.processors,
+            record,
+        )
+        if processed is None:
+            return None
+        record = processed
+
+        filtered = self._apply_filters(
+            self._container.globals.filters,
+            record,
+            enabled=self.status.global_filters.enabled,
+        )
+        if filtered is None:
+            return None
+        record = filtered
+
+        if self.status.global_handlers.enabled:
+            self._apply_handlers(self._container.globals.handlers, record)
+
+        processed = self._apply_processors_end(
+            self._container.globals.processors,
+            record,
+        )
+        if processed is None:
+            return None
+        return processed
 
     def _process_local(self, record: Record) -> Record | None:
         if not self.status.logger.enabled:
@@ -244,32 +301,27 @@ class Logger:
         if not record.level.enabled_for(self.level.get()):
             return None
 
-        for processor in self.processors:
-            try:
-                processed_record = processor.process(record.copy())
-                if processed_record is None:
-                    return None
-                record = processed_record
-            except Exception as exc:  # noqa: BLE001
-                sys.stderr.write(
-                    f"Exception in {processor.__class__.__name__}: {exc}\n"
-                )
-
-        if self.status.filters.enabled and not all(
-            f.filter(record) for f in self.filters
-        ):
+        processed = self._apply_processors_start(self.processors, record)
+        if processed is None:
             return None
+        record = processed
+
+        filtered = self._apply_filters(
+            self.filters,
+            record,
+            enabled=self.status.filters.enabled,
+        )
+        if filtered is None:
+            return None
+        record = filtered
 
         if self.status.handlers.enabled:
-            for handler in self.handlers:
-                try:
-                    handler.handle(record)
-                except Exception as exc:  # noqa: BLE001
-                    sys.stderr.write(
-                        f"Exception in {handler.__class__.__name__}: {exc}\n"
-                    )
+            self._apply_handlers(self.handlers, record)
 
-        return record
+        processed = self._apply_processors_end(self.processors, record)
+        if processed is None:
+            return None
+        return processed
 
     def _process_record(self, record: Record) -> Record | None:
         current = self

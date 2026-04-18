@@ -1,20 +1,20 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from turboprint_logger.core.record import Record
-from turboprint_logger.exceptions.interfaces import InterfaceMethodNotImplementedError
 
 __all__ = ("Processor",)
 
 
-class Processor(ABC):
+class Processor(ABC):  # noqa: B024
     __slots__ = ()
 
-    @abstractmethod
-    def process(self, record: Record) -> Record | None:
-        msg = "Processor.process must be implemented by subclasses"
-        raise InterfaceMethodNotImplementedError(msg)
+    def start(self, record: Record) -> Record | None:
+        return record
+
+    def end(self, record: Record) -> Record | None:
+        return record
 
     def __str__(self) -> str:
         return self.__class__.__name__

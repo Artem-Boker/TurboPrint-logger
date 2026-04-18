@@ -7,7 +7,7 @@ __all__ = ("LazyMessageProcessor",)
 
 
 class LazyMessageProcessor(Processor):
-    def process(self, record: Record) -> Record:
+    def start(self, record: Record) -> Record:
         if not callable(record.message):
             return record
 
