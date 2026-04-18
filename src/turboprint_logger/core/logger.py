@@ -156,7 +156,8 @@ class Logger:
                 return container._root_logger
             existing = container._loggers.get(name)
             if existing is None:
-                logger = Logger._create(name, container, config)
+                effective_config = config or container._resolve_config_for(name)
+                logger = Logger._create(name, container, effective_config)
                 container._loggers[name] = logger
                 return logger
             return existing

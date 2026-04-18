@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Callable
 from functools import wraps
 from string import Template
@@ -29,10 +30,23 @@ class DeprecatedDecorator:
         self.level = level
 
     def __call__(self, func: _F) -> _F:
+        if asyncio.iscoroutinefunction(func):
+
+            @wraps(func)
+            async def async_wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+                self.logger(
+                    self.level,
+                    self.message.safe_substitute(function=func.__name__),
+                )
+                return await func(*args, **kwargs)
+
+            return cast(_F, async_wrapper)
+
         @wraps(func)
-        def wrapper(*args, **kwargs):  # noqa: ANN202
+        def wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
             self.logger(
-                self.level, self.message.safe_substitute(function=func.__name__)
+                self.level,
+                self.message.safe_substitute(function=func.__name__),
             )
             return func(*args, **kwargs)
 

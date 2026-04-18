@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Callable
 from functools import wraps
 from string import Template
@@ -32,8 +33,27 @@ class TimedDecorator:
         self.duration_round = duration_round
 
     def __call__(self, func: _F) -> _F:
+        if asyncio.iscoroutinefunction(func):
+
+            @wraps(func)
+            async def async_wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+                start = perf_counter()
+                try:
+                    return await func(*args, **kwargs)
+                finally:
+                    duration = perf_counter() - start
+                    self.logger(
+                        self.level,
+                        self.message.safe_substitute(
+                            function=func.__name__,
+                            duration=round(duration, self.duration_round),
+                        ),
+                    )
+
+            return cast(_F, async_wrapper)
+
         @wraps(func)
-        def wrapper(*args, **kwargs):  # noqa: ANN202
+        def wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
             start = perf_counter()
             try:
                 return func(*args, **kwargs)

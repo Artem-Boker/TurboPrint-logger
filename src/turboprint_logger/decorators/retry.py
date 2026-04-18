@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Callable
 from functools import wraps
 from string import Template
@@ -49,43 +50,84 @@ class RetryDecorator:
         self.error_level = error_level
         self.error_message = Template(error_message)
 
+    def _log_warning(self, func_name: str, attempt: int, exc: Exception) -> None:
+        self.logger(
+            self.warning_level,
+            self.warning_message.safe_substitute(
+                function=func_name, attempt=attempt, exception=exc
+            ),
+        )
+
+    def _log_success(self, func_name: str, attempt: int) -> None:
+        if attempt > 1:
+            self.logger(
+                self.success_level,
+                self.success_message.safe_substitute(
+                    function=func_name, attempt=attempt
+                ),
+            )
+
+    def _log_error(self, func_name: str, attempt: int) -> None:
+        self.logger(
+            self.error_level,
+            self.error_message.safe_substitute(function=func_name, attempt=attempt),
+        )
+
+    def _raise_final(self, func_name: str, last_exc: Exception | None) -> None:
+        if last_exc:
+            msg = f"{func_name}, last exception: {last_exc}"
+            raise RetryLimitExceededError(msg) from last_exc
+        msg = "Unknown error in retry"
+        raise UnknownRetryError(msg)
+
     def __call__(self, func: _F) -> _F:
+        if asyncio.iscoroutinefunction(func):
+
+            @wraps(func)
+            async def async_wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+                last_exc: Exception | None = None
+                for attempt in range(1, self.max_attempts + 1):
+                    try:
+                        result = await func(*args, **kwargs)
+                        self._log_success(func.__name__, attempt)
+                        return result  # noqa: TRY300
+                    except self.exceptions as exc:
+                        last_exc = exc  # ty:ignore[invalid-assignment]
+                        self._log_warning(
+                            func.__name__,
+                            attempt,
+                            exc,  # ty:ignore[invalid-argument-type]
+                        )
+                        if attempt < self.max_attempts:
+                            await asyncio.sleep(
+                                self.delay * (self.backoff ** (attempt - 1))
+                            )
+                self._log_error(func.__name__, attempt)
+                self._raise_final(func.__name__, last_exc)
+                return None
+
+            return cast(_F, async_wrapper)
+
         @wraps(func)
-        def wrapper(*args, **kwargs):  # noqa: ANN202
-            last_exc = None
+        def wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+            last_exc: Exception | None = None
             for attempt in range(1, self.max_attempts + 1):
                 try:
                     result = func(*args, **kwargs)
-                    if attempt > 1:
-                        self.logger(
-                            self.success_level,
-                            self.success_message.safe_substitute(
-                                function=func.__name__, attempt=attempt
-                            ),
-                        )
+                    self._log_success(func.__name__, attempt)
+                    return result  # noqa: TRY300
                 except self.exceptions as exc:
-                    last_exc = exc
-                    self.logger(
-                        self.warning_level,
-                        self.warning_message.safe_substitute(
-                            function=func.__name__, attempt=attempt, exception=exc
-                        ),
+                    last_exc = exc  # ty:ignore[invalid-assignment]
+                    self._log_warning(
+                        func.__name__,
+                        attempt,
+                        exc,  # ty:ignore[invalid-argument-type]
                     )
                     if attempt < self.max_attempts:
                         sleep(self.delay * (self.backoff ** (attempt - 1)))
-                else:
-                    return result
-            self.logger(
-                self.error_level,
-                self.error_message.safe_substitute(
-                    function=func.__name__, attempt=attempt
-                ),
-            )
-            if last_exc:
-                msg = f"{func.__name__}, last exception: {last_exc}"
-                raise RetryLimitExceededError(msg) from last_exc
-            msg = "Unknown error in retry"
-            raise UnknownRetryError(msg)
+            self._log_error(func.__name__, attempt)
+            self._raise_final(func.__name__, last_exc)
+            return None
 
         return cast(_F, wrapper)
 

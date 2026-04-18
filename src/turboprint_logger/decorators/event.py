@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Callable
 from functools import wraps
 from itertools import chain
@@ -41,58 +42,111 @@ class EventDecorator:
         self.exc_message = exc_message
         self.default_context = default_context
 
-    def __call__(self, func: _F) -> _F:
-        @wraps(func)
-        def wrapper(*args, **kwargs):  # noqa: ANN202
-            arg_parts = chain(
-                (self.arg_parser(arg) for arg in args),
-                (f"{key}={self.arg_parser(value)}" for key, value in kwargs.items()),
-            )
-            str_args = ", ".join(arg_parts)
-
-            entry_extra: dict[str, Any] = {
+    def _build_entry_extra(
+        self,
+        func: _F,  # pyright: ignore[reportInvalidTypeVarUse]
+        *args,
+        **kwargs,
+    ) -> dict[str, Any]:
+        arg_parts = chain(
+            (self.arg_parser(arg) for arg in args),
+            (f"{key}={self.arg_parser(value)}" for key, value in kwargs.items()),
+        )
+        return filter_reserved(
+            {
                 **self.default_context,
                 "event": "entry",
                 "function": func.__name__,
-                "args": str_args,
+                "args": ", ".join(arg_parts),
             }
-            self.logger(
-                self.level,
-                self.entry_message,
-                **filter_reserved(entry_extra),
-            )
-            start_time = perf_counter()
+        )
 
-            try:
-                result = func(*args, **kwargs)
-            except Exception as exc:
-                end_time = perf_counter()
-                exc_extra: dict[str, Any] = {
-                    **self.default_context,
-                    "event": "exception",
-                    "function": func.__name__,
-                    "duration": str(round(end_time - start_time, 3)),
-                    "exception": repr(exc),
-                }
-                self.logger(
-                    self.error_level,
-                    self.exc_message,
-                    **filter_reserved(exc_extra),
-                )
-                raise
-
-            end_time = perf_counter()
-            exit_extra: dict[str, Any] = {
+    def _build_exit_extra(
+        self,
+        func: _F,  # pyright: ignore[reportInvalidTypeVarUse]
+        duration: float,
+        result: Any,  # noqa: ANN401
+    ) -> dict[str, Any]:
+        return filter_reserved(
+            {
                 **self.default_context,
                 "event": "exit",
                 "function": func.__name__,
-                "duration": str(round(end_time - start_time, 3)),
+                "duration": str(round(duration, 3)),
                 "result": repr(result),
             }
+        )
+
+    def _build_exc_extra(
+        self,
+        func: _F,  # pyright: ignore[reportInvalidTypeVarUse]
+        duration: float,
+        exc: BaseException,
+    ) -> dict[str, Any]:
+        return filter_reserved(
+            {
+                **self.default_context,
+                "event": "exception",
+                "function": func.__name__,
+                "duration": str(round(duration, 3)),
+                "exception": repr(exc),
+            }
+        )
+
+    def __call__(self, func: _F) -> _F:
+        if asyncio.iscoroutinefunction(func):
+
+            @wraps(func)
+            async def async_wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+                self.logger(
+                    self.level,
+                    self.entry_message,
+                    **self._build_entry_extra(func, args, kwargs),
+                )
+                start_time = perf_counter()
+                try:
+                    result = await func(*args, **kwargs)
+                except Exception as exc:
+                    duration = perf_counter() - start_time
+                    self.logger(
+                        self.error_level,
+                        self.exc_message,
+                        **self._build_exc_extra(func, duration, exc),
+                    )
+                    raise
+                duration = perf_counter() - start_time
+                self.logger(
+                    self.level,
+                    self.exit_message,
+                    **self._build_exit_extra(func, duration, result),
+                )
+                return result
+
+            return cast(_F, async_wrapper)
+
+        @wraps(func)
+        def wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+            self.logger(
+                self.level,
+                self.entry_message,
+                **self._build_entry_extra(func, args, kwargs),
+            )
+            start_time = perf_counter()
+            try:
+                result = func(*args, **kwargs)
+            except Exception as exc:
+                duration = perf_counter() - start_time
+                self.logger(
+                    self.error_level,
+                    self.exc_message,
+                    **self._build_exc_extra(func, duration, exc),
+                )
+                raise
+            duration = perf_counter() - start_time
             self.logger(
                 self.level,
                 self.exit_message,
-                **filter_reserved(exit_extra),
+                **self._build_exit_extra(func, duration, result),
             )
             return result
 
