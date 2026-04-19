@@ -1,5 +1,21 @@
 # TurboPrint-logger Changelog
 
+## [v0.3.1](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.3.0...v0.3.1) (2026-04-19)
+
+### fix
+
+- **levels:** :recycle: updated levels ([97ae91e](https://github.com/Artem-Boker/TurboPrint-logger/commit/97ae91eee5086c89a7751225282c20bbde77760d))
+- **project:** :bug: fixed known bugs ([b1cfb90](https://github.com/Artem-Boker/TurboPrint-logger/commit/b1cfb902a11c37b98310027dbda20fd5d6df0853))
+
+### feat
+
+- **processors:** :sparkles: processors are divided into inner and outer ([3ed9cb9](https://github.com/Artem-Boker/TurboPrint-logger/commit/3ed9cb965bcbf8d80a04fdc71f17fcf159930fa7))
+- **project:** :sparkles: new processors and filters and add async to decorators and other ([a2769d0](https://github.com/Artem-Boker/TurboPrint-logger/commit/a2769d00189f42faf9fa22db8d9fa29cc61a0e99))
+
+### refactor
+
+- **levels:** :recycle: rename LevelRegistry to LevelType ([e6fbc33](https://github.com/Artem-Boker/TurboPrint-logger/commit/e6fbc335c1b0dd1e9c0df6839ccbd3647ebd9e49))
+
 ## [v0.3.0](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.7...v0.3.0) (2026-04-17)
 
 ### fix
@@ -9,6 +25,10 @@
 - **project:** :bug: fixed known bugs ([5d565db](https://github.com/Artem-Boker/TurboPrint-logger/commit/5d565db7e37d3178366479c358935e0fe5d36224))
 - **project:** :bug: fixed known bugs ([684e644](https://github.com/Artem-Boker/TurboPrint-logger/commit/684e64456915cbe367f625692352c002e7e19c12))
 - **project:** :bug: fixed known bugs ([c39321c](https://github.com/Artem-Boker/TurboPrint-logger/commit/c39321cf4b3ba7a4e3927f05d65208e9ba4f4b5f))
+
+### docs
+
+- **changelog:** :memo: add conventional changelog for v0.3.0 ([248eee5](https://github.com/Artem-Boker/TurboPrint-logger/commit/248eee516cdef0bf1cc79aa0d84d666d2eb6ce91))
 
 ## [v0.2.7](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.2.6...v0.2.7) (2026-04-13)
 
