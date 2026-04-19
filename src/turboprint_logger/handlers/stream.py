@@ -5,7 +5,7 @@ from sys import stdout as default_output
 from threading import RLock
 from typing import TextIO
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers.stream import InvalidStreamError
 from turboprint_logger.interfaces import Filter, Formatter, Handler
@@ -17,7 +17,7 @@ class StreamHandler(Handler):
     def __init__(
         self,
         stream: TextIO = default_output,
-        min_level: LevelRegistry = Level.NOTSET,
+        min_level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
     ) -> None:

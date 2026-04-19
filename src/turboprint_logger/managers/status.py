@@ -14,6 +14,10 @@ class StatusComponent:
         self._enabled = status
         self._thread_local = local()
 
+    @property
+    def enabled(self) -> bool:
+        return self.get()
+
     def get(self) -> bool:
         with self._lock:
             return self._enabled

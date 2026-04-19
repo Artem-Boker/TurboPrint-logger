@@ -5,7 +5,7 @@ from sys import stderr
 from threading import RLock, Timer
 from typing import IO
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers.file import (
     FileClosedError,
@@ -23,7 +23,7 @@ class FileHandler(Handler):
     def __init__(  # noqa: PLR0913
         self,
         file_path: str,
-        min_level: LevelRegistry = Level.NOTSET,
+        min_level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
         *,

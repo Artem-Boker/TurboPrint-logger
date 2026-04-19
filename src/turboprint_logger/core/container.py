@@ -4,7 +4,7 @@ from threading import Lock, RLock
 from typing import TYPE_CHECKING, ClassVar
 
 from turboprint_logger.core.config import Config
-from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.core.levels import LevelType
 from turboprint_logger.exceptions.core.container import ContainerInstantiationError
 from turboprint_logger.managers.collections import DefaultManager, GlobalManager
 from turboprint_logger.utils.normalizers import (
@@ -92,7 +92,7 @@ class Container:
                     best_len = len(prefix)
             return best
 
-    def get_metrics(self) -> dict[str, dict[LevelRegistry, int]]:
+    def get_metrics(self) -> dict[str, dict[LevelType, int]]:
         with self._container_lock:
             loggers = []
             if self._root_logger:

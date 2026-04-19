@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, TypedDict
 
 from colorama import Style
 
-from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.core.levels import LevelType
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Formatter
 
@@ -18,7 +18,7 @@ __all__ = ("SimpleFormatter",)
 
 class FormatDict(TypedDict):
     message: str
-    level: LevelRegistry
+    level: LevelType
     level_name: str
     level_value: int
     level_emoji: str | None

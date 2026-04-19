@@ -16,10 +16,10 @@ from turboprint_logger.exceptions.core.levels import (
 from turboprint_logger.exceptions.utils.normalizers import InvalidLevelNameError
 from turboprint_logger.utils.normalizers import normalize_level_name
 
-__all__ = ("Level", "LevelRegistry")
+__all__ = ("Level", "LevelType")
 
 
-class LevelRegistry:
+class LevelType:
     __slots__ = ("_color", "_emoji", "_name", "_raw_emoji", "_value")
 
     @property
@@ -76,7 +76,7 @@ class LevelRegistry:
             msg = f"Invalid emoji code: {self._raw_emoji}"
             raise InvalidLevelEmojiError(msg)
 
-    def passed_min_level(self, min_level: LevelRegistry) -> bool:
+    def passed_min_level(self, min_level: LevelType) -> bool:
         return self.value >= min_level.value
 
     def __str__(self) -> str:
@@ -91,7 +91,7 @@ class LevelRegistry:
         )
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, LevelRegistry):
+        if isinstance(other, LevelType):
             return self.value == other.value and self.name == other.name
         return NotImplemented
 
@@ -100,8 +100,8 @@ class LevelRegistry:
 
 
 class LevelMeta(type):
-    _standard_levels: tuple[LevelRegistry, ...]
-    _custom_levels: ClassVar[list[LevelRegistry]] = []
+    _standard_levels: tuple[LevelType, ...]
+    _custom_levels: ClassVar[list[LevelType]] = []
     _custom_levels_lock: ClassVar[Lock] = Lock()
 
     def __init__(
@@ -110,7 +110,7 @@ class LevelMeta(type):
         super().__init__(name, bases, attrs, **kwds)
 
         cls._standard_levels = tuple(
-            level for level in vars(cls).values() if isinstance(level, LevelRegistry)
+            level for level in vars(cls).values() if isinstance(level, LevelType)
         )
 
     def __str__(cls) -> str:
@@ -129,31 +129,29 @@ class LevelMeta(type):
 
 
 class Level(metaclass=LevelMeta):
-    NOTSET = LevelRegistry("NOTSET", 0, Fore.RESET, "white_circle")
-    VERBOSE = LevelRegistry(
+    NOTSET = LevelType("NOTSET", 0, Fore.RESET, "white_circle")
+    VERBOSE = LevelType(
         "VERBOSE", 10, Fore.LIGHTBLACK_EX, "magnifying_glass_tilted_left"
     )
-    DEBUG = LevelRegistry("DEBUG", 20, Fore.MAGENTA, "bug")
-    TRACE = LevelRegistry("TRACE", 30, Fore.BLUE, "footprints")
-    LOG = LevelRegistry("LOG", 40, Fore.CYAN, "page_facing_up")
-    NOTICE = LevelRegistry("NOTICE", 50, Fore.LIGHTYELLOW_EX, "loudspeaker")
-    EVENT = LevelRegistry("EVENT", 60, Fore.LIGHTCYAN_EX, "bullseye")
-    PERFORMANCE = LevelRegistry("PERFORMANCE", 70, Fore.LIGHTMAGENTA_EX, "high_voltage")
-    SUCCESS = LevelRegistry("SUCCESS", 80, Fore.GREEN, "check_mark_button")
-    SECURITY = LevelRegistry("SECURITY", 90, Fore.LIGHTGREEN_EX, "locked")
-    AUDIT = LevelRegistry("AUDIT", 100, Fore.LIGHTYELLOW_EX, "clipboard")
-    INFO = LevelRegistry("INFO", 110, Fore.LIGHTBLUE_EX, "information")
-    WARNING = LevelRegistry("WARNING", 120, Fore.YELLOW, "warning")
-    ERROR = LevelRegistry("ERROR", 130, Fore.LIGHTRED_EX, "cross_mark")
-    ALERT = LevelRegistry("ALERT", 140, Style.BRIGHT + Fore.YELLOW, "police_car_light")
-    CRITICAL = LevelRegistry(
-        "CRITICAL", 150, Style.BRIGHT + Fore.LIGHTRED_EX, "collision"
-    )
-    FATAL = LevelRegistry("FATAL", 160, Style.BRIGHT + Fore.RED, "skull_and_crossbones")
-    EMERGENCY = LevelRegistry("EMERGENCY", 170, Style.BRIGHT + Fore.RED, "ambulance")
+    DEBUG = LevelType("DEBUG", 20, Fore.MAGENTA, "bug")
+    TRACE = LevelType("TRACE", 30, Fore.BLUE, "footprints")
+    LOG = LevelType("LOG", 40, Fore.CYAN, "page_facing_up")
+    NOTICE = LevelType("NOTICE", 50, Fore.LIGHTYELLOW_EX, "loudspeaker")
+    EVENT = LevelType("EVENT", 60, Fore.LIGHTCYAN_EX, "bullseye")
+    PERFORMANCE = LevelType("PERFORMANCE", 70, Fore.LIGHTMAGENTA_EX, "high_voltage")
+    SUCCESS = LevelType("SUCCESS", 80, Fore.GREEN, "check_mark_button")
+    SECURITY = LevelType("SECURITY", 90, Fore.LIGHTGREEN_EX, "locked")
+    AUDIT = LevelType("AUDIT", 100, Fore.LIGHTYELLOW_EX, "clipboard")
+    INFO = LevelType("INFO", 110, Fore.LIGHTBLUE_EX, "information")
+    WARNING = LevelType("WARNING", 120, Fore.YELLOW, "warning")
+    ERROR = LevelType("ERROR", 130, Fore.LIGHTRED_EX, "cross_mark")
+    ALERT = LevelType("ALERT", 140, Style.BRIGHT + Fore.YELLOW, "police_car_light")
+    CRITICAL = LevelType("CRITICAL", 150, Style.BRIGHT + Fore.LIGHTRED_EX, "collision")
+    FATAL = LevelType("FATAL", 160, Style.BRIGHT + Fore.RED, "skull_and_crossbones")
+    EMERGENCY = LevelType("EMERGENCY", 170, Style.BRIGHT + Fore.RED, "ambulance")
 
     @classmethod
-    def get_by_name(cls, name: str) -> LevelRegistry | None:
+    def get_by_name(cls, name: str) -> LevelType | None:
         try:
             normalized = normalize_level_name(name)
         except InvalidLevelNameError:
@@ -167,7 +165,7 @@ class Level(metaclass=LevelMeta):
         return None
 
     @classmethod
-    def get_by_level(cls, value: int) -> LevelRegistry | None:
+    def get_by_level(cls, value: int) -> LevelType | None:
         if value < 0:
             return None
         for level in cls._standard_levels:
@@ -179,14 +177,14 @@ class Level(metaclass=LevelMeta):
         return None
 
     @classmethod
-    def standard_levels(cls) -> list[LevelRegistry]:
+    def standard_levels(cls) -> list[LevelType]:
         return sorted(
             cls._standard_levels,
             key=lambda level: (level.value, level.name),
         )
 
     @classmethod
-    def custom_levels(cls) -> list[LevelRegistry]:
+    def custom_levels(cls) -> list[LevelType]:
         return sorted(
             cls._custom_levels,
             key=lambda level: (level.value, level.name),
@@ -199,7 +197,7 @@ class Level(metaclass=LevelMeta):
         value: int,
         color: str = Fore.RESET,
         emoji_alias: str | None = None,
-    ) -> LevelRegistry:
+    ) -> LevelType:
         normalized = normalize_level_name(name)
         with cls._custom_levels_lock:
             for level in cls._standard_levels:
@@ -218,7 +216,7 @@ class Level(metaclass=LevelMeta):
                     msg = f"Level value {value} is already registered"
                     raise LevelValueAlreadyExistsError(msg)
 
-            new_level = LevelRegistry(normalized, value, color, emoji_alias)
+            new_level = LevelType(normalized, value, color, emoji_alias)
             cls._custom_levels.append(new_level)
             return new_level
 

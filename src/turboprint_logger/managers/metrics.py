@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from threading import Lock
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.exceptions.managers.metrics import NegativeMetricsCountError
 
 __all__ = ("MetricsManager",)
@@ -20,11 +20,11 @@ class MetricsManager:
         with self._lock:
             return self._metrics.copy()
 
-    def add(self, level: LevelRegistry) -> None:
+    def add(self, level: LevelType) -> None:
         with self._lock:
             self._metrics[level.value] += 1
 
-    def subtract(self, level: LevelRegistry) -> bool:
+    def subtract(self, level: LevelType) -> bool:
         with self._lock:
             key = level.value
             if key not in self._metrics:
@@ -39,7 +39,7 @@ class MetricsManager:
         with self._lock:
             return self._metrics.total()
 
-    def items(self) -> dict[LevelRegistry, int]:
+    def items(self) -> dict[LevelType, int]:
         with self._lock:
             result = {}
             for level_int, count in self._metrics.items():
@@ -48,22 +48,22 @@ class MetricsManager:
                     result[level] = count
             return result
 
-    def reset(self, level: LevelRegistry | None = None) -> None:
+    def reset(self, level: LevelType | None = None) -> None:
         with self._lock:
             if level is not None:
                 self._metrics.pop(level.value, 0)
             else:
                 self._metrics.clear()
 
-    def __getitem__(self, level: LevelRegistry) -> int:
+    def __getitem__(self, level: LevelType) -> int:
         with self._lock:
             return self._metrics.get(level.value, 0)
 
-    def __delitem__(self, level: LevelRegistry) -> None:
+    def __delitem__(self, level: LevelType) -> None:
         with self._lock:
             del self._metrics[level.value]
 
-    def __setitem__(self, level: LevelRegistry, count: int) -> None:
+    def __setitem__(self, level: LevelType, count: int) -> None:
         if count < 0:
             msg = f"Metrics count cannot be negative, got {count}"
             raise NegativeMetricsCountError(msg)

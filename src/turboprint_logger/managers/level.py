@@ -3,7 +3,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 from threading import RLock, local
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, LevelType
 
 __all__ = ("LevelManager",)
 
@@ -11,21 +11,21 @@ __all__ = ("LevelManager",)
 class LevelManager:
     __slots__ = ("_level", "_lock", "_thread_local")
 
-    def __init__(self, level: LevelRegistry | None = None) -> None:
+    def __init__(self, level: LevelType | None = None) -> None:
         self._lock = RLock()
         self._level = level or Level.NOTSET
         self._thread_local = local()
 
-    def get(self) -> LevelRegistry:
+    def get(self) -> LevelType:
         with self._lock:
             return self._level
 
-    def set(self, level: LevelRegistry) -> None:
+    def set(self, level: LevelType) -> None:
         with self._lock:
             self._level = level
 
     @contextmanager
-    def temporary(self, level: LevelRegistry):  # noqa: ANN201
+    def temporary(self, level: LevelType):  # noqa: ANN201
         if not hasattr(self._thread_local, "stack"):
             self._thread_local.stack = []
 
@@ -39,7 +39,7 @@ class LevelManager:
             finally:
                 self._level = self._thread_local.stack.pop()
 
-    def passed_min_level(self, level: LevelRegistry) -> bool:
+    def passed_min_level(self, level: LevelType) -> bool:
         with self._lock:
             return self._level.passed_min_level(level)
 

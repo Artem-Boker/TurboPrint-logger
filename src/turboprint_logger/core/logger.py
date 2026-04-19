@@ -7,7 +7,7 @@ from typing import Any
 
 from turboprint_logger.core.config import Config
 from turboprint_logger.core.container import Container, get_default_container
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.core.logger import LoggerInstantiationError
 from turboprint_logger.managers.context import ContextManager
@@ -177,7 +177,7 @@ class Logger:
 
     def _create_record(
         self,
-        level: LevelRegistry | str,
+        level: LevelType | str,
         message: str | Callable[[], str],
         tags: set[str],
         context: dict[str, Any],
@@ -339,7 +339,7 @@ class Logger:
 
     def __call__(
         self,
-        level: LevelRegistry | str,
+        level: LevelType | str,
         message: str | Callable[[], str],
         *,
         tags: list[str] | None = None,

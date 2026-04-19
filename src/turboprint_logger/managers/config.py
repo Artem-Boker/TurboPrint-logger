@@ -8,7 +8,7 @@ from threading import Event, RLock, Thread
 from time import sleep
 from typing import TYPE_CHECKING, Any, Protocol, TypeAlias, cast
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.plugins import (
     get_filter,
     get_formatter,
@@ -369,8 +369,8 @@ class ConfigManager:
         return payload
 
     @staticmethod
-    def _as_level(value: object) -> LevelRegistry:
-        if isinstance(value, LevelRegistry):
+    def _as_level(value: object) -> LevelType:
+        if isinstance(value, LevelType):
             return value
         if isinstance(value, str):
             level = Level.get_by_name(value)

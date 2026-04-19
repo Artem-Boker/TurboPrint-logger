@@ -7,7 +7,7 @@ from string import Template
 from time import sleep
 from typing import Any, TypeVar, cast
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.logger import Logger
 from turboprint_logger.exceptions.decorators.retry import (
     RetryLimitExceededError,
@@ -27,11 +27,11 @@ class RetryDecorator:
         backoff: float = 2.0,
         exceptions: tuple[type[Exception], ...] = (Exception,),
         logger: str | Logger | None = None,
-        success_level: LevelRegistry = Level.SUCCESS,
+        success_level: LevelType = Level.SUCCESS,
         success_message: str = "${function} succeeded after ${attempt} attempt",
-        warning_level: LevelRegistry = Level.WARNING,
+        warning_level: LevelType = Level.WARNING,
         warning_message: str = "Attempt ${attempt} for ${function} failed: ${exception}",  # noqa: E501
-        error_level: LevelRegistry = Level.ERROR,
+        error_level: LevelType = Level.ERROR,
         error_message: str = "Function ${function} failed after ${attempt} attempt",
     ) -> None:
         self.logger = (

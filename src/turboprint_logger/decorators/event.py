@@ -7,7 +7,7 @@ from itertools import chain
 from time import perf_counter
 from typing import Any, TypeVar, cast
 
-from turboprint_logger.core.levels import Level, LevelRegistry
+from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.logger import Logger
 from turboprint_logger.utils.reserved import filter_reserved
 
@@ -20,8 +20,8 @@ class EventDecorator:
     def __init__(  # noqa: PLR0913
         self,
         logger: str | Logger | None = None,
-        level: LevelRegistry = Level.EVENT,
-        error_level: LevelRegistry = Level.ERROR,
+        level: LevelType = Level.EVENT,
+        error_level: LevelType = Level.ERROR,
         arg_parser: Callable[[Any], str] = repr,
         *,
         entry_message: str = "Calling ${function}(${args})",

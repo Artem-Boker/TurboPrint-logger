@@ -10,7 +10,7 @@ from threading import get_ident
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, TypeAlias
 
-from turboprint_logger.core.levels import LevelRegistry
+from turboprint_logger.core.levels import LevelType
 
 if TYPE_CHECKING:
     from turboprint_logger.core.logger import Logger
@@ -26,7 +26,7 @@ ExcInfo: TypeAlias = (
 @dataclass(slots=True)
 class Record:
     message: str | Callable[[], str]
-    level: LevelRegistry
+    level: LevelType
     logger: Logger
     trace_id: int
     logger_id: int
