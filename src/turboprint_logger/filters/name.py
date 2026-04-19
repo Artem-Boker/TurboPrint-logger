@@ -19,7 +19,7 @@ class NameFilter(Filter):
             msg = f"Invalid mode: {mode.lower()}"
             raise InvalidFilterModeError(msg)
 
-        self.pattern = pattern
+        self.pattern = pattern.lower()
         self.mode = mode.lower()
         self.ignorecase = ignorecase
 
@@ -29,9 +29,6 @@ class NameFilter(Filter):
     def filter(self, record: Record) -> bool:
         name = record.logger.name
         pattern = self.pattern
-        if self.ignorecase:
-            name = name.lower()
-            pattern = pattern.lower()
 
         match self.mode:
             case "exact":

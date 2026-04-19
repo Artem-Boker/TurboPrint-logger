@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from contextlib import contextmanager
-from threading import RLock
+from threading import RLock, local
 
 from turboprint_logger.interfaces import Filter
 
@@ -10,11 +10,12 @@ __all__ = ("FiltersManager",)
 
 
 class FiltersManager:
-    __slots__ = ("_filters", "_lock")
+    __slots__ = ("_filters", "_lock", "_thread_local")
 
     def __init__(self, *filters: Filter) -> None:
         self._lock = RLock()
-        self._filters: list[Filter] = list(filters)
+        self._filters = list(filters)
+        self._thread_local = local()
 
     def get(self) -> tuple[Filter, ...]:
         with self._lock:
@@ -38,13 +39,18 @@ class FiltersManager:
 
     @contextmanager
     def temporary(self, *filters: Filter, replace: bool = True):  # noqa: ANN201
+        if not hasattr(self._thread_local, "stack"):
+            self._thread_local.stack = []
+
         with self._lock:
-            original = self._filters.copy()
+            snapshot = self._filters.copy()
+            self._thread_local.stack.append(snapshot)
             self._filters = list(filters) if replace else [*self._filters, *filters]
+
             try:
                 yield
             finally:
-                self._filters = original
+                self._filters = self._thread_local.stack.pop()
 
     def __len__(self) -> int:
         with self._lock:
@@ -52,7 +58,7 @@ class FiltersManager:
 
     def __iter__(self) -> Iterator[Filter]:
         with self._lock:
-            return iter(self._filters.copy())
+            return iter(self._filters)
 
     def __getitem__(self, index: int) -> Filter:
         with self._lock:

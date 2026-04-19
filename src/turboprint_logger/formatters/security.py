@@ -46,18 +46,12 @@ class SecurityFormatter(Formatter):
         if isinstance(item, dict):
             masked: dict[str, Any] = {}
             for key, value in item.items():
-                if isinstance(key, str):
-                    if key.strip().lower() in self.sensitive_fields:
-                        masked[key] = "***"
-                    else:
-                        masked[key] = self._mask_process(value)
-                else:
-                    masked[key] = value
+                masked[key.strip()] = self._mask_process(value)
             return masked
-        if isinstance(item, str) and any(
-            pattern.search(item) for pattern in self._compiled_patterns
-        ):
-            return self.mask_char * len(item)
+        if isinstance(item, str):
+            if any(pattern.search(item) for pattern in self._compiled_patterns):
+                return self.mask_char * len(item)
+            return item.strip()
         return item
 
     def format(self, record: Record) -> str:

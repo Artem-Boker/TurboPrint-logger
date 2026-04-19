@@ -21,10 +21,7 @@ class ExceptionFilter(Filter):
             matches = False
         else:
             exc_type = record.exception_info[0]
-            matches = any(
-                exc_type is not None and issubclass(exc_type, et)
-                for et in self.exception_types
-            )
+            matches = any(issubclass(exc_type, et) for et in self.exception_types)
 
         if self.include:
             return matches

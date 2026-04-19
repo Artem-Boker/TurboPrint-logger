@@ -23,12 +23,15 @@ class LocaleManager:
     @classmethod
     @contextmanager
     def temporary(cls, language: _SUPPORTED_LANGUAGES):  # noqa: ANN206
-        original = cls.get()
+        if not hasattr(cls._local, "stack"):
+            cls._local.stack = []
+        snapshot = cls.get()
+        cls._local.stack.append(snapshot)
         cls.set(language)
         try:
             yield
         finally:
-            cls.set(original)
+            cls.set(cls._local.stack.pop())
 
     def __str__(self) -> str:
         return f'{self.__class__.__name__}(locale="{self.get()}")'

@@ -1,58 +1,64 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from threading import RLock
+from threading import RLock, local
 
 __all__ = ("StatusManager",)
 
 
 class StatusComponent:
-    __slots__ = ("_lock", "enabled")
+    __slots__ = ("_enabled", "_lock", "_thread_local")
 
     def __init__(self, *, status: bool = True) -> None:
         self._lock = RLock()
-        self.enabled = status
+        self._enabled = status
+        self._thread_local = local()
 
     def get(self) -> bool:
         with self._lock:
-            return self.enabled
+            return self._enabled
 
     def set(self, status: bool) -> None:  # noqa: FBT001
         with self._lock:
-            self.enabled = status
+            self._enabled = status
 
     def toggle(self) -> bool:
         with self._lock:
-            self.enabled = not self.enabled
-            return self.enabled
+            self._enabled = not self._enabled
+            return self._enabled
 
     def enable(self) -> None:
         with self._lock:
-            self.enabled = True
+            self._enabled = True
 
     def disable(self) -> None:
         with self._lock:
-            self.enabled = False
+            self._enabled = False
 
     @contextmanager
     def temporary(self, *, status: bool = True):  # noqa: ANN202
+        if not hasattr(self._thread_local, "stack"):
+            self._thread_local.stack = []
+
         with self._lock:
-            original = self.enabled
-            self.enabled = status
+            snapshot = self._enabled
+            self._thread_local.stack.append(snapshot)
+            self._enabled = status
+
             try:
                 yield
             finally:
-                self.enabled = original
+                self._enabled = self._thread_local.stack.pop()
 
     def __bool__(self) -> bool:
         with self._lock:
-            return self.enabled
+            return self._enabled
 
     def __str__(self) -> str:
-        return str(self.enabled)
+        return str(self._enabled)
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(status={self.enabled})"
+        return f"{self.__class__.__name__}(status={self._enabled})"
 
 
 class StatusManager:
@@ -74,7 +80,7 @@ class StatusManager:
         self.global_filters = StatusComponent(status=global_filters)
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(logger_enabled={self.logger.enabled})"
+        return f"{self.__class__.__name__}(logger_enabled={self.logger._enabled})"
 
     def __repr__(self) -> str:
         return (

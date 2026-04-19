@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Callable
-from threading import Lock
+from threading import local
 from typing import Any
 
 from turboprint_logger.core.config import Config
@@ -49,10 +49,7 @@ class Logger:
         "status",
         "tags",
     )
-    _trace_counter = 0
-    _trace_counter_lock = Lock()
-    _logger_counter = 0
-    _logger_counter_lock = Lock()
+    _counter = local()
 
     def __init__(self) -> None:
         self._name: str
@@ -129,15 +126,15 @@ class Logger:
 
     @classmethod
     def _next_logger_id(cls) -> int:
-        with cls._logger_counter_lock:
-            cls._logger_counter += 1
-            return cls._logger_counter
+        _logger_counter = getattr(cls._counter, "logger", 0) + 1
+        cls._counter.logger = _logger_counter
+        return _logger_counter
 
     @classmethod
     def _generate_trace_id(cls) -> int:
-        with cls._trace_counter_lock:
-            cls._trace_counter += 1
-            return cls._trace_counter
+        _trace_counter = getattr(cls._counter, "trace", 0) + 1
+        cls._counter.trace = _trace_counter
+        return _trace_counter
 
     @classmethod
     def get_logger(
@@ -264,7 +261,7 @@ class Logger:
         if not self._container.globals.status.logger.enabled:
             return None
 
-        if not record.level.enabled_for(self._container.globals.level.get()):
+        if not record.level.passed_min_level(self._container.globals.level.get()):
             return None
 
         processed = self._apply_processors_start(
@@ -299,7 +296,7 @@ class Logger:
         if not self.status.logger.enabled:
             return None
 
-        if not record.level.enabled_for(self.level.get()):
+        if not record.level.passed_min_level(self.level.get()):
             return None
 
         processed = self._apply_processors_start(self.processors, record)
@@ -336,6 +333,7 @@ class Logger:
             current_record = current._process_local(record)
             if current_record is None:
                 break
+            record = current_record
             current = current.parent
         return record
 

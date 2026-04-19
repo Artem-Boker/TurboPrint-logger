@@ -2,17 +2,18 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from contextlib import contextmanager
-from threading import RLock
+from threading import RLock, local
 
 __all__ = ("TagsManager",)
 
 
 class TagsManager:
-    __slots__ = ("_lock", "_tags")
+    __slots__ = ("_lock", "_tags", "_thread_local")
 
     def __init__(self, *tags: str) -> None:
         self._lock = RLock()
-        self._tags: set[str] = set(tags)
+        self._tags = set(tags)
+        self._thread_local = local()
 
     def get(self) -> set[str]:
         with self._lock:
@@ -32,13 +33,18 @@ class TagsManager:
 
     @contextmanager
     def temporary(self, *tags: str, replace: bool = True):  # noqa: ANN201
+        if not hasattr(self._thread_local, "stack"):
+            self._thread_local.stack = []
+
         with self._lock:
-            original = self._tags.copy()
+            snapshot = self._tags.copy()
+            self._thread_local.stack.append(snapshot)
             self._tags = set(tags) if replace else {*self._tags, *tags}
+
             try:
                 yield
             finally:
-                self._tags = original
+                self._tags = self._thread_local.stack.pop()
 
     def __len__(self) -> int:
         with self._lock:

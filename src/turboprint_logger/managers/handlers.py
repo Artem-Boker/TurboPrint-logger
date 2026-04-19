@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from contextlib import contextmanager
-from threading import RLock
+from threading import RLock, local
 
 from turboprint_logger.interfaces import Handler
 
@@ -10,11 +10,12 @@ __all__ = ("HandlersManager",)
 
 
 class HandlersManager:
-    __slots__ = ("_handlers", "_lock")
+    __slots__ = ("_handlers", "_lock", "_thread_local")
 
     def __init__(self, *handlers: Handler) -> None:
         self._lock = RLock()
-        self._handlers: list[Handler] = list(handlers) or []
+        self._handlers = list(handlers)
+        self._thread_local = local()
 
     def get(self) -> tuple[Handler, ...]:
         with self._lock:
@@ -38,13 +39,18 @@ class HandlersManager:
 
     @contextmanager
     def temporary(self, *handlers: Handler, replace: bool = True):  # noqa: ANN201
+        if not hasattr(self._thread_local, "stack"):
+            self._thread_local.stack = []
+
         with self._lock:
-            original = self._handlers.copy()
+            snapshot = self._handlers.copy()
+            self._thread_local.stack.append(snapshot)
             self._handlers = list(handlers) if replace else [*self._handlers, *handlers]
+
             try:
                 yield
             finally:
-                self._handlers = original
+                self._handlers = self._thread_local.stack.pop()
 
     def __len__(self) -> int:
         with self._lock:
@@ -52,7 +58,7 @@ class HandlersManager:
 
     def __iter__(self) -> Iterator[Handler]:
         with self._lock:
-            return iter(self._handlers.copy())
+            return iter(self._handlers)
 
     def __getitem__(self, index: int) -> Handler:
         with self._lock:

@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 __all__ = ("Record",)
 
+_HOSTNAME = gethostname()
 ExcInfo: TypeAlias = (
     tuple[type[BaseException], BaseException, TracebackType] | tuple[None, None, None]
 )
@@ -35,7 +36,7 @@ class Record:
     date_time: datetime = field(default_factory=lambda: datetime.now(UTC))
     context: dict[str, Any] = field(default_factory=dict)
     tags: set[str] = field(default_factory=set)
-    process_name: str = field(default_factory=gethostname)
+    process_name: str = field(default_factory=lambda: _HOSTNAME)
     process_id: int = field(default_factory=getpid)
     thread_id: int = field(default_factory=get_ident)
     exception_info: ExcInfo = field(default_factory=exc_info)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from contextlib import contextmanager
-from threading import Lock
+from threading import RLock, local
 
 from turboprint_logger.interfaces import Processor
 
@@ -10,11 +10,12 @@ __all__ = ("ProcessorsManager",)
 
 
 class ProcessorsManager:
-    __slots__ = ("_lock", "_processors")
+    __slots__ = ("_lock", "_processors", "_thread_local")
 
     def __init__(self, *processors: Processor) -> None:
-        self._lock = Lock()
-        self._processors: list[Processor] = list(processors) or []
+        self._lock = RLock()
+        self._processors: list[Processor] = list(processors)
+        self._thread_local = local()
 
     def get(self) -> tuple[Processor, ...]:
         with self._lock:
@@ -38,15 +39,20 @@ class ProcessorsManager:
 
     @contextmanager
     def temporary(self, *processors: Processor, replace: bool = True):  # noqa: ANN201
+        if not hasattr(self._thread_local, "stack"):
+            self._thread_local.stack = []
+
         with self._lock:
-            original = self._processors.copy()
+            snapshot = self._processors.copy()
+            self._thread_local.stack.append(snapshot)
             self._processors = (
                 list(processors) if replace else [*self._processors, *processors]
             )
+
             try:
                 yield
             finally:
-                self._processors = original
+                self._processors = self._thread_local.stack.pop()
 
     def __len__(self) -> int:
         with self._lock:
@@ -54,7 +60,7 @@ class ProcessorsManager:
 
     def __iter__(self) -> Iterator[Processor]:
         with self._lock:
-            return iter(self._processors.copy())
+            return iter(self._processors)
 
     def __getitem__(self, index: int) -> Processor:
         with self._lock:

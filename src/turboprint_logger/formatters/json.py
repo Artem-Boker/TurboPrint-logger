@@ -6,7 +6,6 @@ from typing import Any
 from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Formatter
 
-JSON_MODULE = "json"
 try:
     import orjson
 
@@ -21,6 +20,7 @@ except ImportError:
             from ujson import dumps
         except ImportError:
             from json import dumps
+        JSON_MODULE = "json"
 
 __all__ = ("JSONFormatter",)
 
