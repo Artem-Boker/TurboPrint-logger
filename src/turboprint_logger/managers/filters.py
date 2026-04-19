@@ -58,7 +58,7 @@ class FiltersManager:
 
     def __iter__(self) -> Iterator[Filter]:
         with self._lock:
-            return iter(self._filters)
+            return iter(self._filters.copy())
 
     def __getitem__(self, index: int) -> Filter:
         with self._lock:

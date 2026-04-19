@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 from .lazy_message import LazyMessageProcessor
-from .queue import QueueProcessor
+from .security import SecurityProcessor
 
-__all__ = (
-    "LazyMessageProcessor",
-    "QueueProcessor",
-)
+__all__ = ("LazyMessageProcessor", "SecurityProcessor")

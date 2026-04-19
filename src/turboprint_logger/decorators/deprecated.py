@@ -19,7 +19,7 @@ class DeprecatedDecorator:
         self,
         message: str = "The ${function} function has been deprecated and will be removed in a future release.",  # noqa: E501
         logger: str | Logger | None = None,
-        level: LevelType = Level.EVENT,
+        level: LevelType = Level.WARNING,
     ) -> None:
         self.logger = (
             logger

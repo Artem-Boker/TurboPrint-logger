@@ -30,7 +30,7 @@ class RetryDecorator:
         success_level: LevelType = Level.SUCCESS,
         success_message: str = "${function} succeeded after ${attempt} attempt",
         warning_level: LevelType = Level.WARNING,
-        warning_message: str = "Attempt ${attempt} for ${function} failed: ${exception}",  # noqa: E501
+        warning_message: str = "Attempt ${attempt} for ${function} failed[${exception_type}]: ${exception}",  # noqa: E501
         error_level: LevelType = Level.ERROR,
         error_message: str = "Function ${function} failed after ${attempt} attempt",
     ) -> None:
@@ -54,7 +54,10 @@ class RetryDecorator:
         self.logger(
             self.warning_level,
             self.warning_message.safe_substitute(
-                function=func_name, attempt=attempt, exception=exc
+                function=func_name,
+                attempt=attempt,
+                exception_type=exc.__class__.__name__,
+                exception=exc,
             ),
         )
 
@@ -75,7 +78,7 @@ class RetryDecorator:
 
     def _raise_final(self, func_name: str, last_exc: Exception | None) -> None:
         if last_exc:
-            msg = f"{func_name}, last exception: {last_exc}"
+            msg = f"{func_name}, last exception {last_exc.__class__.__name__}: {last_exc}"  # noqa: E501
             raise RetryLimitExceededError(msg) from last_exc
         msg = "Unknown error in retry"
         raise UnknownRetryError(msg)

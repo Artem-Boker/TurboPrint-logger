@@ -45,8 +45,8 @@ class EventDecorator:
     def _build_entry_extra(
         self,
         func: _F,  # pyright: ignore[reportInvalidTypeVarUse]
-        *args,
-        **kwargs,
+        args: tuple[Any],
+        kwargs: dict[str, Any],
     ) -> dict[str, Any]:
         arg_parts = chain(
             (self.arg_parser(arg) for arg in args),

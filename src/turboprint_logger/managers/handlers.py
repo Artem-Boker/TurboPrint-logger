@@ -58,7 +58,7 @@ class HandlersManager:
 
     def __iter__(self) -> Iterator[Handler]:
         with self._lock:
-            return iter(self._handlers)
+            return iter(self._handlers.copy())
 
     def __getitem__(self, index: int) -> Handler:
         with self._lock:

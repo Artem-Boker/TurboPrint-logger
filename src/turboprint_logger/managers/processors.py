@@ -60,7 +60,7 @@ class ProcessorsManager:
 
     def __iter__(self) -> Iterator[Processor]:
         with self._lock:
-            return iter(self._processors)
+            return iter(self._processors.copy())
 
     def __getitem__(self, index: int) -> Processor:
         with self._lock:

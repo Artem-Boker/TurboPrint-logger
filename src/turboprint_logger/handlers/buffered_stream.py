@@ -58,6 +58,8 @@ class BufferedStreamHandler(Handler):
         with self._lock:
             if self._closed:
                 return
+            if self._timer is not None:
+                self._timer.cancel()
             timer = Timer(interval=self.flush_interval, function=self._on_timer_flush)
             timer.daemon = True
             self._timer = timer

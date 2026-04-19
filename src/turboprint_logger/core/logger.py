@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Callable
-from threading import local
+from itertools import count
 from typing import Any
 
 from turboprint_logger.core.config import Config
@@ -49,7 +49,8 @@ class Logger:
         "status",
         "tags",
     )
-    _counter = local()
+    _logger_counter = count()
+    _trace_counter = count()
 
     def __init__(self) -> None:
         self._name: str
@@ -126,15 +127,11 @@ class Logger:
 
     @classmethod
     def _next_logger_id(cls) -> int:
-        _logger_counter = getattr(cls._counter, "logger", 0) + 1
-        cls._counter.logger = _logger_counter
-        return _logger_counter
+        return next(cls._logger_counter)
 
     @classmethod
     def _generate_trace_id(cls) -> int:
-        _trace_counter = getattr(cls._counter, "trace", 0) + 1
-        cls._counter.trace = _trace_counter
-        return _trace_counter
+        return next(cls._trace_counter)
 
     @classmethod
     def get_logger(

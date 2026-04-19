@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import fields
 from datetime import date, datetime, time
 from typing import Any
 
@@ -33,12 +34,10 @@ class JSONFormatter(Formatter):
         exclude: list[str] | None = None,
         rename: dict[str, str] | None = None,
         sort_keys: bool = False,
-        **extra,
     ) -> None:
         self.include = set(include) if include else None
         self.exclude = set(exclude) if exclude else None
         self.rename = rename or {}
-        self.extra = extra or {}
         self.sort_keys = sort_keys
 
         if JSON_MODULE == "msgspec":
@@ -55,6 +54,8 @@ class JSONFormatter(Formatter):
             return obj
         if isinstance(obj, (datetime, date, time)):
             return obj.isoformat()
+        if isinstance(obj, (list, tuple, set)):
+            return list(obj)
         return str(obj)
 
     def format(self, record: Record) -> str:
@@ -64,21 +65,11 @@ class JSONFormatter(Formatter):
             else record.message
         )
 
-        data: dict[str, Any] = {
-            "message": message,
-            "level": {
-                "name": record.level.name,
-                "value": record.level.value,
-            },
-            "logger": record.logger.name,
-            "timestamp": record.date_time.isoformat(),
-            "caller": {
-                "file": record.file,
-                "function": record.function,
-                "line": record.line,
-            },
-            "context": {**record.context, **self.extra},
-        }
+        data = {}
+        for f in fields(record):
+            value = getattr(record, f.name)
+            data[f.name] = value
+        data["message"] = message
 
         for old, new in self.rename.items():
             if old in data:

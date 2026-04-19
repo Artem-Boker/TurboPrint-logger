@@ -63,6 +63,8 @@ class FileHandler(Handler):
         with self._lock:
             if self._closed:
                 return
+            if self._timer is not None:
+                self._timer.cancel()
             timer = Timer(interval=self.flush_interval, function=self._flush)
             timer.daemon = True
             self._timer = timer
@@ -115,7 +117,7 @@ class FileHandler(Handler):
 
     def _write(self, record: Record) -> None:
         with self._lock:
-            if not self._file:
+            if self._file is None or self._file.closed:
                 self._open_file()
             formatter = self.formatter or record.logger.formatter.get()
             if self._file and not self._file.closed:

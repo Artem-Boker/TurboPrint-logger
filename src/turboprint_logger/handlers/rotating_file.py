@@ -60,15 +60,15 @@ class RotatingFileHandler(FileHandler):
         path = Path(self.file_path)
         size = 0
         line_count = 0
-        if path.exists():
-            size = path.stat().st_size
-            if self.max_lines is not None:
-                try:
-                    with path.open("r", encoding=self.encoding) as file:
-                        line_count = sum(1 for _ in file)
-                except OSError:
-                    line_count = 0
         with self._lock:
+            if path.exists():
+                size = path.stat().st_size
+                if self.max_lines is not None:
+                    try:
+                        with path.open("r", encoding=self.encoding) as file:
+                            line_count = sum(1 for _ in file)
+                    except OSError:
+                        line_count = 0
             self._current_size = size
             self._line_count = line_count
 

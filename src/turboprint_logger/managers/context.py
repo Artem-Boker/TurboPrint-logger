@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from contextlib import contextmanager
 from threading import RLock, local
 from typing import Any
@@ -63,6 +64,9 @@ class ContextManager:
     def items(self) -> list[tuple[str, Any]]:
         with self._lock:
             return list(self._context.items())
+
+    def __iter__(self) -> Iterator[tuple[str, Any]]:
+        return iter(self._context.items())
 
     def __getitem__(self, key: str) -> Any:  # noqa: ANN401
         key = normalize_context_key(key)

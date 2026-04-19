@@ -20,7 +20,7 @@ class TimedDecorator:
         self,
         logger: str | Logger | None = None,
         level: LevelType = Level.EVENT,
-        message: str = "${function} completed in ${duration}",
+        message: str = "${function} executed in ${duration}s",
         duration_round: int = 3,
     ) -> None:
         self.logger = (
