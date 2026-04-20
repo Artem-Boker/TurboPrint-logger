@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-from turboprint_logger.exceptions.utils.base import UtilException
+from turboprint_logger.exceptions.base import TurboPrintException
 
-__all__ = (
-    "InvalidContainerNameError",
-    "InvalidContextKeyError",
-    "InvalidLevelNameError",
-    "InvalidLoggerNameError",
-    "NormalizerException",
-)
+__all__ = ("UtilException",)
+
+
+class UtilException(TurboPrintException):
+    """Base exception for all utils exceptions"""
 
 
 class NormalizerException(UtilException):

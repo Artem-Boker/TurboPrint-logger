@@ -7,7 +7,7 @@ from typing import TextIO
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
-from turboprint_logger.exceptions.handlers.stream import InvalidStreamError
+from turboprint_logger.exceptions.handlers import InvalidStreamError
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
 __all__ = ("StreamHandler",)

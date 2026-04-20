@@ -4,6 +4,7 @@ from threading import Lock
 from time import time
 
 from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.filters import InvalidRateLimitError
 from turboprint_logger.interfaces import Filter
 
 __all__ = ("RateLimitFilter",)
@@ -14,18 +15,22 @@ class RateLimitFilter(Filter):
         self,
         rate: float,
         per: float = 1.0,
-        burst: int | None = None,
+        burst: float | None = None,
         key: str | None = None,
     ) -> None:
-        self.rate = max(0.0, rate)
-        self.per = max(0.0, per)
-        self.capacity = float(burst if burst is not None else max(1, int(rate)))
+        if rate <= 0:
+            msg = "rate must be greater than 0"
+            raise InvalidRateLimitError(msg)
+        if per <= 0:
+            msg = "per must be greater than 0"
+            raise InvalidRateLimitError(msg)
+        self.rate = rate
+        self.per = per
+        self.capacity = burst if burst is not None else rate
         self.key = key
         self._buckets: dict[str, tuple[float, float]] = {}
         self._lock = Lock()
-        self._evict_after = (
-            (self.capacity / self.rate * self.per * 2) if self.rate > 0 else 3600.0
-        )
+        self._evict_after = self.capacity / self.rate * self.per * 2
 
     def filter(self, record: Record) -> bool:
         key = self._get_key(record)

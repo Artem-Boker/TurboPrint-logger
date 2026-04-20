@@ -59,10 +59,10 @@ class StatusComponent:
             return self._enabled
 
     def __str__(self) -> str:
-        return str(self._enabled)
+        return str(self.enabled)
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(status={self._enabled})"
+        return f"{self.__class__.__name__}(status={self.enabled})"
 
 
 class StatusManager:

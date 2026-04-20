@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import re
 
-from turboprint_logger.exceptions.utils.normalizers import (
+from turboprint_logger.exceptions.utils import (
     InvalidContainerNameError,
     InvalidContextKeyError,
     InvalidLevelNameError,
     InvalidLoggerNameError,
+    NormalizerException,
 )
 
 __all__ = (
@@ -25,46 +26,55 @@ _BAD_BOUNDARIES = re.compile(r"^[_.-]|[_.-]$", re.IGNORECASE)
 _BAD_DOUBLE = re.compile(r"[_.-]{2,}", re.IGNORECASE)
 
 
-def _normalize(name: str, pattern: re.Pattern, *, upper: bool = True) -> str | None:
+def _normalize(
+    error_message: str,
+    exception_type: type[NormalizerException],
+    name: str,
+    pattern: re.Pattern,
+    *,
+    upper: bool = True,
+) -> str:
     name = name.strip().upper() if upper else name.strip().lower()
+    returned = True
     if not name:
-        return None
+        returned = False
     if not pattern.fullmatch(name):
-        return None
+        returned = False
     if _BAD_BOUNDARIES.search(name):
-        return None
+        returned = False
     if _BAD_DOUBLE.search(name):
-        return None
-    return name
+        returned = False
+
+    if returned:
+        return name
+
+    msg = f"Invalid {error_message}: {name}"
+    raise exception_type(msg)
 
 
 def normalize_container_name(name: str) -> str:
-    normal_name = _normalize(name, _PATTERN_CONTAINER, upper=False)
-    if not normal_name:
-        msg = f"Invalid container name: {name}"
-        raise InvalidContainerNameError(msg)
-    return normal_name
+    return _normalize(
+        "container name",
+        InvalidContainerNameError,
+        name,
+        _PATTERN_CONTAINER,
+        upper=False,
+    )
 
 
 def normalize_logger_name(name: str) -> str:
-    normal_name = _normalize(name, _PATTERN_LOGGER, upper=False)
-    if not normal_name:
-        msg = f"Invalid logger name: {name}"
-        raise InvalidLoggerNameError(msg)
-    return normal_name
+    return _normalize(
+        "logger name", InvalidLoggerNameError, name, _PATTERN_LOGGER, upper=False
+    )
 
 
 def normalize_level_name(name: str) -> str:
-    normal_name = _normalize(name, _PATTERN_LEVEL, upper=True)
-    if not normal_name:
-        msg = f"Invalid level name: {name}"
-        raise InvalidLevelNameError(msg)
-    return normal_name
+    return _normalize(
+        "level name", InvalidLevelNameError, name, _PATTERN_LEVEL, upper=True
+    )
 
 
 def normalize_context_key(key: str) -> str:
-    normal_name = _normalize(key, _PATTERN_CONTEXT, upper=False)
-    if not normal_name:
-        msg = f"Invalid context key: {key}"
-        raise InvalidContextKeyError(msg)
-    return normal_name
+    return _normalize(
+        "context key", InvalidContextKeyError, key, _PATTERN_CONTEXT, upper=False
+    )

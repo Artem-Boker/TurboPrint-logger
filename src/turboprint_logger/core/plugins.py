@@ -4,7 +4,7 @@ from collections.abc import Callable
 from threading import RLock
 from typing import TypeVar
 
-from turboprint_logger.exceptions.core.plugins import (
+from turboprint_logger.exceptions.core import (
     PluginAlreadyRegisteredError,
     PluginNotFoundError,
     PluginTypeError,

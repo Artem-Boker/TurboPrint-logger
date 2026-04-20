@@ -9,6 +9,9 @@ from typing import Literal
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
+from turboprint_logger.exceptions.handlers import (
+    InvalidWhenValueRotatingFileHandlerError,
+)
 from turboprint_logger.handlers.file import FileHandler
 from turboprint_logger.interfaces import Filter, Formatter
 
@@ -18,7 +21,7 @@ __all__ = ("TimedRotatingFileHandler",)
 class TimedRotatingFileHandler(FileHandler):
     def __init__(  # noqa: PLR0913
         self,
-        file_path: str,
+        file_path: str | Path,
         min_level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
@@ -58,7 +61,10 @@ class TimedRotatingFileHandler(FileHandler):
             "W": 60 * 60 * 24 * 7,
             "M": 60 * 60 * 24 * 30,
         }
-        return multipliers.get(self.when, multipliers["h"]) * self.interval
+        if self.when not in multipliers:
+            msg = f"Invalid when value: {self.when}"
+            raise InvalidWhenValueRotatingFileHandlerError(msg)
+        return multipliers[self.when] * self.interval
 
     def _compute_rollover(self) -> float:
         return time() + self._rotation_seconds

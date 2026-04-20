@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, ClassVar
 
 from turboprint_logger.core.config import Config
 from turboprint_logger.core.levels import LevelType
-from turboprint_logger.exceptions.core.container import ContainerInstantiationError
+from turboprint_logger.exceptions.core import ContainerInstantiationError
 from turboprint_logger.managers.collections import DefaultManager, GlobalManager
 from turboprint_logger.utils.normalizers import (
     normalize_container_name,

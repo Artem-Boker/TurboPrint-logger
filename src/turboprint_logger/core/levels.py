@@ -1,19 +1,19 @@
 from __future__ import annotations
 
 from threading import Lock
-from typing import Any, ClassVar
+from typing import Any
 
 from colorama import Fore, Style
 from emoji import emojize, purely_emoji
 
-from turboprint_logger.exceptions.core.levels import (
+from turboprint_logger.exceptions.core import (
     InvalidLevelColorError,
     InvalidLevelEmojiError,
     LevelNameAlreadyExistsError,
     LevelValueAlreadyExistsError,
     NegativeLevelError,
 )
-from turboprint_logger.exceptions.utils.normalizers import InvalidLevelNameError
+from turboprint_logger.exceptions.utils import InvalidLevelNameError
 from turboprint_logger.utils.normalizers import normalize_level_name
 
 __all__ = ("Level", "LevelType")
@@ -100,15 +100,17 @@ class LevelType:
 
 
 class LevelMeta(type):
+    _custom_levels: list[LevelType]
+    _custom_levels_lock: Lock
     _standard_levels: tuple[LevelType, ...]
-    _custom_levels: ClassVar[list[LevelType]] = []
-    _custom_levels_lock: ClassVar[Lock] = Lock()
 
     def __init__(
         cls, name: str, bases: tuple[type, ...], attrs: dict[str, Any], /, **kwds
     ) -> None:
         super().__init__(name, bases, attrs, **kwds)
 
+        cls._custom_levels: list[LevelType] = []
+        cls._custom_levels_lock = Lock()
         cls._standard_levels = tuple(
             level for level in vars(cls).values() if isinstance(level, LevelType)
         )

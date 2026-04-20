@@ -6,7 +6,7 @@ from typing import TextIO
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
-from turboprint_logger.exceptions.handlers.stream import (
+from turboprint_logger.exceptions.handlers import (
     InvalidBufferSizeError,
     InvalidStreamError,
     InvalidStreamFlushIntervalError,

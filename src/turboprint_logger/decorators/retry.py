@@ -9,7 +9,7 @@ from typing import Any, TypeVar, cast
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.logger import Logger
-from turboprint_logger.exceptions.decorators.retry import (
+from turboprint_logger.exceptions.decorators import (
     RetryLimitExceededError,
     UnknownRetryError,
 )
@@ -78,7 +78,9 @@ class RetryDecorator:
 
     def _raise_final(self, func_name: str, last_exc: Exception | None) -> None:
         if last_exc:
-            msg = f"{func_name}, last exception {last_exc.__class__.__name__}: {last_exc}"  # noqa: E501
+            msg = (
+                f"{func_name}, last exception {last_exc.__class__.__name__}: {last_exc}"
+            )
             raise RetryLimitExceededError(msg) from last_exc
         msg = "Unknown error in retry"
         raise UnknownRetryError(msg)

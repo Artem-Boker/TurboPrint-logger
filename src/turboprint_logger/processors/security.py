@@ -34,7 +34,7 @@ class SecurityProcessor(Processor):
         self.mask_char = mask_char
 
     def _mask_process(self, item: Any) -> Any:  # noqa: ANN401
-        if isinstance(item, (list, tuple, set)):
+        if isinstance(item, (list, tuple, set, frozenset)):
             return type(item)([self._mask_process(i) for i in item])
         if isinstance(item, dict):
             masked: dict[str, Any] = {}

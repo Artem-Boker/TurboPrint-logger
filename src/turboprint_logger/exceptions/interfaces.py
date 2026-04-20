@@ -2,10 +2,7 @@ from __future__ import annotations
 
 from turboprint_logger.exceptions.base import TurboPrintException
 
-__all__ = (
-    "InterfaceException",
-    "InterfaceMethodNotImplementedError",
-)
+__all__ = ("InterfaceException",)
 
 
 class InterfaceException(TurboPrintException):

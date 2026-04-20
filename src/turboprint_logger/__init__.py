@@ -13,7 +13,7 @@ from .core import (
     get_default_container,
 )
 from .core import plugins as __plugins
-from .exceptions.core.plugins import PluginAlreadyRegisteredError as __PARE
+from .exceptions.core import PluginAlreadyRegisteredError as __PARE
 from .integrations.logging import LoggingAdapter, install_adapter
 from .managers import ConfigManager, LocaleManager
 

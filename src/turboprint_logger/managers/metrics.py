@@ -4,7 +4,7 @@ from collections import Counter
 from threading import Lock
 
 from turboprint_logger.core.levels import Level, LevelType
-from turboprint_logger.exceptions.managers.metrics import NegativeMetricsCountError
+from turboprint_logger.exceptions.managers import NegativeMetricsCountError
 
 __all__ = ("MetricsManager",)
 

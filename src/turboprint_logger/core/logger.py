@@ -2,23 +2,26 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Callable
+from contextlib import suppress
 from itertools import count
+from types import GenericAlias
 from typing import Any
 
 from turboprint_logger.core.config import Config
 from turboprint_logger.core.container import Container, get_default_container
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
-from turboprint_logger.exceptions.core.logger import LoggerInstantiationError
-from turboprint_logger.managers.context import ContextManager
-from turboprint_logger.managers.filters import FiltersManager
-from turboprint_logger.managers.formatter import FormatterManager
-from turboprint_logger.managers.handlers import HandlersManager
-from turboprint_logger.managers.level import LevelManager
+from turboprint_logger.exceptions.core import LoggerInstantiationError
+from turboprint_logger.managers.items import (
+    ContextManager,
+    FiltersManager,
+    HandlersManager,
+    ProcessorsManager,
+    TagsManager,
+)
 from turboprint_logger.managers.metrics import MetricsManager
-from turboprint_logger.managers.processors import ProcessorsManager
+from turboprint_logger.managers.only import FormatterManager, LevelManager
 from turboprint_logger.managers.status import StatusManager
-from turboprint_logger.managers.tags import TagsManager
 from turboprint_logger.utils.normalizers import (
     normalize_context_key,
     normalize_level_name,
@@ -26,7 +29,6 @@ from turboprint_logger.utils.normalizers import (
 )
 
 __all__ = ("Logger",)
-
 
 _ROOT_LOGGER_NAME = "root".strip().lower()
 _DEFAULT_CONTAINER = get_default_container()
@@ -167,9 +169,27 @@ class Logger:
         merged_context = {}
         merged_context.update(self._container.globals.context.get())
         merged_context.update(self.context.get())
-        merged_context.update(
-            {normalize_context_key(key): value for key, value in extra.items()}
-        )
+        processed_extra = {}
+        for key, value in extra.items():
+            if (
+                hasattr(value, "__log__")
+                and callable(value.__log__)
+                and hasattr(value.__log__, "__annotations__")
+                and isinstance(
+                    value.__log__.__annotations__.get("return"), GenericAlias
+                )
+                and value.__log__.__annotations__["return"].__origin__ is dict
+            ):
+                with suppress(Exception):
+                    extracted = value.__log__()
+                    if isinstance(extracted, dict):
+                        for sub_key, sub_value in extracted.items():
+                            norm_key = normalize_context_key(sub_key)
+                            processed_extra[norm_key] = sub_value
+                    else:
+                        norm_key = normalize_context_key(key)
+                        processed_extra[norm_key] = value
+        merged_context.update(processed_extra)
         return merged_context
 
     def _create_record(

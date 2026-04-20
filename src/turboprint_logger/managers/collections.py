@@ -5,19 +5,20 @@ from typing import Any
 from turboprint_logger.core.levels import LevelType
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 from turboprint_logger.interfaces.processor import Processor
-from turboprint_logger.managers.context import ContextManager
-from turboprint_logger.managers.filters import FiltersManager
-from turboprint_logger.managers.formatter import FormatterManager
-from turboprint_logger.managers.handlers import HandlersManager
-from turboprint_logger.managers.level import LevelManager
-from turboprint_logger.managers.processors import ProcessorsManager
+from turboprint_logger.managers.items import (
+    ContextManager,
+    FiltersManager,
+    HandlersManager,
+    ProcessorsManager,
+    TagsManager,
+)
+from turboprint_logger.managers.only import FormatterManager, LevelManager
 from turboprint_logger.managers.status import StatusManager
-from turboprint_logger.managers.tags import TagsManager
 
 __all__ = ("DefaultManager", "GlobalManager")
 
 
-class ManagerCollection:
+class ManagersCollection:
     __slots__ = (
         "context",
         "filters",
@@ -72,9 +73,9 @@ class ManagerCollection:
         )
 
 
-class GlobalManager(ManagerCollection):
+class GlobalManager(ManagersCollection):
     pass
 
 
-class DefaultManager(ManagerCollection):
+class DefaultManager(ManagersCollection):
     pass

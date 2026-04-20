@@ -5,7 +5,7 @@ from re import compile as re_compile
 from typing import Literal, get_args
 
 from turboprint_logger.core.record import Record
-from turboprint_logger.exceptions.filters.name import InvalidFilterModeError
+from turboprint_logger.exceptions.filters import InvalidFilterModeError
 from turboprint_logger.interfaces import Filter
 
 __all__ = ("NameFilter",)

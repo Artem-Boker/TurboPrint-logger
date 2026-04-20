@@ -15,7 +15,7 @@ from turboprint_logger.core.plugins import (
     get_handler,
     get_processor,
 )
-from turboprint_logger.exceptions.managers.config import (
+from turboprint_logger.exceptions.managers import (
     ConfigParserError,
     ConfigReloadError,
     ConfigSpecError,

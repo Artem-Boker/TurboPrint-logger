@@ -7,7 +7,7 @@ from shutil import copyfileobj
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
-from turboprint_logger.exceptions.handlers.file import (
+from turboprint_logger.exceptions.handlers import (
     FileClosedError,
     FileHandlerConfigError,
     FileWriteError,
@@ -21,7 +21,7 @@ __all__ = ("RotatingFileHandler",)
 class RotatingFileHandler(FileHandler):
     def __init__(  # noqa: PLR0913
         self,
-        file_path: str,
+        file_path: str | Path,
         min_level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,

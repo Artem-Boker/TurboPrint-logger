@@ -54,7 +54,7 @@ class JSONFormatter(Formatter):
             return obj
         if isinstance(obj, (datetime, date, time)):
             return obj.isoformat()
-        if isinstance(obj, (list, tuple, set)):
+        if isinstance(obj, (list, tuple, set, frozenset)):
             return list(obj)
         return str(obj)
 

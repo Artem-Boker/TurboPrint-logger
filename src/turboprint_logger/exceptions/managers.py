@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-from turboprint_logger.exceptions.managers.base import ManagerException
+from turboprint_logger.exceptions.base import TurboPrintException
 
-__all__ = (
-    "ConfigManagerException",
-    "ConfigParserError",
-    "ConfigReloadError",
-    "ConfigSpecError",
-    "ConfigWatchAlreadyRunningError",
-)
+__all__ = ("ManagerException",)
+
+
+class ManagerException(TurboPrintException):
+    """Base exception for all managers exceptions"""
 
 
 class ConfigManagerException(ManagerException):
@@ -29,3 +27,11 @@ class ConfigReloadError(ConfigManagerException):
 
 class ConfigWatchAlreadyRunningError(ConfigReloadError):
     """Raised when auto-reload is enabled twice"""
+
+
+class MetricsException(ManagerException):
+    """Base exception for all metrics managers exceptions"""
+
+
+class NegativeMetricsCountError(MetricsException):
+    """Raised when the metrics count is negative"""
