@@ -26,7 +26,7 @@ class RateLimitFilter(Filter):
             raise InvalidRateLimitError(msg)
         self.rate = rate
         self.per = per
-        self.capacity = burst if burst is not None else rate
+        self.capacity = burst if burst is not None and burst > 0 else rate
         self.key = key
         self._buckets: dict[str, tuple[float, float]] = {}
         self._lock = Lock()
@@ -37,8 +37,10 @@ class RateLimitFilter(Filter):
         now = time()
         with self._lock:
             if key not in self._buckets:
-                self._buckets[key] = (self.capacity - 1.0, now)
-                return True
+                if self.capacity >= 1.0:
+                    self._buckets[key] = (self.capacity - 1.0, now)
+                    return True
+                return False
 
             tokens, last_ts = self._buckets[key]
 
@@ -48,7 +50,6 @@ class RateLimitFilter(Filter):
                 tokens = min(self.capacity, tokens + refill)
 
             if tokens >= self.capacity and (now - last_ts) > self._evict_after:
-                del self._buckets[key]
                 self._buckets[key] = (self.capacity - 1.0, now)
                 return True
 

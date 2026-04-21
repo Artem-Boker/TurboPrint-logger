@@ -44,9 +44,7 @@ class JSONFormatter(Formatter):
             order = "sorted" if sort_keys else "deterministic"
             self._encoder = Encoder(enc_hook=self._default_serializer, order=order)
         elif JSON_MODULE == "orjson":
-            self._orjson_option = orjson.OPT_SERIALIZE_NUMPY
-            if sort_keys:
-                self._orjson_option |= orjson.OPT_SORT_KEYS
+            self._orjson_option = orjson.OPT_SORT_KEYS if sort_keys else 0
 
     @staticmethod
     def _default_serializer(obj: Any) -> Any:  # noqa: ANN401

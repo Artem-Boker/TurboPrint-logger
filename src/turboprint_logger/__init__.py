@@ -49,6 +49,8 @@ def __register_from_package(package, registry_func) -> None:  # noqa: ANN001
         return
     for name in package.__all__:
         cls = getattr(package, name)
+        if not isinstance(cls, type):
+            continue
         with __suppress(__PARE):
             registry_func(name)(cls)
 

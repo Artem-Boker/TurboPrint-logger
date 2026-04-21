@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from contextlib import suppress
+from sys import stderr
 from sys import stdout as default_output
 from threading import RLock
 from typing import TextIO
@@ -17,11 +17,11 @@ class StreamHandler(Handler):
     def __init__(
         self,
         stream: TextIO = default_output,
-        min_level: LevelType = Level.NOTSET,
+        level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
     ) -> None:
-        super().__init__(min_level, formatter, filters)
+        super().__init__(level, formatter, filters)
         if not callable(getattr(stream, "write", None)):
             msg = "stream must provide a callable 'write' method"
             raise InvalidStreamError(msg)
@@ -31,8 +31,12 @@ class StreamHandler(Handler):
     def emit(self, record: Record) -> None:
         with self._lock:
             formatter = self.formatter or record.logger.formatter.get()
-            with suppress(OSError):
+            try:
                 self.stream.write(formatter.format(record) + "\n")
+            except Exception as exc:  # noqa: BLE001
+                stderr.write(
+                    f"{exc.__class__.__name__}[{self.__class__.__name__}]: Failed to write to stream: {exc}\n"  # noqa: E501
+                )
 
     def close(self) -> None:
         with self._lock:

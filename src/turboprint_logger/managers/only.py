@@ -55,9 +55,9 @@ class BaseManager(Generic[T]):
 class LevelManager(BaseManager[LevelType]):
     default = Level.NOTSET
 
-    def passed_min_level(self, item: LevelType) -> bool:
+    def passed_level(self, item: LevelType) -> bool:
         with self._lock:
-            return self._item.passed_min_level(  # pyright: ignore[reportAttributeAccessIssue]
+            return self._item.passed_level(  # pyright: ignore[reportAttributeAccessIssue]
                 item
             )
 

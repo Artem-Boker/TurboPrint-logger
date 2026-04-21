@@ -10,18 +10,18 @@ __all__ = ("LevelFilter",)
 class LevelFilter(Filter):
     def __init__(
         self,
-        min_level: LevelType | None = None,
+        level: LevelType | None = None,
         max_level: LevelType | None = None,
         allowed_levels: list[LevelType] | None = None,
     ) -> None:
-        self.min_level = min_level
+        self.level = level
         self.max_level = max_level
-        self.allowed_levels = allowed_levels
+        self.allowed_levels = set(allowed_levels) if allowed_levels else None
 
     def filter(self, record: Record) -> bool:
         level = record.level
 
-        if self.min_level is not None and level.value < self.min_level.value:
+        if self.level is not None and level.value < self.level.value:
             return False
         if self.max_level is not None and level.value > self.max_level.value:
             return False

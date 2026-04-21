@@ -22,7 +22,7 @@ class RotatingFileHandler(FileHandler):
     def __init__(  # noqa: PLR0913
         self,
         file_path: str | Path,
-        min_level: LevelType = Level.NOTSET,
+        level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
         *,
@@ -37,7 +37,7 @@ class RotatingFileHandler(FileHandler):
     ) -> None:
         super().__init__(
             file_path=file_path,
-            min_level=min_level,
+            level=level,
             formatter=formatter,
             filters=filters,
             separator=separator,

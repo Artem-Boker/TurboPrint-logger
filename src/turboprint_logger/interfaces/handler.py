@@ -16,11 +16,11 @@ class Handler(ABC):
 
     def __init__(
         self,
-        min_level: LevelType = Level.NOTSET,
+        level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
     ) -> None:
-        self.level = min_level
+        self.level = level
         self.formatter = formatter
         self.filters = filters or []
         self._finalizer = finalize(self, self.close)
@@ -47,7 +47,7 @@ class Handler(ABC):
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}("
-            f"min_level={self.level}, "
+            f"level={self.level}, "
             f"formatter={self.formatter}, "
             f"filters={tuple(self.filters)})"
         )

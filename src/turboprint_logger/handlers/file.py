@@ -23,7 +23,7 @@ class FileHandler(Handler):
     def __init__(  # noqa: PLR0913
         self,
         file_path: str | Path,
-        min_level: LevelType = Level.NOTSET,
+        level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
         *,
@@ -33,7 +33,7 @@ class FileHandler(Handler):
         encoding: str = "utf-8",
         update_mode: bool = False,
     ) -> None:
-        super().__init__(min_level, formatter, filters)
+        super().__init__(level, formatter, filters)
         if not isinstance(separator, str):
             msg = "separator must be a string"
             raise InvalidSeparatorError(msg)
@@ -136,10 +136,10 @@ class FileHandler(Handler):
             stderr.write(
                 f"{exc.__class__.__name__}[{self.__class__.__name__}]: {exc}\n"
             )
-            self.reopen()
             try:
+                self.reopen()
                 self._write(record)
             except Exception as exc:  # noqa: BLE001
                 stderr.write(
-                    f"{exc.__class__.__name__}[{self.__class__.__name__}]: Failed to write to {self.file_path}: {exc}\n"  # noqa: E501
+                    f"{exc.__class__.__name__}[{self.__class__.__name__}]: Re-open to {self.file_path} failed: {exc}\n"  # noqa: E501
                 )

@@ -22,7 +22,7 @@ class TimedRotatingFileHandler(FileHandler):
     def __init__(  # noqa: PLR0913
         self,
         file_path: str | Path,
-        min_level: LevelType = Level.NOTSET,
+        level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
         *,
@@ -37,7 +37,7 @@ class TimedRotatingFileHandler(FileHandler):
     ) -> None:
         super().__init__(
             file_path=file_path,
-            min_level=min_level,
+            level=level,
             formatter=formatter,
             filters=filters,
             separator=separator,
@@ -126,9 +126,10 @@ class TimedRotatingFileHandler(FileHandler):
             if self._should_rotate():
                 self.close()
                 self._rotate()
-                self._open_file()
-                self._closed = False
-                self._schedule_flush()
+                with self._lock:
+                    self._open_file()
+                    self._closed = False
+                    self._schedule_flush()
                 self._rollover_at = self._compute_rollover()
 
             super()._write(record)

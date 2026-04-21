@@ -248,8 +248,8 @@ class ConfigManager:
             if "tags" in spec:
                 logger.tags.clear()
 
-        if "min_level" in spec:
-            logger.level.set(self._as_level(spec["min_level"]))
+        if "level" in spec:
+            logger.level.set(self._as_level(spec["level"]))
 
         if "formatter" in spec:
             formatter = cast(
@@ -406,8 +406,8 @@ class ConfigManager:
             raise ConfigSpecError(msg)
 
         kwargs = dict(kwargs)
-        if "min_level" in kwargs:
-            kwargs["min_level"] = self._as_level(kwargs["min_level"])
+        if "level" in kwargs:
+            kwargs["level"] = self._as_level(kwargs["level"])
         if "max_level" in kwargs:
             kwargs["max_level"] = self._as_level(kwargs["max_level"])
         if "allowed_levels" in kwargs and isinstance(kwargs["allowed_levels"], list):
@@ -450,8 +450,8 @@ class ConfigManager:
             raise ConfigSpecError(msg)
 
         kwargs = dict(kwargs)
-        if "min_level" in kwargs:
-            kwargs["min_level"] = self._as_level(kwargs["min_level"])
+        if "level" in kwargs:
+            kwargs["level"] = self._as_level(kwargs["level"])
         if "formatter" in kwargs:
             kwargs["formatter"] = self._build_component(
                 "formatter", kwargs["formatter"]

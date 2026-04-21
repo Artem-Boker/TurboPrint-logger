@@ -76,8 +76,8 @@ class LevelType:
             msg = f"Invalid emoji code: {self._raw_emoji}"
             raise InvalidLevelEmojiError(msg)
 
-    def passed_min_level(self, min_level: LevelType) -> bool:
-        return self.value >= min_level.value
+    def passed_level(self, level: LevelType) -> bool:
+        return self.value >= level.value
 
     def __str__(self) -> str:
         return f"{self.emoji or ''}{self.name}[{self.value}]"

@@ -22,11 +22,11 @@ class BufferedStreamHandler(Handler):
         stream: TextIO = default_output,
         buffer_size: int = 1_000,
         flush_interval: int = 60,
-        min_level: LevelType = Level.NOTSET,
+        level: LevelType = Level.NOTSET,
         formatter: Formatter | None = None,
         filters: list[Filter] | None = None,
     ) -> None:
-        super().__init__(min_level, formatter, filters)
+        super().__init__(level, formatter, filters)
         if not callable(getattr(stream, "write", None)):
             msg = "stream must provide a callable 'write' method"
             raise InvalidStreamError(msg)
@@ -60,6 +60,7 @@ class BufferedStreamHandler(Handler):
                 return
             if self._timer is not None:
                 self._timer.cancel()
+                self._timer = None
             timer = Timer(interval=self.flush_interval, function=self._on_timer_flush)
             timer.daemon = True
             self._timer = timer
@@ -93,5 +94,7 @@ class BufferedStreamHandler(Handler):
             self._closed = True
             if self._timer is not None:
                 self._timer.cancel()
+                if self._timer.is_alive():
+                    self._timer.join(timeout=1.0)
                 self._timer = None
             self.flush()

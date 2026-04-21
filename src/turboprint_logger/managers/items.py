@@ -54,7 +54,8 @@ class CollectionManager(Generic[T]):
             try:
                 yield
             finally:
-                self._items = self._thread_local.stack.pop()
+                if self._thread_local.stack:
+                    self._items = self._thread_local.stack.pop()
 
     def __len__(self) -> int:
         with self._lock:

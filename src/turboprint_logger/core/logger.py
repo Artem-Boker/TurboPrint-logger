@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Callable
-from contextlib import suppress
 from itertools import count
 from types import GenericAlias
 from typing import Any
@@ -104,7 +103,7 @@ class Logger:
     def _create_managers(self, config: Config) -> None:
         defaults = self._container.defaults
 
-        self.level = LevelManager(config.min_level or defaults.level.get())
+        self.level = LevelManager(config.level or defaults.level.get())
         self.formatter = FormatterManager(config.formatter or defaults.formatter.get())
         self.processors = ProcessorsManager(
             *(config.processors or defaults.processors.get())
@@ -180,8 +179,11 @@ class Logger:
                 )
                 and value.__log__.__annotations__["return"].__origin__ is dict
             ):
-                with suppress(Exception):
+                try:
                     extracted = value.__log__()
+                except Exception as exc:  # noqa: BLE001
+                    sys.stderr.write(f"__log__ failed: {exc}")
+                else:
                     if isinstance(extracted, dict):
                         for sub_key, sub_value in extracted.items():
                             norm_key = normalize_context_key(sub_key)
@@ -228,12 +230,11 @@ class Logger:
                 processed_record = processor.start(record.copy())
                 if processed_record is None:
                     return None
-                record = processed_record
             except Exception as exc:  # noqa: BLE001
                 sys.stderr.write(
                     f"Exception in {processor.__class__.__name__}: {exc}\n"
                 )
-        return record
+        return processed_record
 
     def _apply_processors_end(
         self,
@@ -245,12 +246,11 @@ class Logger:
                 processed_record = processor.end(record.copy())
                 if processed_record is None:
                     return None
-                record = processed_record
             except Exception as exc:  # noqa: BLE001
                 sys.stderr.write(
                     f"Exception in {processor.__class__.__name__}: {exc}\n"
                 )
-        return record
+        return processed_record
 
     def _apply_handlers(
         self,
@@ -278,7 +278,7 @@ class Logger:
         if not self._container.globals.status.logger.enabled:
             return None
 
-        if not record.level.passed_min_level(self._container.globals.level.get()):
+        if not record.level.passed_level(self._container.globals.level.get()):
             return None
 
         processed = self._apply_processors_start(
@@ -313,7 +313,7 @@ class Logger:
         if not self.status.logger.enabled:
             return None
 
-        if not record.level.passed_min_level(self.level.get()):
+        if not record.level.passed_level(self.level.get()):
             return None
 
         processed = self._apply_processors_start(self.processors, record)
@@ -383,7 +383,7 @@ class Logger:
             f"logger_id={self._logger_id}, "
             f'container_name="{self._container.name}", '
             f"propagate={self.propagate}, "
-            f"min_level={self.level.get()!r}, "
+            f"level={self.level.get()!r}, "
             f"formatter={self.formatter.get()}, "
             f"filters={self.filters.get()}, "
             f"handlers={self.handlers.get()}, "

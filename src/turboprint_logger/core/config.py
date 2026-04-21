@@ -12,7 +12,7 @@ __all__ = ("Config",)
 
 @dataclass(slots=True)
 class Config:
-    min_level: LevelType | None = None
+    level: LevelType | None = None
     formatter: Formatter | None = None
     processors: list[Processor] | None = None
     handlers: list[Handler] | None = None
