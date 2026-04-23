@@ -12,6 +12,7 @@ from turboprint_logger.core.logger import Logger
 __all__ = ("deprecated",)
 
 _F = TypeVar("_F", bound=Callable[..., Any])
+_STACKLEVEL = 3
 
 
 class DeprecatedDecorator:
@@ -37,6 +38,7 @@ class DeprecatedDecorator:
                 self.logger(
                     self.level,
                     self.message.safe_substitute(function=func.__name__),
+                    stacklevel=_STACKLEVEL,
                 )
                 return await func(*args, **kwargs)
 
@@ -47,6 +49,7 @@ class DeprecatedDecorator:
             self.logger(
                 self.level,
                 self.message.safe_substitute(function=func.__name__),
+                stacklevel=_STACKLEVEL,
             )
             return func(*args, **kwargs)
 

@@ -17,6 +17,7 @@ from turboprint_logger.exceptions.decorators import (
 __all__ = ("retry",)
 
 _F = TypeVar("_F", bound=Callable[..., Any])
+_STACKLEVEL = 4
 
 
 class RetryDecorator:
@@ -59,6 +60,7 @@ class RetryDecorator:
                 exception_type=exc.__class__.__name__,
                 exception=exc,
             ),
+            stacklevel=_STACKLEVEL,
         )
 
     def _log_success(self, func_name: str, attempt: int) -> None:
@@ -68,12 +70,14 @@ class RetryDecorator:
                 self.success_message.safe_substitute(
                     function=func_name, attempt=attempt
                 ),
+                stacklevel=_STACKLEVEL,
             )
 
     def _log_error(self, func_name: str, attempt: int) -> None:
         self.logger(
             self.error_level,
             self.error_message.safe_substitute(function=func_name, attempt=attempt),
+            stacklevel=_STACKLEVEL,
         )
 
     def _raise_final(self, func_name: str, last_exc: Exception | None) -> None:
@@ -85,7 +89,7 @@ class RetryDecorator:
         msg = "Unknown error in retry"
         raise UnknownRetryError(msg)
 
-    def __call__(self, func: _F) -> _F:
+    def __call__(self, func: _F) -> _F:  # noqa: C901
         if asyncio.iscoroutinefunction(func):
 
             @wraps(func)
@@ -96,7 +100,6 @@ class RetryDecorator:
                     try:
                         result = await func(*args, **kwargs)
                         self._log_success(func.__name__, attempt)
-                        return result  # noqa: TRY300
                     except self.exceptions as exc:
                         last_exc = exc  # ty:ignore[invalid-assignment]
                         self._log_warning(
@@ -108,6 +111,8 @@ class RetryDecorator:
                             await asyncio.sleep(
                                 self.delay * (self.backoff ** (attempt - 1))
                             )
+                    else:
+                        return result
                 self._log_error(func.__name__, attempt)
                 self._raise_final(func.__name__, last_exc)
                 return None
@@ -122,7 +127,6 @@ class RetryDecorator:
                 try:
                     result = func(*args, **kwargs)
                     self._log_success(func.__name__, attempt)
-                    return result  # noqa: TRY300
                 except self.exceptions as exc:
                     last_exc = exc  # ty:ignore[invalid-assignment]
                     self._log_warning(
@@ -132,6 +136,8 @@ class RetryDecorator:
                     )
                     if attempt < self.max_attempts:
                         sleep(self.delay * (self.backoff ** (attempt - 1)))
+                else:
+                    return result
             self._log_error(func.__name__, attempt)
             self._raise_final(func.__name__, last_exc)
             return None

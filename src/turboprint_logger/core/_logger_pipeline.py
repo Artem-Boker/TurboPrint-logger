@@ -3,10 +3,10 @@ from __future__ import annotations
 import sys
 from collections.abc import Callable
 from contextlib import suppress
-from types import GenericAlias
 from typing import Any
 
-from turboprint_logger.core import Level, LevelType, Record
+from turboprint_logger.core.levels import Level, LevelType
+from turboprint_logger.core.record import Record
 from turboprint_logger.managers import (
     FiltersManager,
     HandlersManager,
@@ -37,22 +37,27 @@ class _LoggerPipeline:
 
         processed: dict[str, Any] = {}
         for key, value in extra.items():
-            if (
-                hasattr(value, "__log__")
-                and callable(value.__log__)
-                and hasattr(value.__log__, "__annotations__")
-                and isinstance(
-                    value.__log__.__annotations__.get("return"), GenericAlias
-                )
-                and value.__log__.__annotations__["return"].__origin__ is dict
-            ):
-                with suppress(Exception):
+            if hasattr(value, "__log__") and callable(value.__log__):
+                try:
                     extracted = value.__log__()
+                except Exception as exc:  # noqa: BLE001
+                    sys.stderr.write(
+                        f"Error calling __log__ on {type(value).__name__}: {exc}\n"
+                    )
+                else:
                     if isinstance(extracted, dict):
                         for sub_key, sub_value in extracted.items():
-                            with suppress(Exception):
+                            try:
                                 processed[normalize_context_key(sub_key)] = sub_value
-                        continue
+                            except Exception as exc:  # noqa: BLE001
+                                sys.stderr.write(
+                                    f"Error normalizing context key {sub_key!r}: {exc}\n"  # noqa: E501
+                                )
+                    else:
+                        sys.stderr.write(
+                            f"__log__ must return dict, got {type(extracted).__name__}\n"  # noqa: E501
+                        )
+                continue
 
             with suppress(Exception):
                 processed[normalize_context_key(key)] = value

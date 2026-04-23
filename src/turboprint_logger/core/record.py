@@ -10,9 +10,8 @@ from threading import get_ident
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, TypeAlias
 
-from turboprint_logger.core.levels import LevelType
-
 if TYPE_CHECKING:
+    from turboprint_logger.core.levels import LevelType
     from turboprint_logger.core.logger import Logger
 
 __all__ = ("Record",)

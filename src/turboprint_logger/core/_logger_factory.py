@@ -3,8 +3,8 @@ from __future__ import annotations
 from itertools import count
 from typing import TYPE_CHECKING
 
-from turboprint_logger import Container, get_default_container
 from turboprint_logger.core.config import Config
+from turboprint_logger.core.container import Container, get_default_container
 from turboprint_logger.core.levels import LevelType
 from turboprint_logger.exceptions.core import LoggerInstantiationError
 from turboprint_logger.managers.items import (

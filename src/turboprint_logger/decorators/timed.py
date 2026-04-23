@@ -13,6 +13,7 @@ from turboprint_logger.core.logger import Logger
 __all__ = ("timed",)
 
 _F = TypeVar("_F", bound=Callable[..., Any])
+_STACKLEVEL = 3
 
 
 class TimedDecorator:
@@ -48,6 +49,7 @@ class TimedDecorator:
                             function=func.__name__,
                             duration=round(duration, self.duration_round),
                         ),
+                        stacklevel=_STACKLEVEL,
                     )
 
             return cast(_F, async_wrapper)
@@ -65,6 +67,7 @@ class TimedDecorator:
                         function=func.__name__,
                         duration=round(duration, self.duration_round),
                     ),
+                    stacklevel=_STACKLEVEL,
                 )
 
         return cast(_F, wrapper)

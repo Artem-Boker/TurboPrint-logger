@@ -4,6 +4,7 @@ import asyncio
 from collections.abc import Callable
 from functools import wraps
 from itertools import chain
+from string import Template
 from time import perf_counter
 from typing import Any, TypeVar, cast
 
@@ -14,6 +15,7 @@ from turboprint_logger.utils.reserved import filter_reserved
 __all__ = ("event",)
 
 _F = TypeVar("_F", bound=Callable[..., Any])
+_STACKLEVEL = 3
 
 
 class EventDecorator:
@@ -37,9 +39,9 @@ class EventDecorator:
         self.level = level
         self.error_level = error_level
         self.arg_parser = arg_parser
-        self.entry_message = entry_message
-        self.exit_message = exit_message
-        self.exc_message = exc_message
+        self.entry_message = Template(entry_message)
+        self.exit_message = Template(exit_message)
+        self.exc_message = Template(exc_message)
         self.default_context = default_context
 
     def _build_entry_extra(
@@ -98,27 +100,33 @@ class EventDecorator:
 
             @wraps(func)
             async def async_wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+                entry_extra = self._build_entry_extra(func, args, kwargs)
                 self.logger(
                     self.level,
-                    self.entry_message,
-                    **self._build_entry_extra(func, args, kwargs),
+                    self.entry_message.safe_substitute(**entry_extra),
+                    **entry_extra,
+                    stacklevel=_STACKLEVEL,
                 )
                 start_time = perf_counter()
                 try:
                     result = await func(*args, **kwargs)
                 except Exception as exc:
                     duration = perf_counter() - start_time
+                    exc_extra = self._build_exc_extra(func, duration, exc)
                     self.logger(
                         self.error_level,
-                        self.exc_message,
-                        **self._build_exc_extra(func, duration, exc),
+                        self.exc_message.safe_substitute(**exc_extra),
+                        **exc_extra,
+                        stacklevel=_STACKLEVEL,
                     )
                     raise
                 duration = perf_counter() - start_time
+                exit_extra = self._build_exit_extra(func, duration, result)
                 self.logger(
                     self.level,
-                    self.exit_message,
-                    **self._build_exit_extra(func, duration, result),
+                    self.exit_message.safe_substitute(**exit_extra),
+                    **exit_extra,
+                    stacklevel=_STACKLEVEL,
                 )
                 return result
 
@@ -126,27 +134,33 @@ class EventDecorator:
 
         @wraps(func)
         def wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+            entry_extra = self._build_entry_extra(func, args, kwargs)
             self.logger(
                 self.level,
-                self.entry_message,
-                **self._build_entry_extra(func, args, kwargs),
+                self.entry_message.safe_substitute(**entry_extra),
+                **entry_extra,
+                stacklevel=_STACKLEVEL,
             )
             start_time = perf_counter()
             try:
                 result = func(*args, **kwargs)
             except Exception as exc:
                 duration = perf_counter() - start_time
+                exc_extra = self._build_exc_extra(func, duration, exc)
                 self.logger(
                     self.error_level,
-                    self.exc_message,
-                    **self._build_exc_extra(func, duration, exc),
+                    self.exc_message.safe_substitute(**exc_extra),
+                    **exc_extra,
+                    stacklevel=_STACKLEVEL,
                 )
                 raise
             duration = perf_counter() - start_time
+            exit_extra = self._build_exit_extra(func, duration, result)
             self.logger(
                 self.level,
-                self.exit_message,
-                **self._build_exit_extra(func, duration, result),
+                self.exit_message.safe_substitute(**exit_extra),
+                **exit_extra,
+                stacklevel=_STACKLEVEL,
             )
             return result
 

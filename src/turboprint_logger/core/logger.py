@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from turboprint_logger.core import Config, LevelType, Record
 from turboprint_logger.core._logger_factory import _LoggerFactory
 from turboprint_logger.core._logger_pipeline import _LoggerPipeline
+from turboprint_logger.core.config import Config
+from turboprint_logger.core.levels import LevelType
+from turboprint_logger.core.record import Record
 from turboprint_logger.utils.normalizers import normalize_logger_name
 
 __all__ = ("Logger",)
