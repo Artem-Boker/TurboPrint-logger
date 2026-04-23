@@ -46,10 +46,17 @@ class FileHandler(Handler):
         if not separator:
             msg = "separator must be a non-empty string"
             raise InvalidSeparatorError(msg)
+
+        if buffer_size is None:
+            self.buffer_size = -1
+        elif buffer_size < 1:
+            self.buffer_size = 1
+        else:
+            self.buffer_size = buffer_size
+
         self.file_path = Path(file_path)
         self.mode = "a" if update_mode else "w"
         self.encoding = encoding
-        self.buffer_size = 1 if not buffer_size or buffer_size < 1 else buffer_size
         self.separator = separator
         self.flush_interval = flush_interval
         self._timer: Timer | None = None

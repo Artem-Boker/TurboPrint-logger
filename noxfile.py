@@ -13,6 +13,7 @@ REPORT_FILES = [
     "bandit-report.json",
     "coverage.xml",
     ".coverage",
+    "repomix-output.xml",
 ]
 CACHE_DIRS = [
     ".pytest_cache",

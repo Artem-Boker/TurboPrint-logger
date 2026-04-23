@@ -18,8 +18,8 @@ class InvalidFilterModeError(NameFilterException):
 
 
 class RateLimitFilterException(FilterException):
-    "Base exception for all rate limit filter exceptions"
+    """Base exception for all rate limit filter exceptions"""
 
 
 class InvalidRateLimitError(RateLimitFilterException):
-    "Raised when the rate limit is invalid"
+    """Raised when the rate limit is invalid"""

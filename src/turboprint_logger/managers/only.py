@@ -19,7 +19,7 @@ class BaseManager(Generic[T]):
 
     def __init__(self, item: T | None = None) -> None:
         self._lock = RLock()
-        self._item = item or self.default
+        self._item = item if item is not None else self.default
         self._thread_local = local()
 
     def get(self) -> T:

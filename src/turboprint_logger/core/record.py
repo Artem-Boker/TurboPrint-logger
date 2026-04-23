@@ -36,7 +36,7 @@ class Record:
     date_time: datetime = field(default_factory=lambda: datetime.now(UTC))
     context: dict[str, Any] = field(default_factory=dict)
     tags: set[str] = field(default_factory=set)
-    process_name: str = field(default_factory=lambda: _HOSTNAME)
+    host_name: str = field(default_factory=lambda: _HOSTNAME)
     process_id: int = field(default_factory=getpid)
     thread_id: int = field(default_factory=get_ident)
     exception_info: ExcInfo = field(default_factory=exc_info)
@@ -69,7 +69,7 @@ class Record:
             f"file={self.file}, "
             f"function={self.function}, "
             f"line={self.line}, "
-            f"process_name={self.process_name!r}, "
+            f"host_name={self.host_name!r}, "
             f"process_id={self.process_id}, "
             f"thread_id={self.thread_id}, "
             f"exception_info={self.exception_info})"

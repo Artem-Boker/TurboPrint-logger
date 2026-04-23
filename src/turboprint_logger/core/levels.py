@@ -225,8 +225,8 @@ class Level(metaclass=LevelMeta):
     @classmethod
     def unregister(cls, name_or_value: str | int) -> bool:
         with cls._custom_levels_lock:
-            for level in cls._custom_levels:
+            for i, level in enumerate(cls._custom_levels):
                 if name_or_value in (level.name, level.value):
-                    cls._custom_levels.remove(level)
+                    del cls._custom_levels[i]
                     return True
             return False

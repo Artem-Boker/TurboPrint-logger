@@ -39,7 +39,13 @@ class SecurityProcessor(Processor):
         if isinstance(item, dict):
             masked: dict[str, Any] = {}
             for key, value in item.items():
-                masked[key.strip()] = self._mask_process(value)
+                stripped_key = key.strip()
+                if any(
+                    pattern.search(stripped_key) for pattern in self._compiled_patterns
+                ):
+                    masked[stripped_key] = self.mask_char * len(str(value))
+                else:
+                    masked[stripped_key] = self._mask_process(value)
             return masked
         if isinstance(item, str):
             stripped = item.strip()

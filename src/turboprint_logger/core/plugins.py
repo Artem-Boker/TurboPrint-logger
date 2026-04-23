@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import sys
 from collections.abc import Callable
+from importlib.metadata import entry_points
 from threading import RLock
 from typing import TypeVar
 
@@ -16,6 +18,7 @@ __all__ = (
     "get_formatter",
     "get_handler",
     "get_processor",
+    "load_entry_points",
     "register_filter",
     "register_formatter",
     "register_handler",
@@ -38,9 +41,19 @@ _filters: dict[str, type[Filter]] = {}
 _formatters: dict[str, type[Formatter]] = {}
 _processors: dict[str, type[Processor]] = {}
 
+_ENTRY_POINT_GROUPS: dict[str, tuple[type, dict[str, type], RLock]] = {
+    "turboprint_logger.handlers": (Handler, _handlers, _handlers_lock),
+    "turboprint_logger.filters": (Filter, _filters, _filters_lock),
+    "turboprint_logger.formatters": (Formatter, _formatters, _formatters_lock),
+    "turboprint_logger.processors": (Processor, _processors, _processors_lock),
+}  # ty:ignore[invalid-assignment]
+
 
 def _register(
-    type_: _T, lock: RLock, dict_: dict[str, _T], name: str | None = None
+    type_: _T,
+    lock: RLock,
+    dict_: dict[str, _T],
+    name: str | None = None,
 ) -> Callable[[_T], _T]:
     def decorator(cls: _T) -> _T:
         if not issubclass(cls, type_):
@@ -49,7 +62,7 @@ def _register(
         with lock:
             key = name or cls.__name__
             if key in dict_ and dict_[key] is not cls:
-                msg = f"{cls.__name__} {key!r} already registered"
+                msg = f"{cls.__name__} '{key}' already registered"
                 raise PluginAlreadyRegisteredError(msg)
             dict_[key] = cls
         return cls
@@ -95,3 +108,56 @@ def register_processor(name: str | None = None) -> Callable[[_PROCESSOR], _PROCE
 
 def get_processor(name: str) -> type[Processor]:
     return _get(_processors, Processor, name)
+
+
+def load_entry_points(*, silent: bool = True) -> dict[str, list[str]]:
+    loaded: dict[str, list[str]] = {}
+
+    for group, (base_type, registry, lock) in _ENTRY_POINT_GROUPS.items():
+        loaded[group] = []
+        eps = entry_points(group=group)
+
+        for ep in eps:
+            try:
+                cls = ep.load()
+            except Exception as exc:
+                if not silent:
+                    raise
+                sys.stderr.write(
+                    f"[turboprint_logger] Failed to load entry point "
+                    f"'{ep.name}' from group '{group}': "
+                    f"{type(exc).__name__}: {exc}\n"
+                )
+                continue
+
+            if not (isinstance(cls, type) and issubclass(cls, base_type)):
+                msg = (
+                    f"[turboprint_logger] Entry point '{ep.name}' in group "
+                    f"'{group}' must be a subclass of {base_type.__name__}, "
+                    f"got {cls!r}"
+                )
+                if not silent:
+                    raise PluginTypeError(msg)
+                sys.stderr.write(msg + "\n")
+                continue
+
+            name = ep.name
+            with lock:
+                if name in registry:
+                    if registry[name] is cls:
+                        loaded[group].append(name)
+                        continue
+                    msg = (
+                        f"[turboprint_logger] Entry point '{name}' in group "
+                        f"'{group}' conflicts with already registered "
+                        f"{registry[name].__name__!r}"
+                    )
+                    if not silent:
+                        raise PluginAlreadyRegisteredError(msg)
+                    sys.stderr.write(msg + "\n")
+                    continue
+                registry[name] = cls
+
+            loaded[group].append(name)
+
+    return loaded

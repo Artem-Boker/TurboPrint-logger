@@ -49,10 +49,6 @@ class RateLimitFilter(Filter):
                 refill = elapsed * (self.rate / self.per)
                 tokens = min(self.capacity, tokens + refill)
 
-            if tokens >= self.capacity and (now - last_ts) > self._evict_after:
-                self._buckets[key] = (self.capacity - 1.0, now)
-                return True
-
             if tokens >= 1.0:
                 self._buckets[key] = (tokens - 1.0, now)
                 return True

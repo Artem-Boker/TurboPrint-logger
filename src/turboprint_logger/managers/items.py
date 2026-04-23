@@ -73,12 +73,16 @@ class CollectionManager(Generic[T]):
         with self._lock:
             return item in self._items
 
+    def __reversed__(self) -> list[T]:
+        with self._lock:
+            return self._items[::-1]
+
     def __bool__(self) -> bool:
         with self._lock:
             return bool(self._items)
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(filters_count={len(self._items)})"
+        return f"{self.__class__.__name__}(count={len(self._items)})"
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(items={self._items!r})"

@@ -84,7 +84,7 @@ class StatusManager:
         self.global_filters = StatusComponent(status=global_filters)
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(logger_enabled={self.logger._enabled})"
+        return f"{self.__class__.__name__}({self.logger.enabled})"
 
     def __repr__(self) -> str:
         return (

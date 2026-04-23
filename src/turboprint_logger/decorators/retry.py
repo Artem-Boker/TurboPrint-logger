@@ -90,6 +90,7 @@ class RetryDecorator:
 
             @wraps(func)
             async def async_wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+                attempt = 0
                 last_exc: Exception | None = None
                 for attempt in range(1, self.max_attempts + 1):
                     try:
@@ -115,6 +116,7 @@ class RetryDecorator:
 
         @wraps(func)
         def wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
+            attempt = 0
             last_exc: Exception | None = None
             for attempt in range(1, self.max_attempts + 1):
                 try:
