@@ -32,7 +32,7 @@ class TimeFilter(Filter):
         )
 
         if start is not None and end is not None and start > end:
-            if record_time < end:
+            if record_time <= end:
                 return True
             return record_time >= start
 

@@ -40,7 +40,7 @@ class LoggingAdapter(logging.Handler):
         if levelno in _STD_TO_CUSTOM_LEVEL:
             return _STD_TO_CUSTOM_LEVEL[levelno]
 
-        custom_level = Level.get_by_level(levelno)
+        custom_level = Level.get_by_value(levelno)
         if custom_level is not None:
             return custom_level
 

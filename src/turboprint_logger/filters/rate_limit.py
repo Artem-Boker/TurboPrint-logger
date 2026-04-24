@@ -54,6 +54,15 @@ class RateLimitFilter(Filter):
                 return True
 
             self._buckets[key] = (tokens, now)
+
+            stale = (
+                k
+                for k, (_, ts) in self._buckets.items()
+                if now - ts > self._evict_after and k != key
+            )
+            for k in stale:
+                del self._buckets[k]
+
             return False
 
     def _get_key(self, record: Record) -> str:

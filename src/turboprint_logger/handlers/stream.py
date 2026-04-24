@@ -7,7 +7,7 @@ from typing import TextIO
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
-from turboprint_logger.exceptions.handlers import InvalidStreamError
+from turboprint_logger.exceptions.handlers import CloseException, InvalidStreamError
 from turboprint_logger.interfaces import Filter, Formatter, Handler
 
 __all__ = ("StreamHandler",)
@@ -39,5 +39,9 @@ class StreamHandler(Handler):
                 )
 
     def close(self) -> None:
-        with self._lock:
-            self.stream.flush()
+        try:
+            with self._lock:
+                self.stream.flush()
+        except Exception as exc:
+            msg = f"failed to close stream: {exc}"
+            raise CloseException(msg) from exc

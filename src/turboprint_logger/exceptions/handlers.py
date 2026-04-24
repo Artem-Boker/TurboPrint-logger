@@ -9,6 +9,10 @@ class HandlerException(TurboPrintException):
     """Base exception for all handlers exceptions"""
 
 
+class CloseException(HandlerException):
+    """Raised when the handler cannot be closed"""
+
+
 class FileHandlerException(HandlerException):
     """Base exception for all file handlers exceptions"""
 

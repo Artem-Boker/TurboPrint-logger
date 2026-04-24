@@ -203,13 +203,13 @@ class _LoggerPipeline:
             return None
         record = result
 
-        current = self.parent  # type: ignore[reportAttributeAccessIssue]
-        while current.propagate and current is not current.parent:
+        current = self
+        while current.propagate and current is not current.parent:  # type: ignore[reportAttributeAccessIssue]
+            current = current.parent  # type: ignore[reportAttributeAccessIssue]
             parent_result = current._process_local(record)
             if parent_result is None:
                 break
             record = parent_result
-            current = current.parent
 
         self.metrics.add(record.level)  # type: ignore[reportAttributeAccessIssue]
         return record

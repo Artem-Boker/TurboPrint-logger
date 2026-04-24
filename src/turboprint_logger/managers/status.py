@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from contextlib import contextmanager
 from threading import RLock, local
+
+from turboprint_logger.managers._mixins import TemporaryMixin
 
 __all__ = ("StatusManager",)
 
 
-class StatusComponent:
+class StatusComponent(TemporaryMixin[bool]):
     __slots__ = ("_enabled", "_lock", "_thread_local")
 
     def __init__(self, *, status: bool = True) -> None:
@@ -38,21 +39,6 @@ class StatusComponent:
     def disable(self) -> None:
         with self._lock:
             self._enabled = False
-
-    @contextmanager
-    def temporary(self, *, status: bool = True):  # noqa: ANN202
-        if not hasattr(self._thread_local, "stack"):
-            self._thread_local.stack = []
-
-        with self._lock:
-            snapshot = self._enabled
-            self._thread_local.stack.append(snapshot)
-            self._enabled = status
-
-            try:
-                yield
-            finally:
-                self._enabled = self._thread_local.stack.pop()
 
     def __bool__(self) -> bool:
         with self._lock:

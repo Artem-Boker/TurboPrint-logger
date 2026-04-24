@@ -48,8 +48,8 @@ class _LoggerFactory:
         "tags",
     )
 
-    _logger_counter: count = count()
-    _trace_counter: count = count()
+    _logger_counter = count()
+    _trace_counter = count()
 
     def __init__(self) -> None:
         msg = "Logger cannot be instantiated directly. Use Logger.get_logger()"

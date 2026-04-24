@@ -7,6 +7,7 @@ from typing import TextIO
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers import (
+    CloseException,
     InvalidBufferSizeError,
     InvalidStreamError,
     InvalidStreamFlushIntervalError,
@@ -90,11 +91,15 @@ class BufferedStreamHandler(Handler):
                 self.stream.flush()
 
     def close(self) -> None:
-        with self._lock:
-            self._closed = True
-            if self._timer is not None:
-                self._timer.cancel()
-                if self._timer.is_alive():
-                    self._timer.join(timeout=1.0)
-                self._timer = None
-            self.flush()
+        try:
+            with self._lock:
+                self._closed = True
+                if self._timer is not None:
+                    self._timer.cancel()
+                    if self._timer.is_alive():
+                        self._timer.join(timeout=1.0)
+                    self._timer = None
+                self.flush()
+        except Exception as exc:
+            msg = f"failed to close stream: {exc}"
+            raise CloseException(msg) from exc

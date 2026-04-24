@@ -5,7 +5,6 @@ from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from os import getpid
 from socket import gethostname
-from sys import exc_info
 from threading import get_ident
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, TypeAlias
@@ -38,7 +37,7 @@ class Record:
     host_name: str = field(default_factory=lambda: _HOSTNAME)
     process_id: int = field(default_factory=getpid)
     thread_id: int = field(default_factory=get_ident)
-    exception_info: ExcInfo = field(default_factory=exc_info)
+    exception_info: ExcInfo = field(default_factory=lambda: (None, None, None))
 
     def copy(self) -> Record:
         return replace(

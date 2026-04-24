@@ -8,6 +8,7 @@ from typing import IO
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
 from turboprint_logger.exceptions.handlers import (
+    CloseException,
     FileClosedError,
     FileOpenError,
     FileWriteError,
@@ -112,14 +113,18 @@ class FileHandler(Handler):
             self._schedule_flush()
 
     def close(self) -> None:
-        with self._lock:
-            self._closed = True
-            if self._timer is not None:
-                self._timer.cancel()
-                self._timer = None
-            if self._file and not self._file.closed:
-                self._file.close()
-            self._file = None
+        try:
+            with self._lock:
+                self._closed = True
+                if self._timer is not None:
+                    self._timer.cancel()
+                    self._timer = None
+                if self._file and not self._file.closed:
+                    self._file.close()
+                self._file = None
+        except Exception as exc:
+            msg = f"Could not close file {self.file_path}: {exc}"
+            raise CloseException(msg) from exc
 
     def _write(self, record: Record) -> None:
         with self._lock:

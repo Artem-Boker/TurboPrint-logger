@@ -56,8 +56,6 @@ class SimpleFormatter(Formatter):
             if callable(record.message)
             else record.message
         )
-        if "$" in message:
-            message = Template(message).safe_substitute(record.context)
 
         date_obj = record.date_time.date()
         date_str = (

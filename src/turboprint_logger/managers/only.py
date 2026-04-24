@@ -1,19 +1,19 @@
 from __future__ import annotations
 
-from contextlib import contextmanager
 from threading import RLock, local
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.formatters import SimpleFormatter
 from turboprint_logger.interfaces import Formatter
+from turboprint_logger.managers._mixins import TemporaryMixin
 
 __all__ = ()
 
 T = TypeVar("T")
 
 
-class BaseManager(Generic[T]):
+class BaseManager(TemporaryMixin[T]):
     __slots__ = ("_item", "_lock", "_thread_local")
     default: T
 
@@ -29,21 +29,6 @@ class BaseManager(Generic[T]):
     def set(self, item: T) -> None:
         with self._lock:
             self._item = item
-
-    @contextmanager
-    def temporary(self, item: T):  # noqa: ANN202
-        if not hasattr(self._thread_local, "stack"):
-            self._thread_local.stack = []
-
-        with self._lock:
-            snapshot = self._item
-            self._thread_local.stack.append(snapshot)
-            self._item = item
-
-            try:
-                yield
-            finally:
-                self._item = self._thread_local.stack.pop()
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}(item={self._item!s})"

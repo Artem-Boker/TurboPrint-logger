@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from copy import copy
+from sys import exc_info
 
 from turboprint_logger.core._logger_factory import _LoggerFactory
 from turboprint_logger.core._logger_pipeline import _LoggerPipeline
 from turboprint_logger.core.config import Config
 from turboprint_logger.core.levels import LevelType
 from turboprint_logger.core.record import Record
+from turboprint_logger.managers.items import ContextManager, TagsManager
 from turboprint_logger.utils.normalizers import normalize_logger_name
 
 __all__ = ("Logger",)
@@ -20,6 +23,7 @@ class Logger(_LoggerFactory, _LoggerPipeline):
         *,
         tags: list[str] | None = None,
         stacklevel: int = 2,
+        use_exception_info: bool = False,
         **extra,
     ) -> Record | None:
         merged_tags = self._merge_tags(tags)
@@ -31,6 +35,8 @@ class Logger(_LoggerFactory, _LoggerPipeline):
             merged_context,
             stacklevel=stacklevel,
         )
+        if use_exception_info:
+            record.exception_info = exc_info()
         processed = self._process_global(record)
         if processed is None:
             return None
@@ -68,6 +74,14 @@ class Logger(_LoggerFactory, _LoggerPipeline):
 
         if config.status is not None:
             self.status.logger.set(config.status)
+
+    def bind(self, *tags, **context) -> Logger:
+        new_logger = copy(self)
+        merged_tags = {*self.tags, *tags}
+        merged_context = {**self.context, **context}
+        new_logger.tags = TagsManager(*merged_tags)
+        new_logger.context = ContextManager(**merged_context)
+        return new_logger
 
     def get_child(self, suffix: str) -> Logger:
         child_name = normalize_logger_name(f"{self._name}.{suffix.strip('.')}")

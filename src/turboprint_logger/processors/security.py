@@ -47,11 +47,6 @@ class SecurityProcessor(Processor):
                 else:
                     masked[stripped_key] = self._mask_process(value)
             return masked
-        if isinstance(item, str):
-            stripped = item.strip()
-            if any(pattern.search(stripped) for pattern in self._compiled_patterns):
-                return self.mask_char * len(stripped)
-            return stripped
         return item
 
     def start(self, record: Record) -> Record:

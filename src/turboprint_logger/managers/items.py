@@ -1,19 +1,25 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-from contextlib import contextmanager
 from threading import RLock, local
-from typing import Any, Generic, TypeVar
+from typing import Any, TypeVar
 
 from turboprint_logger.interfaces import Filter, Handler, Processor
+from turboprint_logger.managers._mixins import TemporaryMixin
 from turboprint_logger.utils.normalizers import normalize_context_key
 
-__all__ = ()
+__all__ = (
+    "ContextManager",
+    "FiltersManager",
+    "HandlersManager",
+    "ProcessorsManager",
+    "TagsManager",
+)
 
 T = TypeVar("T")
 
 
-class CollectionManager(Generic[T]):
+class CollectionManager(TemporaryMixin[T]):
     __slots__ = ("_items", "_lock", "_thread_local")
 
     def __init__(self, *items: T) -> None:
@@ -27,12 +33,12 @@ class CollectionManager(Generic[T]):
 
     def add(self, *items: T) -> None:
         with self._lock:
-            self._items.extend(items)
+            self._items.extend(items)  # ty:ignore[unresolved-attribute]
 
     def remove(self, item: T) -> bool:
         try:
             with self._lock:
-                self._items.remove(item)
+                self._items.remove(item)  # ty:ignore[unresolved-attribute]
         except ValueError:
             return False
         return True
@@ -40,22 +46,6 @@ class CollectionManager(Generic[T]):
     def clear(self) -> None:
         with self._lock:
             self._items.clear()
-
-    @contextmanager
-    def temporary(self, *items: T, replace: bool = True):  # noqa: ANN202
-        if not hasattr(self._thread_local, "stack"):
-            self._thread_local.stack = []
-
-        with self._lock:
-            snapshot = self._items.copy()
-            self._thread_local.stack.append(snapshot)
-            self._items = list(items) if replace else [*self._items, *items]
-
-            try:
-                yield
-            finally:
-                if self._thread_local.stack:
-                    self._items = self._thread_local.stack.pop()
 
     def __len__(self) -> int:
         with self._lock:
@@ -73,9 +63,9 @@ class CollectionManager(Generic[T]):
         with self._lock:
             return item in self._items
 
-    def __reversed__(self) -> list[T]:
+    def __reversed__(self) -> Iterator[T]:
         with self._lock:
-            return self._items[::-1]
+            return iter(self._items[::-1])
 
     def __bool__(self) -> bool:
         with self._lock:
@@ -106,7 +96,7 @@ class TagsManager(CollectionManager[str]):
             return set(self._items.copy())
 
 
-class ContextManager:
+class ContextManager(TemporaryMixin[dict]):
     __slots__ = ("_items", "_lock", "_thread_local")
 
     def __init__(self, **items) -> None:
@@ -130,23 +120,6 @@ class ContextManager:
                 {normalize_context_key(key): value for key, value in items.items()}
             )
 
-    @contextmanager
-    def temporary(self, *, replace: bool = True, **items):  # noqa: ANN202
-        if not hasattr(self._thread_local, "stack"):
-            self._thread_local.stack = []
-
-        normalized = {normalize_context_key(key): value for key, value in items.items()}
-
-        with self._lock:
-            snapshot = self._items.copy()
-            self._thread_local.stack.append(snapshot)
-            self._items = normalized if replace else {**self._items, **normalized}
-
-            try:
-                yield
-            finally:
-                self._items = self._thread_local.stack.pop()
-
     def values(self) -> list[Any]:
         with self._lock:
             return list(self._items.values())
@@ -160,7 +133,7 @@ class ContextManager:
             return list(self._items.items())
 
     def __iter__(self) -> Iterator[tuple[str, Any]]:
-        return iter(self._items.items())
+        return iter(list(self._items.items()))
 
     def __getitem__(self, key: str) -> Any:  # noqa: ANN401
         key = normalize_context_key(key)

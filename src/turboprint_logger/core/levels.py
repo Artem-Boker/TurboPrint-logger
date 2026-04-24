@@ -101,6 +101,8 @@ class LevelType:
 
 class LevelMeta(type):
     _custom_levels: list[LevelType]
+    _levels_by_name: dict[str, LevelType]
+    _levels_by_value: dict[int, LevelType]
     _custom_levels_lock: Lock
     _standard_levels: tuple[LevelType, ...]
 
@@ -114,6 +116,9 @@ class LevelMeta(type):
         cls._standard_levels = tuple(
             level for level in vars(cls).values() if isinstance(level, LevelType)
         )
+
+        cls._levels_by_name = {level.name: level for level in cls._standard_levels}
+        cls._levels_by_value = {level.value: level for level in cls._standard_levels}
 
     def __str__(cls) -> str:
         return (
@@ -158,25 +163,13 @@ class Level(metaclass=LevelMeta):
             normalized = normalize_level_name(name)
         except InvalidLevelNameError:
             return None
-        for level in cls._standard_levels:
-            if level.name == normalized:
-                return level
-        for level in cls._custom_levels:
-            if level.name == normalized:
-                return level
-        return None
+        return cls._levels_by_name.get(normalized, None)
 
     @classmethod
-    def get_by_level(cls, value: int) -> LevelType | None:
+    def get_by_value(cls, value: int) -> LevelType | None:
         if value < 0:
             return None
-        for level in cls._standard_levels:
-            if level.value == value:
-                return level
-        for level in cls._custom_levels:
-            if level.value == value:
-                return level
-        return None
+        return cls._levels_by_value.get(value, None)
 
     @classmethod
     def standard_levels(cls) -> list[LevelType]:
@@ -220,13 +213,22 @@ class Level(metaclass=LevelMeta):
 
             new_level = LevelType(normalized, value, color, emoji_alias)
             cls._custom_levels.append(new_level)
+            cls._levels_by_name[new_level.name] = new_level
+            cls._levels_by_value[new_level.value] = new_level
             return new_level
 
     @classmethod
     def unregister(cls, name_or_value: str | int) -> bool:
         with cls._custom_levels_lock:
-            for i, level in enumerate(cls._custom_levels):
-                if name_or_value in (level.name, level.value):
-                    del cls._custom_levels[i]
-                    return True
+            level = None
+            if isinstance(name_or_value, str):
+                level = Level.get_by_name(name_or_value)
+            if isinstance(name_or_value, int):
+                level = Level.get_by_value(name_or_value)
+
+            if level is not None:
+                cls._custom_levels.remove(level)
+                del cls._levels_by_name[level.name]
+                del cls._levels_by_value[level.value]
+                return True
             return False

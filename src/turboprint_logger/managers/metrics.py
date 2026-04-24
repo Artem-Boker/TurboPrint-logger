@@ -42,7 +42,7 @@ class MetricsManager:
         with self._lock:
             result = {}
             for level_int, count in self._metrics.items():
-                level = Level.get_by_level(level_int)
+                level = Level.get_by_value(level_int)
                 if level:
                     result[level] = count
             return result
