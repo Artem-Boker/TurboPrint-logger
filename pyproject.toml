@@ -132,3 +132,14 @@ markers = [
     "benchmark: тесты производительности (pytest-benchmark)",
     "profile: тесты для профилирования (pytest-profiling)",
 ]
+
+[tool.git-changelog]
+convention = "conventional"
+template = "keepachangelog"
+bump = "auto"
+in-place = false
+output = "CHANGELOG.md"
+sections = ["feat", "fix", "perf", "refactor", "build", "deps"]
+provider = "github"
+include-all = false
+versioning = "semver"
