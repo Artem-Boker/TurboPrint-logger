@@ -29,7 +29,7 @@ class RotatingFileHandler(FileHandler):
         separator: str = "\n",
         buffer_size: int | None = None,
         encoding: str = "utf-8",
-        update_mode: bool = False,
+        truncate_on_open: bool = False,
         compress: bool = True,
         max_bytes: int | None = None,
         max_lines: int | None = None,
@@ -43,7 +43,7 @@ class RotatingFileHandler(FileHandler):
             separator=separator,
             buffer_size=buffer_size,
             encoding=encoding,
-            update_mode=update_mode,
+            truncate_on_open=truncate_on_open,
         )
         if max_bytes is None and max_lines is None:
             msg = f"{self.__class__.__name__} required at least one of max_bytes or max_lines"  # noqa: E501

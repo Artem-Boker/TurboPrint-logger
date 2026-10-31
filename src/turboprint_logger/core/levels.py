@@ -238,9 +238,9 @@ class Level(metaclass=LevelMeta):
             if isinstance(name_or_value, int):
                 level = Level.get_by_value(name_or_value)
 
-            if level is not None:
-                cls._custom_levels.remove(level)
-                del cls._levels_by_name[level.name]
-                del cls._levels_by_value[level.value]
-                return True
-            return False
+            if level is None or level not in cls._custom_levels:
+                return False
+            cls._custom_levels.remove(level)
+            del cls._levels_by_name[level.name]
+            del cls._levels_by_value[level.value]
+            return True

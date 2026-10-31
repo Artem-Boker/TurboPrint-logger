@@ -29,7 +29,7 @@ class TimedRotatingFileHandler(FileHandler):
         separator: str = "\n",
         buffer_size: int | None = None,
         encoding: str = "utf-8",
-        update_mode: bool = False,
+        truncate_on_open: bool = False,
         compress: bool = True,
         when: Literal["s", "m", "h", "D", "W", "M"] = "h",
         interval: int = 1,
@@ -43,7 +43,7 @@ class TimedRotatingFileHandler(FileHandler):
             separator=separator,
             buffer_size=buffer_size,
             encoding=encoding,
-            update_mode=update_mode,
+            truncate_on_open=truncate_on_open,
         )
         self.compress = compress
         self.when = when.strip()

@@ -32,7 +32,7 @@ class FileHandler(Handler):
         buffer_size: int | None = None,
         flush_interval: int = 60,
         encoding: str = "utf-8",
-        update_mode: bool = False,
+        truncate_on_open: bool = False,
     ) -> None:
         super().__init__(level, formatter, filters)
         if not isinstance(separator, str):
@@ -56,7 +56,7 @@ class FileHandler(Handler):
             self.buffer_size = buffer_size
 
         self.file_path = Path(file_path)
-        self.mode = "a" if update_mode else "w"
+        self.mode = "w" if truncate_on_open else "a"
         self.encoding = encoding
         self.separator = separator
         self.flush_interval = flush_interval

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from typing import Any
+from weakref import WeakSet
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.logger import Logger
@@ -19,6 +20,7 @@ _STD_TO_CUSTOM_LEVEL = {
     logging.FATAL: Level.CRITICAL,
     logging.CRITICAL: Level.CRITICAL,
 }
+_INSTALLED: WeakSet[LoggingAdapter] = WeakSet()
 
 
 class LoggingAdapter(logging.Handler):
@@ -80,6 +82,11 @@ class LoggingAdapter(logging.Handler):
 
 
 def install_adapter(level: int = logging.NOTSET) -> LoggingAdapter:
+    for installed in _INSTALLED:
+        if installed.level == level:
+            return installed
+
     handler = LoggingAdapter(level)
     logging.root.addHandler(handler)
+    _INSTALLED.add(handler)
     return handler

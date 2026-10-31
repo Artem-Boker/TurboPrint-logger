@@ -87,9 +87,9 @@ class BufferedStreamHandler(Handler):
         with self._lock:
             if self.buffer:
                 data = "\n".join(self.buffer) + "\n"
-                self.buffer.clear()
                 self.stream.write(data)
                 self.stream.flush()
+                self.buffer.clear()
 
     def close(self) -> None:
         try:
