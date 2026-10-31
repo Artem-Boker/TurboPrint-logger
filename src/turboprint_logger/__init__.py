@@ -41,7 +41,7 @@ __all__ = (
     "processors",
 )
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 
 def __register_from_package(package, registry_func) -> None:  # noqa: ANN001

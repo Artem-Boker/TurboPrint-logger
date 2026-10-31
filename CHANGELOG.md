@@ -6,13 +6,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
-## [v0.3.2](https://github.com/Artem-Boker/TurboPrint-logger/releases/tag/v0.3.2) - 2026-10-31
+## [v0.4.0](https://github.com/Artem-Boker/TurboPrint-logger/releases/tag/v0.4.0) - 2026-10-31
 
-<small>[Compare with v0.3.1](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.3.1...v0.3.2)</small>
+<small>[Compare with v0.3.1](https://github.com/Artem-Boker/TurboPrint-logger/compare/v0.3.1...v0.4.0)</small>
+
+### Features
+
+- :sparkles: add new changelog generator ([901084f](https://github.com/Artem-Boker/TurboPrint-logger/commit/901084f079de08aa878b426c827b0e000edd9cf3) by Artem-Boker).
 
 ### Bug Fixes
 
-- :bug: fixed known bugs ([764acc2](https://github.com/Artem-Boker/TurboPrint-logger/commit/764acc28ab4676d45ddf3a800a2227ffdafc0f7d) by Artem-Boker).
+- :bug: fixed known bugs ([f8fe99a](https://github.com/Artem-Boker/TurboPrint-logger/commit/f8fe99a5cec1deb01b5d0ea43c2ce0fb01f332a7) by Artem-Boker).
 
 ## [v0.3.1](https://github.com/Artem-Boker/TurboPrint-logger/releases/tag/v0.3.1) - 2026-04-19
 
