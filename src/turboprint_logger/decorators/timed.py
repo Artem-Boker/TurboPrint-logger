@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-import asyncio
-from collections.abc import Callable
 from functools import wraps
+from inspect import iscoroutinefunction
 from string import Template
 from time import perf_counter
-from typing import Any, TypeVar, cast
+from typing import Any, cast
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.logger import Logger
+from turboprint_logger.decorators._callables import FuncT
 
 __all__ = ("timed",)
 
-_F = TypeVar("_F", bound=Callable[..., Any])
 _STACKLEVEL = 3
 
 
@@ -33,8 +32,8 @@ class TimedDecorator:
         self.message = Template(message)
         self.duration_round = duration_round
 
-    def __call__(self, func: _F) -> _F:
-        if asyncio.iscoroutinefunction(func):
+    def __call__(self, func: FuncT) -> FuncT:
+        if iscoroutinefunction(func):
 
             @wraps(func)
             async def async_wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
@@ -52,7 +51,7 @@ class TimedDecorator:
                         stacklevel=_STACKLEVEL,
                     )
 
-            return cast(_F, async_wrapper)
+            return cast(FuncT, async_wrapper)
 
         @wraps(func)
         def wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
@@ -70,7 +69,7 @@ class TimedDecorator:
                     stacklevel=_STACKLEVEL,
                 )
 
-        return cast(_F, wrapper)
+        return cast(FuncT, wrapper)
 
 
 timed = TimedDecorator

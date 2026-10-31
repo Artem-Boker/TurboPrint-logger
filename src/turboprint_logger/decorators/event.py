@@ -1,20 +1,20 @@
 from __future__ import annotations
 
-import asyncio
 from collections.abc import Callable
 from functools import wraps
+from inspect import iscoroutinefunction
 from itertools import chain
 from string import Template
 from time import perf_counter
-from typing import Any, TypeVar, cast
+from typing import Any, cast
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.logger import Logger
+from turboprint_logger.decorators._callables import FuncT
 from turboprint_logger.utils.reserved import filter_reserved
 
 __all__ = ("event",)
 
-_F = TypeVar("_F", bound=Callable[..., Any])
 _STACKLEVEL = 3
 
 
@@ -46,7 +46,7 @@ class EventDecorator:
 
     def _build_entry_extra(
         self,
-        func: _F,  # pyright: ignore[reportInvalidTypeVarUse]
+        func: FuncT,  # pyright: ignore[reportInvalidTypeVarUse]
         args: tuple[Any],
         kwargs: dict[str, Any],
     ) -> dict[str, Any]:
@@ -65,7 +65,7 @@ class EventDecorator:
 
     def _build_exit_extra(
         self,
-        func: _F,  # pyright: ignore[reportInvalidTypeVarUse]
+        func: FuncT,  # pyright: ignore[reportInvalidTypeVarUse]
         duration: float,
         result: Any,  # noqa: ANN401
     ) -> dict[str, Any]:
@@ -81,7 +81,7 @@ class EventDecorator:
 
     def _build_exc_extra(
         self,
-        func: _F,  # pyright: ignore[reportInvalidTypeVarUse]
+        func: FuncT,  # pyright: ignore[reportInvalidTypeVarUse]
         duration: float,
         exc: BaseException,
     ) -> dict[str, Any]:
@@ -95,8 +95,8 @@ class EventDecorator:
             }
         )
 
-    def __call__(self, func: _F) -> _F:
-        if asyncio.iscoroutinefunction(func):
+    def __call__(self, func: FuncT) -> FuncT:
+        if iscoroutinefunction(func):
 
             @wraps(func)
             async def async_wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
@@ -130,7 +130,7 @@ class EventDecorator:
                 )
                 return result
 
-            return cast(_F, async_wrapper)
+            return cast(FuncT, async_wrapper)
 
         @wraps(func)
         def wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
@@ -164,7 +164,7 @@ class EventDecorator:
             )
             return result
 
-        return cast(_F, wrapper)
+        return cast(FuncT, wrapper)
 
 
 event = EventDecorator

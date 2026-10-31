@@ -8,17 +8,17 @@ from turboprint_logger.core.record import Record
 from turboprint_logger.interfaces import Formatter
 
 try:
-    import orjson
+    import orjson  # ty: ignore[unresolved-import]
 
     JSON_MODULE = "orjson"
 except ImportError:
     try:
-        from msgspec.json import Encoder
+        from msgspec.json import Encoder  # ty: ignore[unresolved-import]
 
         JSON_MODULE = "msgspec"
     except ImportError:
         try:
-            from ujson import dumps
+            from ujson import dumps  # ty: ignore[unresolved-import]
         except ImportError:
             from json import dumps
         JSON_MODULE = "json"
@@ -57,11 +57,7 @@ class JSONFormatter(Formatter):
         return str(obj)
 
     def format(self, record: Record) -> str:
-        message = (
-            record.message()  # ty:ignore[call-top-callable]
-            if callable(record.message)
-            else record.message
-        )
+        message = record.resolve_message()
 
         data = {}
         for f in fields(record):

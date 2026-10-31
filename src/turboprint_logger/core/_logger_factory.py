@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from itertools import count
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from turboprint_logger.core.config import Config
 from turboprint_logger.core.container import Container, get_default_container
@@ -28,8 +28,20 @@ _ROOT_LOGGER_NAME = "root"
 
 
 class _LoggerFactory:
-    _name: str
     _container: Container
+    _logger_id: int
+    _name: str
+    context: ContextManager
+    filters: FiltersManager
+    formatter: FormatterManager
+    handlers: HandlersManager
+    level: LevelManager
+    metrics: MetricsManager
+    parent: Logger
+    processors: ProcessorsManager
+    propagate: bool
+    status: StatusManager
+    tags: TagsManager
 
     __slots__ = (
         "_container",
@@ -67,7 +79,7 @@ class _LoggerFactory:
         config: Config | None = None,
     ) -> Logger:
         config = config or Config()
-        self = object.__new__(cls)
+        self = cast("Logger", object.__new__(cls))
 
         self._logger_id = cls._next_logger_id()
         self._container = container
@@ -85,7 +97,7 @@ class _LoggerFactory:
             else container.defaults.propagate
         )
         self._create_managers(config)
-        return self  # pyright: ignore[reportReturnType]
+        return self
 
     @classmethod
     def get_logger(
@@ -111,7 +123,7 @@ class _LoggerFactory:
                 return existing
 
             effective_config = config or _container._resolve_config_for(name)
-            logger = Logger._create(name, _container, effective_config)
+            logger = cls._create(name, _container, effective_config)
             _container._loggers[name] = logger
             return logger
 

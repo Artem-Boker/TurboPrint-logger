@@ -354,7 +354,7 @@ class ConfigManager:
     @staticmethod
     def _parse_yaml(source: str) -> dict[str, Any]:
         try:
-            from yaml import safe_load  # noqa: PLC0415
+            from yaml import safe_load  # noqa: PLC0415  # ty: ignore[unresolved-import]
         except ImportError as exc:
             msg = (
                 "YAML parser is unavailable. Install 'PyYAML' to load .yaml/.yml files"

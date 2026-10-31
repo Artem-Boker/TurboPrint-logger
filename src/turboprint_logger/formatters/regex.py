@@ -23,5 +23,5 @@ class RegexFormatter(Formatter):
         self.replacement = replacement
 
     def format(self, record: Record) -> str:
-        message = record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
+        message = record.resolve_message()
         return self.pattern.sub(self.replacement, message)

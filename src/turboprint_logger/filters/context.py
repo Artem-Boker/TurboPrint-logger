@@ -23,7 +23,7 @@ class ContextFilter(Filter):
     def _check_condition(condition: object, actual: object) -> bool:
         if callable(condition):
             try:
-                return condition(actual)  # type: ignore[no-any-return]
+                return bool(condition(actual))
             except Exception:  # noqa: BLE001
                 return False
         elif isinstance(condition, Pattern):

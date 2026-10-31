@@ -46,6 +46,13 @@ class Record:
             tags=self.tags.copy(),
         )
 
+    def resolve_message(self) -> str:
+        """Return the message text, resolving a lazy message callable."""
+        message = self.message
+        if isinstance(message, str):
+            return message
+        return message()
+
     def __str__(self) -> str:
         return (
             f"{self.__class__.__name__}("

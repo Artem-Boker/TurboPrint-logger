@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from threading import Lock
-from typing import Any
+from typing import Any, cast
 
 from colorama import Fore, Style
 from emoji import emojize, purely_emoji
@@ -17,6 +17,11 @@ from turboprint_logger.exceptions.utils import InvalidLevelNameError
 from turboprint_logger.utils.normalizers import normalize_level_name
 
 __all__ = ("Level", "LevelType")
+
+
+def _ansi(code: int) -> str:
+    """Return a colorama ANSI code as text (colorama values are strings)."""
+    return cast(str, code)
 
 
 class LevelType:
@@ -128,34 +133,41 @@ class LevelMeta(type):
         )
 
     def __repr__(cls) -> str:
-        return (
-            f"{cls.__name__}("
-            f"standard_levels={[str(level) for level in cls.standard_levels()]}, "  # type: ignore[reportAttributeAccessIssue]
-            f"custom_levels={[str(level) for level in cls.custom_levels()]})"  # type: ignore[reportAttributeAccessIssue]
-        )
+        level_cls = cast("type[Level]", cls)
+        standard = [str(level) for level in level_cls.standard_levels()]
+        custom = [str(level) for level in level_cls.custom_levels()]
+        return f"{cls.__name__}(standard_levels={standard}, custom_levels={custom})"
 
 
 class Level(metaclass=LevelMeta):
-    NOTSET = LevelType("NOTSET", 0, Fore.RESET, "white_circle")
+    NOTSET = LevelType("NOTSET", 0, _ansi(Fore.RESET), "white_circle")
     VERBOSE = LevelType(
-        "VERBOSE", 10, Fore.LIGHTBLACK_EX, "magnifying_glass_tilted_left"
+        "VERBOSE", 10, _ansi(Fore.LIGHTBLACK_EX), "magnifying_glass_tilted_left"
     )
-    DEBUG = LevelType("DEBUG", 20, Fore.MAGENTA, "bug")
-    TRACE = LevelType("TRACE", 30, Fore.BLUE, "footprints")
-    LOG = LevelType("LOG", 40, Fore.CYAN, "page_facing_up")
-    NOTICE = LevelType("NOTICE", 50, Fore.LIGHTYELLOW_EX, "loudspeaker")
-    EVENT = LevelType("EVENT", 60, Fore.LIGHTCYAN_EX, "bullseye")
-    PERFORMANCE = LevelType("PERFORMANCE", 70, Fore.LIGHTMAGENTA_EX, "high_voltage")
-    SUCCESS = LevelType("SUCCESS", 80, Fore.GREEN, "check_mark_button")
-    SECURITY = LevelType("SECURITY", 90, Fore.LIGHTGREEN_EX, "locked")
-    AUDIT = LevelType("AUDIT", 100, Fore.LIGHTYELLOW_EX, "clipboard")
-    INFO = LevelType("INFO", 110, Fore.LIGHTBLUE_EX, "information")
-    WARNING = LevelType("WARNING", 120, Fore.YELLOW, "warning")
-    ERROR = LevelType("ERROR", 130, Fore.LIGHTRED_EX, "cross_mark")
-    ALERT = LevelType("ALERT", 140, Style.BRIGHT + Fore.YELLOW, "police_car_light")
-    CRITICAL = LevelType("CRITICAL", 150, Style.BRIGHT + Fore.LIGHTRED_EX, "collision")
-    FATAL = LevelType("FATAL", 160, Style.BRIGHT + Fore.RED, "skull_and_crossbones")
-    EMERGENCY = LevelType("EMERGENCY", 170, Style.BRIGHT + Fore.RED, "ambulance")
+    DEBUG = LevelType("DEBUG", 20, _ansi(Fore.MAGENTA), "bug")
+    TRACE = LevelType("TRACE", 30, _ansi(Fore.BLUE), "footprints")
+    LOG = LevelType("LOG", 40, _ansi(Fore.CYAN), "page_facing_up")
+    NOTICE = LevelType("NOTICE", 50, _ansi(Fore.LIGHTYELLOW_EX), "loudspeaker")
+    EVENT = LevelType("EVENT", 60, _ansi(Fore.LIGHTCYAN_EX), "bullseye")
+    PERFORMANCE = LevelType(
+        "PERFORMANCE", 70, _ansi(Fore.LIGHTMAGENTA_EX), "high_voltage"
+    )
+    SUCCESS = LevelType("SUCCESS", 80, _ansi(Fore.GREEN), "check_mark_button")
+    SECURITY = LevelType("SECURITY", 90, _ansi(Fore.LIGHTGREEN_EX), "locked")
+    AUDIT = LevelType("AUDIT", 100, _ansi(Fore.LIGHTYELLOW_EX), "clipboard")
+    INFO = LevelType("INFO", 110, _ansi(Fore.LIGHTBLUE_EX), "information")
+    WARNING = LevelType("WARNING", 120, _ansi(Fore.YELLOW), "warning")
+    ERROR = LevelType("ERROR", 130, _ansi(Fore.LIGHTRED_EX), "cross_mark")
+    ALERT = LevelType(
+        "ALERT", 140, _ansi(Style.BRIGHT + Fore.YELLOW), "police_car_light"
+    )
+    CRITICAL = LevelType(
+        "CRITICAL", 150, _ansi(Style.BRIGHT + Fore.LIGHTRED_EX), "collision"
+    )
+    FATAL = LevelType(
+        "FATAL", 160, _ansi(Style.BRIGHT + Fore.RED), "skull_and_crossbones"
+    )
+    EMERGENCY = LevelType("EMERGENCY", 170, _ansi(Style.BRIGHT + Fore.RED), "ambulance")
 
     @classmethod
     def get_by_name(cls, name: str) -> LevelType | None:
@@ -190,7 +202,7 @@ class Level(metaclass=LevelMeta):
         cls,
         name: str,
         value: int,
-        color: str = Fore.RESET,
+        color: str = _ansi(Fore.RESET),
         emoji_alias: str | None = None,
     ) -> LevelType:
         normalized = normalize_level_name(name)

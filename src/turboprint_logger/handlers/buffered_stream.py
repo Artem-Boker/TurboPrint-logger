@@ -18,7 +18,8 @@ __all__ = ("BufferedStreamHandler",)
 
 
 class BufferedStreamHandler(Handler):
-    def __init__(  # noqa: PLR0913
+    # Публичный конструктор: позиционные параметры — часть заявленного API.
+    def __init__(  # noqa: PLR0913, PLR0917
         self,
         stream: TextIO = default_output,
         buffer_size: int = 1_000,

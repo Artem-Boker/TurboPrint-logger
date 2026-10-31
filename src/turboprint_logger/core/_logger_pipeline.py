@@ -3,37 +3,56 @@ from __future__ import annotations
 import sys
 from collections.abc import Callable
 from contextlib import suppress
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.record import Record
 from turboprint_logger.managers import (
+    ContextManager,
     FiltersManager,
     HandlersManager,
+    LevelManager,
+    MetricsManager,
     ProcessorsManager,
+    StatusManager,
+    TagsManager,
 )
 from turboprint_logger.utils.normalizers import (
     normalize_context_key,
     normalize_level_name,
 )
 
+if TYPE_CHECKING:
+    from turboprint_logger.core.container import Container
+    from turboprint_logger.core.logger import Logger
+
 __all__ = ("_LoggerPipeline",)
 
 
 class _LoggerPipeline:
+    _container: Container
+    context: ContextManager
+    filters: FiltersManager
+    handlers: HandlersManager
+    level: LevelManager
+    metrics: MetricsManager
+    parent: Logger
+    processors: ProcessorsManager
+    propagate: bool
+    status: StatusManager
+    tags: TagsManager
+
     def _merge_tags(self, tags: list[str] | None = None) -> set[str]:
         merged: set[str] = set()
-        merged.update(
-            self._container.globals.tags.get()  # type: ignore[reportAttributeAccessIssue]
-        )
-        merged.update(self.tags.get())  # type: ignore[reportAttributeAccessIssue]
+        merged.update(self._container.globals.tags.get())
+        merged.update(self.tags.get())
         merged.update(tags or [])
         return merged
 
     def _merge_context(self, extra: dict[str, Any]) -> dict[str, Any]:
         merged: dict[str, Any] = {}
-        merged.update(self._container.globals.context.get())  # type: ignore[reportAttributeAccessIssue]
-        merged.update(self.context.get())  # type: ignore[reportAttributeAccessIssue]
+        merged.update(self._container.globals.context.get())
+        merged.update(self.context.get())
 
         processed: dict[str, Any] = {}
         for key, value in extra.items():
@@ -78,12 +97,13 @@ class _LoggerPipeline:
             level = Level.get_by_name(normalize_level_name(level)) or Level.NOTSET
         frame = sys._getframe(stacklevel)
         code = frame.f_code
+        logger = cast("Logger", self)
         return Record(
             message=message,
             level=level,
-            logger=self,  # type: ignore[arg-type]
-            logger_id=self._logger_id,  # type: ignore[reportAttributeAccessIssue]
-            trace_id=self._generate_trace_id(),  # type: ignore[reportAttributeAccessIssue]
+            logger=logger,
+            logger_id=logger._logger_id,
+            trace_id=logger._generate_trace_id(),
             file=code.co_filename,
             function=code.co_name,
             line=frame.f_lineno,
@@ -150,52 +170,56 @@ class _LoggerPipeline:
         return record
 
     def _process_global(self, record: Record) -> Record | None:
-        glob = self._container.globals  # type: ignore[reportAttributeAccessIssue]
+        glob = self._container.globals
 
         if not glob.status.logger.enabled:
             return None
         if not record.level.passed_level(glob.level.get()):
             return None
 
-        record = self._apply_processors_start(glob.processors, record) or None  # type: ignore[reportAttributeAccessIssue]
-        if record is None:
+        processed = self._apply_processors_start(glob.processors, record)
+        if processed is None:
             return None
+        record = processed
 
-        record = self._apply_filters(  # type: ignore[reportAttributeAccessIssue]
+        filtered = self._apply_filters(
             glob.filters,
             record,
-            enabled=self.status.global_filters.enabled,  # type: ignore[reportAttributeAccessIssue]
+            enabled=self.status.global_filters.enabled,
         )
-        if record is None:
+        if filtered is None:
             return None
+        record = filtered
 
-        if self.status.global_handlers.enabled:  # type: ignore[reportAttributeAccessIssue]
+        if self.status.global_handlers.enabled:
             self._apply_handlers(glob.handlers, record)
 
         return self._apply_processors_end(glob.processors, record)
 
     def _process_local(self, record: Record) -> Record | None:
-        if not self.status.logger.enabled:  # type: ignore[reportAttributeAccessIssue]
+        if not self.status.logger.enabled:
             return None
-        if not record.level.passed_level(self.level.get()):  # type: ignore[reportAttributeAccessIssue]
-            return None
-
-        record = self._apply_processors_start(self.processors, record) or None  # type: ignore[reportAttributeAccessIssue]
-        if record is None:
+        if not record.level.passed_level(self.level.get()):
             return None
 
-        record = self._apply_filters(  # type: ignore[reportAttributeAccessIssue]
-            self.filters,  # type: ignore[reportAttributeAccessIssue]
+        processed = self._apply_processors_start(self.processors, record)
+        if processed is None:
+            return None
+        record = processed
+
+        filtered = self._apply_filters(
+            self.filters,
             record,
-            enabled=self.status.filters.enabled,  # type: ignore[reportAttributeAccessIssue]
+            enabled=self.status.filters.enabled,
         )
-        if record is None:
+        if filtered is None:
             return None
+        record = filtered
 
-        if self.status.handlers.enabled:  # type: ignore[reportAttributeAccessIssue]
-            self._apply_handlers(self.handlers, record)  # type: ignore[reportAttributeAccessIssue]
+        if self.status.handlers.enabled:
+            self._apply_handlers(self.handlers, record)
 
-        return self._apply_processors_end(self.processors, record)  # type: ignore[reportAttributeAccessIssue]
+        return self._apply_processors_end(self.processors, record)
 
     def _process_record(self, record: Record) -> Record | None:
         result = self._process_local(record)
@@ -204,12 +228,12 @@ class _LoggerPipeline:
         record = result
 
         current = self
-        while current.propagate and current is not current.parent:  # type: ignore[reportAttributeAccessIssue]
-            current = current.parent  # type: ignore[reportAttributeAccessIssue]
+        while current.propagate and current is not current.parent:
+            current = current.parent
             parent_result = current._process_local(record)
             if parent_result is None:
                 break
             record = parent_result
 
-        self.metrics.add(record.level)  # type: ignore[reportAttributeAccessIssue]
+        self.metrics.add(record.level)
         return record

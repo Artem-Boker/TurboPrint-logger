@@ -8,11 +8,12 @@ __all__ = ("LazyMessageProcessor",)
 
 class LazyMessageProcessor(Processor):
     def start(self, record: Record) -> Record:
-        if not callable(record.message):
+        message = record.message
+        if isinstance(message, str):
             return record
 
         try:
-            record.message = record.message()  # ty:ignore[call-top-callable]
+            record.message = message()
         except Exception as exc:  # noqa: BLE001
             record.context["lazy_message_error"] = exc
             record.message = "<lazy_message_error>"

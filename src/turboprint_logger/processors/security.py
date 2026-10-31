@@ -53,11 +53,7 @@ class SecurityProcessor(Processor):
         masked_context = self._mask_process(record.context)
         masked_tags = self._mask_process(record.tags)
 
-        message = (
-            record.message()  # ty:ignore[call-top-callable]
-            if callable(record.message)
-            else record.message
-        )
+        message = record.resolve_message()
         masked_message = self._mask_process(message)
 
         record.context = masked_context

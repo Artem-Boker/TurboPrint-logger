@@ -3,9 +3,11 @@ from __future__ import annotations
 from threading import Lock, RLock
 from typing import TYPE_CHECKING, ClassVar
 
+from turboprint_logger import formatters
 from turboprint_logger.core.config import Config
-from turboprint_logger.core.levels import LevelType
+from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.exceptions.core import ContainerInstantiationError
+from turboprint_logger.handlers.stream import StreamHandler
 from turboprint_logger.managers.collections import DefaultManager, GlobalManager
 from turboprint_logger.utils.normalizers import (
     normalize_container_name,
@@ -114,6 +116,10 @@ class Container:
 
 
 _DEFAULT_CONTAINER = Container._create(_DEFAULT_CONTAINER_NAME)
+_DEFAULT_CONTAINER.defaults.handlers.add(
+    StreamHandler(formatter=formatters.SimpleFormatter(colored=True))
+)
+_DEFAULT_CONTAINER.defaults.level.set(Level.ERROR)
 
 
 def get_default_container() -> Container:

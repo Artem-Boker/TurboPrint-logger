@@ -31,9 +31,7 @@ class RegexFilter(Filter):
     def _get_field_value(self, record: Record) -> str:  # noqa: PLR0911
         match self.field.lower():
             case "message":
-                return (
-                    record.message() if callable(record.message) else record.message  # ty:ignore[call-top-callable]
-                )
+                return record.resolve_message()
             case "level_name":
                 return record.level.name
             case "logger_name":

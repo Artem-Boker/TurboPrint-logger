@@ -94,7 +94,7 @@ class Logger(_LoggerFactory, _LoggerPipeline):
         return (
             f"{self.__class__.__name__}("
             f'name="{self.name}", '
-            f"logger_id={self._logger_id}, "  # ty:ignore[unresolved-attribute]
+            f"logger_id={self._logger_id}, "
             f'container_name="{self._container.name}", '
             f"propagate={self.propagate}, "
             f"min_level={self.level.get()!r}, "

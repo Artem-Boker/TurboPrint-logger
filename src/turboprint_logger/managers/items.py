@@ -22,6 +22,8 @@ T = TypeVar("T")
 class CollectionManager(TemporaryMixin[T]):
     __slots__ = ("_items", "_lock", "_thread_local")
 
+    _items: list[T]
+
     def __init__(self, *items: T) -> None:
         self._lock = RLock()
         self._items = list(items)
@@ -33,12 +35,12 @@ class CollectionManager(TemporaryMixin[T]):
 
     def add(self, *items: T) -> None:
         with self._lock:
-            self._items.extend(items)  # ty:ignore[unresolved-attribute]
+            self._items.extend(items)
 
     def remove(self, item: T) -> bool:
         try:
             with self._lock:
-                self._items.remove(item)  # ty:ignore[unresolved-attribute]
+                self._items.remove(item)
         except ValueError:
             return False
         return True
@@ -99,9 +101,11 @@ class TagsManager(CollectionManager[str]):
 class ContextManager(TemporaryMixin[dict]):
     __slots__ = ("_items", "_lock", "_thread_local")
 
+    _items: dict[str, Any]
+
     def __init__(self, **items) -> None:
         self._lock = RLock()
-        self._items: dict[str, Any] = {
+        self._items = {
             normalize_context_key(key): value for key, value in items.items()
         }
         self._thread_local = local()

@@ -4,7 +4,7 @@ import sys
 from collections.abc import Callable
 from importlib.metadata import entry_points
 from threading import RLock
-from typing import TypeVar
+from typing import Any, TypeVar
 
 from turboprint_logger.exceptions.core import (
     PluginAlreadyRegisteredError,
@@ -41,12 +41,12 @@ _filters: dict[str, type[Filter]] = {}
 _formatters: dict[str, type[Formatter]] = {}
 _processors: dict[str, type[Processor]] = {}
 
-_ENTRY_POINT_GROUPS: dict[str, tuple[type, dict[str, type], RLock]] = {
+_ENTRY_POINT_GROUPS: dict[str, tuple[type, dict[str, Any], RLock]] = {
     "turboprint_logger.handlers": (Handler, _handlers, _handlers_lock),
     "turboprint_logger.filters": (Filter, _filters, _filters_lock),
     "turboprint_logger.formatters": (Formatter, _formatters, _formatters_lock),
     "turboprint_logger.processors": (Processor, _processors, _processors_lock),
-}  # ty:ignore[invalid-assignment]
+}
 
 
 def _register(

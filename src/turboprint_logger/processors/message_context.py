@@ -13,11 +13,7 @@ class MessageContextProcessor(Processor):
         self.context = context
 
     def start(self, record: Record) -> Record:
-        message = (
-            record.message()  # ty:ignore[call-top-callable]
-            if callable(record.message)
-            else record.message
-        )
+        message = record.resolve_message()
         record.message = Template(message).safe_substitute(
             {**record.context, **self.context}
         )

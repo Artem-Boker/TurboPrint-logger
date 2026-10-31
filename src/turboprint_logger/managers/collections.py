@@ -31,7 +31,8 @@ class ManagersCollection:
         "tags",
     )
 
-    def __init__(  # noqa: PLR0913
+    # Публичный конструктор: позиционные параметры — часть заявленного API.
+    def __init__(  # noqa: PLR0913, PLR0917
         self,
         level: LevelType | None = None,
         formatter: Formatter | None = None,

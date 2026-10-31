@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable
 from functools import wraps
+from inspect import iscoroutinefunction
 from string import Template
 from time import sleep
-from typing import Any, TypeVar, cast
+from typing import Any, cast
 
 from turboprint_logger.core.levels import Level, LevelType
 from turboprint_logger.core.logger import Logger
+from turboprint_logger.decorators._callables import FuncT
 from turboprint_logger.exceptions.decorators import (
     RetryLimitExceededError,
     UnknownRetryError,
@@ -16,12 +17,12 @@ from turboprint_logger.exceptions.decorators import (
 
 __all__ = ("retry",)
 
-_F = TypeVar("_F", bound=Callable[..., Any])
 _STACKLEVEL = 4
 
 
 class RetryDecorator:
-    def __init__(  # noqa: PLR0913
+    # Публичный конструктор: позиционные параметры — часть заявленного API.
+    def __init__(  # noqa: PLR0913, PLR0917
         self,
         max_attempts: int = 3,
         delay: float = 1.0,
@@ -89,8 +90,8 @@ class RetryDecorator:
         msg = "Unknown error in retry"
         raise UnknownRetryError(msg)
 
-    def __call__(self, func: _F) -> _F:  # noqa: C901
-        if asyncio.iscoroutinefunction(func):
+    def __call__(self, func: FuncT) -> FuncT:  # noqa: C901
+        if iscoroutinefunction(func):
 
             @wraps(func)
             async def async_wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
@@ -101,11 +102,11 @@ class RetryDecorator:
                         result = await func(*args, **kwargs)
                         self._log_success(func.__name__, attempt)
                     except self.exceptions as exc:
-                        last_exc = exc  # ty:ignore[invalid-assignment]
+                        last_exc = exc
                         self._log_warning(
                             func.__name__,
                             attempt,
-                            exc,  # ty:ignore[invalid-argument-type]
+                            exc,
                         )
                         if attempt < self.max_attempts:
                             await asyncio.sleep(
@@ -117,7 +118,7 @@ class RetryDecorator:
                 self._raise_final(func.__name__, last_exc)
                 return None
 
-            return cast(_F, async_wrapper)
+            return cast(FuncT, async_wrapper)
 
         @wraps(func)
         def wrapper(*args, **kwargs) -> Any:  # noqa: ANN401
@@ -128,11 +129,11 @@ class RetryDecorator:
                     result = func(*args, **kwargs)
                     self._log_success(func.__name__, attempt)
                 except self.exceptions as exc:
-                    last_exc = exc  # ty:ignore[invalid-assignment]
+                    last_exc = exc
                     self._log_warning(
                         func.__name__,
                         attempt,
-                        exc,  # ty:ignore[invalid-argument-type]
+                        exc,
                     )
                     if attempt < self.max_attempts:
                         sleep(self.delay * (self.backoff ** (attempt - 1)))
@@ -142,7 +143,7 @@ class RetryDecorator:
             self._raise_final(func.__name__, last_exc)
             return None
 
-        return cast(_F, wrapper)
+        return cast(FuncT, wrapper)
 
 
 retry = RetryDecorator
